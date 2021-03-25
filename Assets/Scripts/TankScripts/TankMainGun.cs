@@ -11,35 +11,37 @@ public class TankMainGun
 {
     public Transform mainGunTransform; // reference to the main gun of the tank
     public GameObject tankShellPrefab; // reference to the tank prefab we want to fire
+   //  public GameObject tankBlastPrefab; // reference to second type of gun fire
+   //  
 
-    public float minLaunchForce = 15f; // the minimum amount of force for our weapon
-    public float maxLaunchForce = 30f; // the maximum amount of force for our weapon
-    public float maxChargeTime = 0.75f; // the maximum amount of time we will allow to charge up and fire
+    public float MinimumFireForce = 15f; // the minimum amount of force for our weapon
+    public float MaximumFireForce = 50f; // the maximum amount of force for our weapon
+    public float MaximumRechargeTime = 0.75f; // the maximum amount of time we will allow to charge up and fire
 
-    public Slider mainGunArrowIndicator; // a reference to the main gun slider
+    public Slider MainWeaponArrowIndicator; // a reference to the main gun slider
 
-    private float currentLaunchForce; // the force we should use to fire our shell
-    private float chargeSpeed; // how fast we should charge up our weapon
-    private bool weaponFired; // have we just fired our weapon?
-    private bool aimingDownSight; // are we aiming down sight 
+    private float m_currentLaunchForce; // the force we should use to fire our shell
+    private float m_chargeSpeed; // how fast we should charge up our weapon
+    private bool m_weaponHasFired; // have we just fired our weapon?
+    private bool m_aimingDownSight; // are we aiming down sight 
 
-    public AudioSource weaponSystemSource; // reference to the audio source for the main gun
-    public AudioClip chargingSFX; // a charging up sound
-    public AudioClip firingSFX; // a firing weapon SFX.
+    public AudioSource WeaponSystemAudioSource; // reference to the audio source for the main gun
+    public AudioClip Charge_SoundFX; // a charging up sound
+    public AudioClip WeaponFire_SoundFX; // a firing weapon SFX.
 
-    private bool enableShooting; // should we be allowed to fire?
-    private bool enableADS; // should we be allowed to ads? 
+    private bool m_enabledShooting; // should we be allowed to fire?
+    private bool m_enableAimDownSight; // should we be allowed to ads? 
     /// <summary>
     /// Sets up all the necessary variables for our main gun script
     /// </summary>
     public void SetUp()
     {
-        currentLaunchForce = minLaunchForce; // set our current launch force to the min
-        chargeSpeed = (maxLaunchForce - minLaunchForce) / maxChargeTime; // get the range between the max and min, and divide it by how quickly we charge
-        mainGunArrowIndicator.minValue = minLaunchForce; // set the min and max programatically
-        mainGunArrowIndicator.maxValue = maxLaunchForce;
-        weaponSystemSource.clip = chargingSFX; // set the clip to the charging effect
-        weaponSystemSource.loop = false; // don't set it to loop
+        m_currentLaunchForce = MinimumFireForce; // set our current launch force to the min
+        m_chargeSpeed = (MaximumFireForce - MinimumFireForce) / MaximumRechargeTime; // get the range between the max and min, and divide it by how quickly we charge
+        MainWeaponArrowIndicator.minValue = MinimumFireForce; // set the min and max programatically
+        MainWeaponArrowIndicator.maxValue = MaximumFireForce;
+        WeaponSystemAudioSource.clip = Charge_SoundFX; // set the clip to the charging effect
+        WeaponSystemAudioSource.loop = false; // don't set it to loop
         EnableShooting(false); // disable shooting
         EnableAimDownSight(false);
     }
@@ -50,7 +52,7 @@ public class TankMainGun
     /// <param name="Enabled"></param>
     public void EnableShooting(bool Enabled)
     {
-        enableShooting = Enabled;
+        m_enabledShooting = Enabled;
     }
 
     /// <summary>
@@ -59,7 +61,7 @@ public class TankMainGun
     /// <param name="Enabled"></param>
     public void EnableAimDownSight(bool Enabled)
 	{
-        enableADS = Enabled;
+        m_enableAimDownSight = Enabled;
 	}
 
     /// <summary>
@@ -69,58 +71,62 @@ public class TankMainGun
 
     public void UpdateMainGun(float MainGunShootValue, float MainGunAimValue)
     {   
-        if(enableShooting != true)
+        if (m_enabledShooting != true)
         {
             return; // don't do anything
         }
 
-        if(currentLaunchForce >= maxLaunchForce && !weaponFired)
+        if (m_currentLaunchForce >= MaximumFireForce && !m_weaponHasFired)
         {
             // if we are at max charge and we haven't fired the weapon
-            currentLaunchForce = maxLaunchForce;
+            m_currentLaunchForce = MaximumFireForce;
             FireWeapon(); // fire our gun
         }
         // get the input from out main button press
-        else if(MainGunShootValue > 0 && !weaponFired)
+        else if (MainGunShootValue > 0 && !m_weaponHasFired)
         {
             //Debug.Log("Weapon button pressed");
 
-            // we want to charge up our weapon
-            currentLaunchForce += chargeSpeed * Time.deltaTime; // increase the current force
-            if(!weaponSystemSource.isPlaying)
+            // Charge up the weapon 
+            // Increase the force of the weapon 
+            m_currentLaunchForce += m_chargeSpeed * Time.deltaTime; 
+
+            // Play the weapon audio from the weapon system audio source
+            if (!WeaponSystemAudioSource.isPlaying)
             {
-                weaponSystemSource.Play();// start playing the charging up sound effect
+                // Play Weapon Charging Audio Clip
+                WeaponSystemAudioSource.Play();
                 Debug.Log("Charging");
             }
             // play a charging up sound effect
         }
-        else if(MainGunShootValue < 0 && !weaponFired)
+        else if (MainGunShootValue < 0 && !m_weaponHasFired)
         {
            // Debug.Log("Weapon Button Released");
             // we've released our button
             // we want to fire our weapon
             FireWeapon(true);
         }
-        else if(MainGunShootValue < 0 && weaponFired)
+        else if (MainGunShootValue < 0 && m_weaponHasFired)
         {
-            weaponFired = false;
+            m_weaponHasFired = false;
         }
   
-        mainGunArrowIndicator.value = currentLaunchForce; // set our arrow back to min at all times
+        MainWeaponArrowIndicator.value = m_currentLaunchForce; // set our arrow back to min at all times
 
-        if (MainGunAimValue > 0 && !aimingDownSight)
+        if (MainGunAimValue > 0 && !m_aimingDownSight)
 		{
             Debug.Log("Aiming Down Sight Pressed!");
             AimDownSight();
 		}
-        else if (MainGunAimValue < 0 && !aimingDownSight)
+        else if (MainGunAimValue < 0 && !m_aimingDownSight)
 		{
             Debug.Log("Aiming Down Sight Released!");
             AimDownSight(true);
 		}
-        else if (MainGunAimValue < 0 && aimingDownSight)
+        else if (MainGunAimValue < 0 && m_aimingDownSight)
 		{
-            aimingDownSight = false;
+            m_aimingDownSight = false;
 		}
     }
 
@@ -130,24 +136,24 @@ public class TankMainGun
     /// </summary>
     private void FireWeapon(bool ButtonReleased = false)
     {
-        weaponFired = true; // we have fired our weapon
+        m_weaponHasFired = true; // we have fired our weapon
         // spawns in a tank shell at the main gun transform and matches the rotation of the main gun and stores it in the clone GameObject variable
         GameObject clone = Object.Instantiate(tankShellPrefab, mainGunTransform.position, mainGunTransform.rotation);
 
         // If the clone has a rigidbody, we want to add some velocity to it to make it fire!
         if(clone.GetComponent<Rigidbody>())
         {
-            clone.GetComponent<Rigidbody>().velocity = currentLaunchForce * mainGunTransform.forward; // make the velocity of our bullet go in the direction of our gun at the launch force
+            clone.GetComponent<Rigidbody>().velocity = m_currentLaunchForce * mainGunTransform.forward; // make the velocity of our bullet go in the direction of our gun at the launch force
         }
         Object.Destroy(clone,5f);
         
-        weaponSystemSource.PlayOneShot(firingSFX); // play the firing sound effect
-        weaponSystemSource.Stop(); // stop charging up
-        currentLaunchForce = minLaunchForce;
+        WeaponSystemAudioSource.PlayOneShot(WeaponFire_SoundFX); // play the firing sound effect
+        WeaponSystemAudioSource.Stop(); // stop charging up
+        m_currentLaunchForce = MinimumFireForce;
         // only reset our weapon if we have released our fire button, don't allow it if we overcharged
         if (ButtonReleased)
         {
-            weaponFired = false;
+            m_weaponHasFired = false;
         }
     }
 
@@ -158,7 +164,7 @@ public class TankMainGun
     /// <param name="ButtonReleased"></param>
     private void AimDownSight(bool ButtonReleased = false)
 	{
-        aimingDownSight = true;
+        m_aimingDownSight = true;
 
         // We would probably get the clone's camera here? Then use some sort of zoom effect 
 
@@ -166,7 +172,7 @@ public class TankMainGun
 
         if (ButtonReleased)
 		{
-            aimingDownSight = false;
+            m_aimingDownSight = false;
 		}
 	}
 }

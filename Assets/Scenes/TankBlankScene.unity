@@ -123,6 +123,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &13212086 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7925429849883294391, guid: a504c6c563098ec4f9c3c8dd35ce8250,
+    type: 3}
+  m_PrefabInstance: {fileID: 1995614346}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &346244476
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -585,7 +597,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 1000
-  field of view: 38
+  field of view: 46.6423
   orthographic: 0
   orthographic size: 20
   m_Depth: -1
@@ -611,10 +623,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251673544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: -0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1545264142}
+  m_Father: {fileID: 7288597493176058799}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1302245436
@@ -716,36 +728,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 102.574875, y: 11.896666, z: 11.628063}
   m_Center: {x: 3.4625359, y: 4.6348534, z: -48.944984}
---- !u!1 &1418788514
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1418788515}
-  m_Layer: 0
-  m_Name: FirstPersonCameraViewPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1418788515
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1418788514}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.85, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7288597493176058799}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1427907933
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,53 +921,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1545264140
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1545264142}
-  - component: {fileID: 1545264141}
-  m_Layer: 0
-  m_Name: CameraRig
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1545264141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545264140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 522f9e9c3a643384d9d8d3cdc0b4a3b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FirstPersonCameraViewpoint: {fileID: 1418788515}
-  ThirdPersonCameraViewpoint: {fileID: 1707950536}
-  CameraViewType: 1
---- !u!4 &1545264142
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1545264140}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: -5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1251673547}
-  m_Father: {fileID: 1318264944685133099}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1547203217
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,36 +1110,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1553962886}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1707950535
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1707950536}
-  m_Layer: 8
-  m_Name: ThirdPersonCameraViewPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1707950536
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707950535}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: -5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1318264944685133099}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1995614346
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1409,7 +1314,7 @@ Transform:
   m_Children:
   - {fileID: 1074705712961947851}
   m_Father: {fileID: 7288597493176058799}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 80, y: 0, z: 0}
 --- !u!23 &2064174400
 MeshRenderer:
@@ -6763,8 +6668,6 @@ Transform:
   - {fileID: 7029449026760273271}
   - {fileID: 6489767271676681874}
   - {fileID: 1074705711796182498}
-  - {fileID: 1545264142}
-  - {fileID: 1707950536}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7172,6 +7075,7 @@ GameObject:
   - component: {fileID: 2598633212495814463}
   - component: {fileID: 2504495111016669187}
   - component: {fileID: 2786163785280839929}
+  - component: {fileID: 2598633212495814457}
   m_Layer: 8
   m_Name: Player_01 (1)
   m_TagString: Untagged
@@ -7179,6 +7083,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2598633212495814457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2598633212495814456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17f78e9f5bca2bc4a8de2be4f66965b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSensitivity: 0.7
 --- !u!54 &2598633212495814462
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7230,6 +7147,7 @@ MonoBehaviour:
     right: 100
     fireButton: 323
     adsButton: 324
+    changeCamera: 99
   tankHealth:
     minHealth: 0
     maxHealth: 100
@@ -7241,25 +7159,25 @@ MonoBehaviour:
   tankMovement:
     speed: 12
     turnSpeed: 180
-    cameraClampMin: 85
-    cameraClampMax: 90
-    tankMainWeaponTransform: {fileID: 1074705712961947851}
-    cameraTransform: {fileID: 1545264142}
+    cameraSlot: {fileID: 1251673547}
+    mainTurret: {fileID: 7288597493176058799}
+    cameraSensitivity: 5
     tankSoundEffects:
-      tankIdleSound: {fileID: 0}
-      tankMovingSound: {fileID: 0}
+      tankIdleSound: {fileID: 8300000, guid: ebb9c6c3d94bfd84087fb8c0fd7f7a00, type: 3}
+      tankMovingSound: {fileID: 8300000, guid: 3de0a9a6424a75f4fb350d35f90385d4, type: 3}
       pitchRangeMax: 0.2
   tankMainGun:
     mainGunTransform: {fileID: 1074705712961947851}
     tankShellPrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
       type: 3}
-    minLaunchForce: 15
-    maxLaunchForce: 30
-    maxChargeTime: 0.75
-    mainGunArrowIndicator: {fileID: 2504495110151946112}
-    weaponSystemSource: {fileID: 3179282617702853630}
-    chargingSFX: {fileID: 8300000, guid: b07c1f85edea5fb429801d35ecdf71c8, type: 3}
-    firingSFX: {fileID: 8300000, guid: a9a8ff8d2e81a96488285207119885db, type: 3}
+    MinimumFireForce: 15
+    MaximumFireForce: 50
+    MaximumRechargeTime: 0.75
+    MainWeaponArrowIndicator: {fileID: 13212086}
+    WeaponSystemAudioSource: {fileID: 1427907934}
+    Charge_SoundFX: {fileID: 8300000, guid: b07c1f85edea5fb429801d35ecdf71c8, type: 3}
+    WeaponFire_SoundFX: {fileID: 8300000, guid: a9a8ff8d2e81a96488285207119885db,
+      type: 3}
   explosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 3}
 --- !u!33 &3020878375673195422
 MeshFilter:
@@ -12322,8 +12240,8 @@ Transform:
   m_LocalPosition: {x: 0.000010554959, y: 1.0796412, z: -0.025321364}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1251673547}
   - {fileID: 2064174398}
-  - {fileID: 1418788515}
   m_Father: {fileID: 6489767271676681874}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

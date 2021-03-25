@@ -9,7 +9,8 @@ using UnityEngine;
 [System.Serializable]
 public class TankControls
 {
-    public enum KeyType { Movement, Rotation, Fire, Aim }
+    public enum KeyType { Movement, Rotation, Fire, Aim };
+    public enum CameraMode { FirstPerson, ThirdPerson };
 
     public KeyCode forward = KeyCode.W; // the forward button to use
     public KeyCode backwards = KeyCode.S; // the backwards button
@@ -17,10 +18,41 @@ public class TankControls
     public KeyCode right = KeyCode.D; // the right button
     public KeyCode fireButton = KeyCode.Mouse0; // the button to fire
     public KeyCode adsButton = KeyCode.Mouse1; // the aim down sight button (ads)
+    public KeyCode changeCamera = KeyCode.C;
     private bool fireButtonWasPressed = false; // has the fire button been pressed?
     private bool adsButtonWasPressed = false; // the aim down sight button was pressed 
-    private float m_xRotation = 0f;
-    
+    private bool changeCameraModeWasPressed = false; // change camera mode button was pressed
+
+
+    public float ReturnCameraView(CameraMode Mode)
+	{
+        float cameraViewValue = 0;
+
+		switch (Mode)
+		{
+			case CameraMode.FirstPerson:
+                { 
+                    if (Input.GetKey(changeCamera))
+					{
+                       changeCameraModeWasPressed = true;
+                        cameraViewValue = 1;
+					}
+                }
+				break;
+			case CameraMode.ThirdPerson:
+                { 
+                    if (Input.GetKey(changeCamera) && changeCameraModeWasPressed == true)
+					{
+                        changeCameraModeWasPressed = false;
+                        cameraViewValue = -1;
+					}
+                }
+				break;
+		}
+
+        return cameraViewValue;
+	}
+
     
     /// <summary>
     /// If the value returned is postive then the postive axis has been pressed for that key.
@@ -97,13 +129,13 @@ public class TankControls
     }
 
 
-    public float ReturnXRotationAxis(float Sensitivity)
+    public float ReturnMouseInputX(float Sensitivity)
 	{
 
         return Input.GetAxis("Mouse X") * Sensitivity * Time.deltaTime;
 	}
 
-    public float ReturnYRotationAxis(float Sensitivity)
+    public float ReturnMouseInputY(float Sensitivity)
 	{
         return Input.GetAxis("Mouse Y") * Sensitivity * Time.deltaTime;
 	}

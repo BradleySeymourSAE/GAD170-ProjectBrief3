@@ -47,12 +47,15 @@ public class Tank : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
       
-        // Handles the basic movement for the tank and its rotation values based on the key input (W,A,S,D)
+        // Handles Basic movement position & rotation from player input (W,A,S,D)
         tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
-        tankMovement.HandleAiming(tankControls.ReturnXRotationAxis(MouseSensitivity), tankControls.ReturnYRotationAxis(MouseSensitivity));
+       
+       tankMovement.HandleCameraLook();
+
+        // Handles Firing and Aiming of Main Weapon 
         tankMainGun.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire), tankControls.ReturnKeyValue(TankControls.KeyType.Aim)); // grab the input from the fire key
     }
 
