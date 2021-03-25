@@ -11,15 +11,24 @@ public class TankMovement
 {
     public float speed = 12f; // the speed our tank moves
     public float turnSpeed = 180f; // the speed that we can turn in degrees in seconds.
+    
+
+    public float cameraClampMin = -85f;
+    public float cameraClampMax = 90f;
+    public Transform tankMainWeaponTransform;
+    public Transform cameraTransform;
 
     private TankParticleEffects tankParticleEffects = new TankParticleEffects(); // creating a new instance of our tank particle effects class
     public TankSoundEffects tankSoundEffects = new TankSoundEffects(); // creating a new instance of our tank sound effects class
 
     private Rigidbody rigidbody;// a reference to the rigidbody on our tank
     private bool enableMovement = true; // if this is true we are allowed to accept input from the player
+    private float xAimRotation = 0f;
 
+   
     private Transform tankReference; // a reference to the tank gameobject
 
+   
 
     /// <summary>
     /// Handles the set up of our tank movement script
@@ -52,7 +61,7 @@ public class TankMovement
     }
 
     /// <summary>
-    /// Handles the movement of our tank
+    /// Handles the basic movement of our tank
     /// </summary>
     public void HandleMovement(float ForwardMovement, float RotationMovement)
     {
@@ -65,6 +74,33 @@ public class TankMovement
         Turn(RotationMovement);
 
         tankSoundEffects.PlayTankEngine(ForwardMovement, RotationMovement); // update our audio based on our input
+    }
+
+    /// <summary>
+    ///     Handles the tanks aiming for firing projectiles
+    /// </summary>
+    /// <param name="MouseXPosition">Current Mouse X Position</param>
+    /// <param name="MouseYPosition">Current Mouse Y Position</param>
+    public void HandleAiming(float Horizontal, float Vertical)
+    {
+        Debug.Log("Mouse Aim Rotation X" + Horizontal + " Mouse Aim Rotation Y: " + Vertical);
+
+        // Find the current look rotation
+        Vector3 currentLookRotation = cameraTransform.transform.localRotation.eulerAngles;
+        desiredAimX = currentLookRotation.y + Horizontal;
+       
+
+        // Rotation, ensure you dont over or under rotate.
+        xAimRotation -= Vertical;
+        xAimRotation = Mathf.Clamp(xAimRotation, cameraClampMin, cameraClampMax);
+
+
+        // Perform the rotations for the camera transform 
+        cameraTransform.transform.localRotation = Quaternion.Euler(xAimRotation, desiredAimX, 0);
+        tankMainWeaponTransform.transform.localRotation = Quaternion.Euler(0, desiredAimX, 0);
+    
+        // Perform the rotations for the main weapon transform     
+        // tankMainWeaponTransform.Rotate(Vector3.up * Horizontal);
     }
 
     /// <summary>
@@ -89,5 +125,9 @@ public class TankMovement
         // update our rigidboy with this new rotation
         rigidbody.MoveRotation(rigidbody.rotation * turnRotation); // rotate our rigidbody based on our input.
     }
+
+	#region Helper Properties 
+	private float desiredAimX;
+	#endregion
 }
 

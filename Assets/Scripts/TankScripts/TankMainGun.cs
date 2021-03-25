@@ -21,13 +21,14 @@ public class TankMainGun
     private float currentLaunchForce; // the force we should use to fire our shell
     private float chargeSpeed; // how fast we should charge up our weapon
     private bool weaponFired; // have we just fired our weapon?
+    private bool aimingDownSight; // are we aiming down sight 
 
     public AudioSource weaponSystemSource; // reference to the audio source for the main gun
     public AudioClip chargingSFX; // a charging up sound
     public AudioClip firingSFX; // a firing weapon SFX.
 
     private bool enableShooting; // should we be allowed to fire?
-
+    private bool enableADS; // should we be allowed to ads? 
     /// <summary>
     /// Sets up all the necessary variables for our main gun script
     /// </summary>
@@ -40,6 +41,7 @@ public class TankMainGun
         weaponSystemSource.clip = chargingSFX; // set the clip to the charging effect
         weaponSystemSource.loop = false; // don't set it to loop
         EnableShooting(false); // disable shooting
+        EnableAimDownSight(false);
     }
 
     /// <summary>
@@ -51,7 +53,21 @@ public class TankMainGun
         enableShooting = Enabled;
     }
 
-    public void UpdateMainGun(float MainGunValue)
+    /// <summary>
+    ///     Called to Enable / Disable Aim down sight 
+    /// </summary>
+    /// <param name="Enabled"></param>
+    public void EnableAimDownSight(bool Enabled)
+	{
+        enableADS = Enabled;
+	}
+
+    /// <summary>
+    ///     Update's the Main Gun movement value 
+    /// </summary>
+    /// <param name="MainGunShootValue"></param>
+
+    public void UpdateMainGun(float MainGunShootValue, float MainGunAimValue)
     {   
         if(enableShooting != true)
         {
@@ -60,12 +76,12 @@ public class TankMainGun
 
         if(currentLaunchForce >= maxLaunchForce && !weaponFired)
         {
-            // if we are at max charge essentially and we haven't fired the weapon
+            // if we are at max charge and we haven't fired the weapon
             currentLaunchForce = maxLaunchForce;
             FireWeapon(); // fire our gun
         }
         // get the input from out main button press
-        else if(MainGunValue > 0 && !weaponFired)
+        else if(MainGunShootValue > 0 && !weaponFired)
         {
             //Debug.Log("Weapon button pressed");
 
@@ -78,19 +94,34 @@ public class TankMainGun
             }
             // play a charging up sound effect
         }
-        else if(MainGunValue < 0 && !weaponFired)
+        else if(MainGunShootValue < 0 && !weaponFired)
         {
            // Debug.Log("Weapon Button Released");
             // we've released our button
             // we want to fire our weapon
             FireWeapon(true);
         }
-        else if(MainGunValue < 0 && weaponFired)
+        else if(MainGunShootValue < 0 && weaponFired)
         {
             weaponFired = false;
         }
   
         mainGunArrowIndicator.value = currentLaunchForce; // set our arrow back to min at all times
+
+        if (MainGunAimValue > 0 && !aimingDownSight)
+		{
+            Debug.Log("Aiming Down Sight Pressed!");
+            AimDownSight();
+		}
+        else if (MainGunAimValue < 0 && !aimingDownSight)
+		{
+            Debug.Log("Aiming Down Sight Released!");
+            AimDownSight(true);
+		}
+        else if (MainGunAimValue < 0 && aimingDownSight)
+		{
+            aimingDownSight = false;
+		}
     }
 
 
@@ -120,4 +151,22 @@ public class TankMainGun
         }
     }
 
+    /// <summary>
+    ///     Called when the ADS button has been released 
+    ///     TODO:
+    /// </summary>
+    /// <param name="ButtonReleased"></param>
+    private void AimDownSight(bool ButtonReleased = false)
+	{
+        aimingDownSight = true;
+
+        // We would probably get the clone's camera here? Then use some sort of zoom effect 
+
+        // Then reset after releasing the aim down sight button 
+
+        if (ButtonReleased)
+		{
+            aimingDownSight = false;
+		}
+	}
 }

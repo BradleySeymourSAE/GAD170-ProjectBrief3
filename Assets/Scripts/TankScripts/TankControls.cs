@@ -9,15 +9,19 @@ using UnityEngine;
 [System.Serializable]
 public class TankControls
 {
-    public enum KeyType { Movement, Rotation, Fire }
+    public enum KeyType { Movement, Rotation, Fire, Aim }
 
     public KeyCode forward = KeyCode.W; // the forward button to use
     public KeyCode backwards = KeyCode.S; // the backwards button
     public KeyCode left = KeyCode.A; // the left button
     public KeyCode right = KeyCode.D; // the right button
-    public KeyCode fireButton = KeyCode.Space; // the button to fire
+    public KeyCode fireButton = KeyCode.Mouse0; // the button to fire
+    public KeyCode adsButton = KeyCode.Mouse1; // the aim down sight button (ads)
     private bool fireButtonWasPressed = false; // has the fire button been pressed?
-
+    private bool adsButtonWasPressed = false; // the aim down sight button was pressed 
+    private float m_xRotation = 0f;
+    
+    
     /// <summary>
     /// If the value returned is postive then the postive axis has been pressed for that key.
     /// if the value returned is negative then the negative axis as been pressed
@@ -25,6 +29,7 @@ public class TankControls
     /// </summary>
     /// <param name="codeToCheck"></param>
     /// <returns></returns>
+ 
     public float ReturnKeyValue(KeyType codeToCheck)
     {
         float currentValue = 0; // the current input value of the code to check
@@ -71,9 +76,37 @@ public class TankControls
                     }
                     break;
                 }
+
+            case KeyType.Aim:
+				{
+                    if (Input.GetKey(adsButton)) // if we are pressing the aim down sight button 
+					{
+                        currentValue = 1; // the aim down sigt button was pressed 
+					    adsButtonWasPressed = true;
+                    }
+                    else if (Input.GetKeyUp(adsButton) && adsButtonWasPressed == true)
+					{
+                        adsButtonWasPressed = false;
+                        currentValue = -1;
+					}
+                   break;
+				}
         }
 
         return currentValue;
     }
+
+
+    public float ReturnXRotationAxis(float Sensitivity)
+	{
+
+        return Input.GetAxis("Mouse X") * Sensitivity * Time.deltaTime;
+	}
+
+    public float ReturnYRotationAxis(float Sensitivity)
+	{
+        return Input.GetAxis("Mouse Y") * Sensitivity * Time.deltaTime;
+	}
+
 }
   

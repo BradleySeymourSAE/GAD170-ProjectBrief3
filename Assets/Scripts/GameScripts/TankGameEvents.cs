@@ -58,7 +58,7 @@ public static class TankGameEvents
     /// <summary>
     /// Called when the round is over
     /// </summary>
-    public static PostRound OnRoundEnededEvent;
+    public static PostRound OnRoundEndedEvent;
 
     /// <summary>
     /// Called when a player has scored a point

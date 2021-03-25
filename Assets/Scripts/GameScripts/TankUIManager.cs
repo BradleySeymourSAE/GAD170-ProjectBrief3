@@ -15,7 +15,7 @@ public class TankUIManager : MonoBehaviour
     {
         TankGameEvents.OnPreGameEvent += PreGame;
         TankGameEvents.OnGameStartedEvent += InGame;
-        TankGameEvents.OnRoundEnededEvent += PostRound;
+        TankGameEvents.OnRoundEndedEvent += PostRound;
         TankGameEvents.OnScoreUpdatedEvent += UpdateScoreText;
         TankGameEvents.OnTanksSpawnedEvent += DisplayScore;
     }
@@ -24,7 +24,7 @@ public class TankUIManager : MonoBehaviour
     {
         TankGameEvents.OnPreGameEvent -= PreGame;
         TankGameEvents.OnGameStartedEvent -= InGame;
-        TankGameEvents.OnRoundEnededEvent -= PostRound;
+        TankGameEvents.OnRoundEndedEvent -= PostRound;
         TankGameEvents.OnScoreUpdatedEvent -= UpdateScoreText;
         TankGameEvents.OnTanksSpawnedEvent -= DisplayScore;
     }

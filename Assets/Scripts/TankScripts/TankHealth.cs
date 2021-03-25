@@ -14,6 +14,7 @@ public class TankHealth
     private float currentHealth; // our current health
     public bool isDead = true; // is our character alive?
     public Color fullHealthColour = Color.green; // our full health colour
+    public Color warningHealthColor = Color.yellow; // warning health colour (50%)
     public Color zeroHealthColour = Color.red; // colour of no health
     private Transform tankParent; // reference to the tank that this script is attached to
 
@@ -46,12 +47,15 @@ public class TankHealth
             {
                 healthSlider.value = CurrentHealth;
 
-                if (fillImage != null)
-                {                
-                                                    // if there is a fill image then let's change its colour to match our current health
-                    fillImage.color = Color.Lerp(zeroHealthColour, fullHealthColour, CurrentHealth / maxHealth);
-                    // move towards the colour at the rate of our health/maxhealth = a % of our health
-                }
+                if (CurrentHealth > 0 && CurrentHealth <= 50f && fillImage != null)
+				{
+                    fillImage.color = Color.Lerp(zeroHealthColour, warningHealthColor, CurrentHealth / maxHealth);
+				}
+                else if (CurrentHealth > 50f && CurrentHealth <= 100f && fillImage != null)
+				{
+                    fillImage.color = Color.Lerp(warningHealthColor, fullHealthColour, CurrentHealth / maxHealth);
+				}
+                
             }
             else
             {

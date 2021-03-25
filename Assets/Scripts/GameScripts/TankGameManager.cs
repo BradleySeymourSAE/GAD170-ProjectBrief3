@@ -114,7 +114,7 @@ public class TankGameManager : MonoBehaviour
 
             // update our score
             UpdateScores();
-            TankGameEvents.OnRoundEnededEvent?.Invoke(allTanksSpawnedIn[0].playerNumber);
+            TankGameEvents.OnRoundEndedEvent?.Invoke(allTanksSpawnedIn[0].playerNumber);
 
             // reset our round
             Invoke("ResetRound", 3f); // after 3 seconds reset our round

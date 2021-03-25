@@ -12,6 +12,7 @@ public class Tank : MonoBehaviour
 {
     public bool enableTankMovement = false;
     public PlayerNumber playerNumber; // the number of our players tank
+    public float MouseSensitivity = 100f;
     public TankControls tankControls = new TankControls(); // creating a new instance of our tank controls
     public TankHealth tankHealth = new TankHealth(); // creating a new instance of our tank health data class.
     public TankMovement tankMovement = new TankMovement(); // creating a new instance of our tank movement script
@@ -47,10 +48,12 @@ public class Tank : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    { 
-        // passes in the values from our key input, to our motor to make it move
-        tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation));
-        tankMainGun.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire)); // grab the input from the fire key
+    {
+      
+        // Handles the basic movement for the tank and its rotation values based on the key input (W,A,S,D)
+        tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
+        tankMovement.HandleAiming(tankControls.ReturnXRotationAxis(MouseSensitivity), tankControls.ReturnYRotationAxis(MouseSensitivity));
+        tankMainGun.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire), tankControls.ReturnKeyValue(TankControls.KeyType.Aim)); // grab the input from the fire key
     }
 
     /// <summary>
@@ -60,6 +63,7 @@ public class Tank : MonoBehaviour
     {
         tankMovement.EnableTankMovement(true);
         tankMainGun.EnableShooting(true);
+        tankMainGun.EnableAimDownSight(true);
     }
 
     /// <summary>
