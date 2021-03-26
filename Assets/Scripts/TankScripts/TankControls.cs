@@ -105,8 +105,8 @@ public class TankControls
     /// <returns></returns>
     public Vector2 ReturnMouseInput(float MouseSensitivity)
 	{
-        float x = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
-        float y = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
+        float x = Input.GetAxis("Mouse X") * MouseSensitivity * Time.fixedDeltaTime;
+        float y = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.fixedDeltaTime;
 
         // Debugging Mouse Input 
         // Debug.Log("[TankControls.ReturnMouseInput]: " + "Mouse Input: (" + x + ", " + y + ")");

@@ -17,6 +17,8 @@ public class TankHealth
     public Color warningHealthColor = Color.yellow; // warning health colour (50%)
     public Color zeroHealthColour = Color.red; // colour of no health
     private Transform tankParent; // reference to the tank that this script is attached to
+    public Slider healthSlider; // reference to the health Slider
+    private Image fillImage; // reference to the fill image component of our slider;
 
     public float CurrentHealth
     {
@@ -63,10 +65,6 @@ public class TankHealth
             }
         }
     }
-
-    public Slider healthSlider; // reference to the health Slider
-    private Image fillImage; // reference to the fill image component of our slider;
-
     public void SetUp(Transform TankTransform)
     {
         tankParent = TankTransform;

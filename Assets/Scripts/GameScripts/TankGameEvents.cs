@@ -4,46 +4,76 @@ using UnityEngine;
 
 public static class TankGameEvents 
 {
-    public delegate void OnObjectDestroyed(Transform TankDestroyed);
-    public delegate void ObjectTakeDamage(Transform ObjectDamaged, float amountOfDamage);
 
-    public delegate void SpawnTanksIn(int NumberToSpawn);
-    public delegate void OnTanksSpawned(List<GameObject> allTanksSpawnedIn);
+    // Tank Delegates 
+    public delegate void OnObjectDestroyed(Transform TankDestroyed); // Handles the Tank being Destroyed 
+    public delegate void ObjectTakeDamage(Transform ObjectDamaged, float amountOfDamage); // Handles the Tank Taking Damage 
 
-    public delegate void ResetGame();
-    public delegate void ResetRound();
+    // Tank Spawn Event Delegates 
+    public delegate void SpawnTanksIn(int NumberToSpawn); // Handles the Tank Spawn event 
+    public delegate void OnTanksSpawned(List<GameObject> allTanksSpawnedIn); // Handles the tanks that have been spawning in 
 
-    public delegate void PreGame();
-    public delegate void GameStarted();
-    public delegate void PostRound(PlayerNumber playerNumber);
+  
+    public delegate void OnCollectableItemPickedUp(Transform CollectableItem);
 
-    public delegate void UpdateScore(PlayerNumber playerNumber, int Amount);
+    // Collectable Item Delegates 
+    public delegate void SpawnCollectableItems(int TotalCollectableItems); // Amount of Collectable Items to spawn 
+    public delegate void OnCollectableItemSpawned(List<GameObject> allCollectableItemsSpawned); // Handle What happens when collectable items have spawned 
 
-    /// <summary>
-    /// Called when a tank has been destroyed
-    /// </summary>
-    public static OnObjectDestroyed OnObjectDestroyedEvent;
+
+    // Game & Round Delegates 
+    public delegate void ResetGame(); // Reset the game 
+    public delegate void ResetRound(); // Reset the round 
+
+    public delegate void PreGame(); // Pre game 
+    public delegate void GameStarted(); // Handles when the game launches 
+    public delegate void PostRound(PlayerNumber playerNumber); // Handle after a round has completed 
+
+    public delegate void UpdateScore(PlayerNumber playerNumber, int Amount); // Update a players score 
+
+
+	#region Tank Damage Events 
+	/// <summary>
+	/// Called when a tank has been destroyed
+	/// </summary>
+	public static OnObjectDestroyed OnObjectDestroyedEvent;
 
     /// <summary>
     /// Called whenever damage is applied to a tank
     /// </summary>
     public static ObjectTakeDamage OnObjectTakeDamageEvent;
 
-    /// <summary>
-    /// Called when the tanks should be spawned in
-    /// </summary>
-    public static SpawnTanksIn SpawnTanksEvent;
+	#endregion
+
+	#region Tank Spawn Events 
+	/// <summary>
+	/// Called when the tanks should be spawned in
+	/// </summary>
+	public static SpawnTanksIn SpawnTanksEvent;
 
     /// <summary>
     /// Called after the tanks have been spawned in
     /// </summary>
     public static OnTanksSpawned OnTanksSpawnedEvent;
+	#endregion
 
+	#region Collectable Item Spawn Events
     /// <summary>
-    /// Called when the game should be reset
+    ///     Called when random collectable Items should be spawned in
     /// </summary>
-    public static ResetGame OnResetGameEvent;
+    public static SpawnCollectableItems SpawnItemsEvent;
+    
+    /// <summary>
+    ///     Called after the collectable items have been spawned into the game
+    /// </summary>
+    public static OnCollectableItemSpawned OnItemsSpawnedEvent;
+	#endregion
 
+	#region Game Mode Events  
+	/// <summary>
+	/// Called when the game should be reset
+	/// </summary>
+	public static ResetGame OnResetGameEvent;
 
     /// <summary>
     /// Called before our game starts might be good for set up stuff
@@ -69,4 +99,5 @@ public static class TankGameEvents
     /// Called when the round is reset
     /// </summary>
     public static ResetRound OnRoundResetEvent;
+	#endregion
 }

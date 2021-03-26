@@ -18,19 +18,23 @@ public class TankMainGun
     public float maximumBulletVelocity = 50f; // the maximum amount of force for our weapon
     public float maximumReloadTime = 0.25f; // the maximum amount of time we will allow to charge up and fire
 
-    public Slider MainWeaponArrowIndicator; // a reference to the main gun slider
+    // public Slider MainWeaponArrowIndicator; // a reference to the main gun slider
 
-    private float m_currentFireVelocity; // the force we should use to fire our shell
-    private float m_reloadSpeed; // how fast we should charge up our weapon
-    private bool weaponHasFired; // have we just fired our weapon?
-    private bool isAimingDownSight; // are we aiming down sight 
+   
+   [SerializeField] private float m_currentFireVelocity; // the force we should use to fire our shell
+   [SerializeField] private float m_reloadSpeed; // how fast we should charge up our weapon
+   [SerializeField] private bool weaponHasFired; // have we just fired our weapon?
+   [SerializeField] private bool isAimingDownSight; // are we aiming down sight 
 
+    [Header("Audio")]
     public AudioSource WeaponSystemAudioSource; // reference to the audio source for the main gun
     public AudioClip Charge_SoundFX; // a charging up sound
     public AudioClip WeaponFire_SoundFX; // a firing weapon SFX.
 
     private bool enableWeaponWiring; // should we be allowed to fire?
     private bool enableADSAiming; // should we be allowed to ads? 
+
+
     /// <summary>
     /// Sets up all the necessary variables for our main gun script
     /// </summary>
@@ -38,8 +42,15 @@ public class TankMainGun
     {
         m_currentFireVelocity = minimumBulletVelocity; // set our current launch force to the min
         m_reloadSpeed = (maximumBulletVelocity - minimumBulletVelocity) / maximumReloadTime; // get the range between the max and min, and divide it by how quickly we charge
-        MainWeaponArrowIndicator.minValue = minimumBulletVelocity; // set the min and max programatically
-        MainWeaponArrowIndicator.maxValue = maximumBulletVelocity;
+        
+        
+        // TODO: At the moment I am switch around the UI for the Tank Object 
+        // so i have commented out the weapon arrow indicator slider 
+       // I will be replacing this with some sort of aim reticle of some sort :) 
+       //  MainWeaponArrowIndicator.minValue = minimumBulletVelocity; // set the min and max programatically
+       // MainWeaponArrowIndicator.maxValue = maximumBulletVelocity;
+        
+        
         WeaponSystemAudioSource.clip = Charge_SoundFX; // set the clip to the charging effect
         WeaponSystemAudioSource.loop = false; // don't set it to loop
         EnableShooting(false); // disable shooting
@@ -123,7 +134,7 @@ public class TankMainGun
         }
   
         // Set our main weapon arrow ui to the current velocity value 
-        MainWeaponArrowIndicator.value = m_currentFireVelocity; 
+       // MainWeaponArrowIndicator.value = m_currentFireVelocity; 
 
        
         // If aim down sight is not enabled 

@@ -13,12 +13,12 @@ public class Tank : MonoBehaviour
     public bool enableTankMovement = false;
     public bool enableTankAimDownSight = false;
     public PlayerNumber playerNumber; // the number of our players tank
-    public float MouseSensitivity = 100f;
+    public float MouseSensitivity = 1f;
     public TankControls tankControls = new TankControls(); // creating a new instance of our tank controls
     public TankHealth tankHealth = new TankHealth(); // creating a new instance of our tank health data class.
     public TankMovement tankMovement = new TankMovement(); // creating a new instance of our tank movement script
     public TankMainGun tankMainGun = new TankMainGun(); // creating a new instance of our tank main gun script
-    public GameObject explosionPrefab; // the prefab we will use when we have 0 left to make it go boom!
+    public GameObject deathExplosionPrefab; // the prefab we will use when we have 0 left to make it go boom!
    
     /// <summary>
     ///     OnEnable Event Methods for the Tank Instance
@@ -48,26 +48,24 @@ public class Tank : MonoBehaviour
         tankMainGun.SetUp(); // calls the set up function of our tank main gun script
 
         // If the tank is allowed to move 
-        if(enableTankMovement)
+        if(enableTankMovement && enableTankAimDownSight)
         {
             // Enable tank input 
             EnableInput();
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Fixed Update is called once per frame at a fixed rate (Mouse Sensitivity is smoother at a fixed update)
+    private void FixedUpdate()
     {
       
         // Handles Basic movement position & rotation from player input (W,A,S,D)
         tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
 
-        // Handles Tank Look Aiming 
-
-       
+        // Handles Aiming the Tank's Turret - Mouse X & Y Axis  
         tankMovement.HandleAiming(tankControls.ReturnMouseInput(MouseSensitivity));
 
-        // Handles Firing and Aim Down Sight of Main Weapon 
+        // Handles the Tanks Main Weapon Fire & Aim Down Sight (Mouse0, Mouse1)
         tankMainGun.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire), tankControls.ReturnKeyValue(TankControls.KeyType.Aim)); // grab the input from the fire key
     }
 
@@ -118,7 +116,7 @@ public class Tank : MonoBehaviour
         }
 
         // Clone the explosion gameobject prefab 
-        GameObject clone = Instantiate(explosionPrefab, transform.position,explosionPrefab.transform.rotation); // spawn in our explosion effect
+        GameObject clone = Instantiate(deathExplosionPrefab, transform.position, deathExplosionPrefab.transform.rotation); // spawn in our explosion effect
         Destroy(clone, 2); // just cleaning up our particle effect
         gameObject.SetActive(false); // turn off our tank as we are dead
     }
