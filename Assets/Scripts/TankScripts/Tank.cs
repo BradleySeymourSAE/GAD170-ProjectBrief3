@@ -11,6 +11,7 @@ public enum PlayerNumber { One = 1, Two = 2, Three = 3, Four = 4 } // the number
 public class Tank : MonoBehaviour
 {
     public bool enableTankMovement = false;
+    public bool enableTankAimDownSight = false;
     public PlayerNumber playerNumber; // the number of our players tank
     public float MouseSensitivity = 100f;
     public TankControls tankControls = new TankControls(); // creating a new instance of our tank controls
@@ -18,7 +19,10 @@ public class Tank : MonoBehaviour
     public TankMovement tankMovement = new TankMovement(); // creating a new instance of our tank movement script
     public TankMainGun tankMainGun = new TankMainGun(); // creating a new instance of our tank main gun script
     public GameObject explosionPrefab; // the prefab we will use when we have 0 left to make it go boom!
-
+   
+    /// <summary>
+    ///     OnEnable Event Methods for the Tank Instance
+    /// </summary>
     private void OnEnable()
     {
         TankGameEvents.OnObjectDestroyedEvent += Dead; // add dead function to the event for when a tank is destroyed
@@ -26,6 +30,9 @@ public class Tank : MonoBehaviour
         TankGameEvents.OnGameStartedEvent += EnableInput; // assign our tank movement function to the game started event
     }
 
+    /// <summary>
+    ///  OnDisable Event Methods for the Tank Instance 
+    /// </summary>
     private void OnDisable()
     {
         TankGameEvents.OnObjectDestroyedEvent -= Dead; // add dead function to the event for when a tank is destroyed
@@ -40,22 +47,27 @@ public class Tank : MonoBehaviour
         tankMovement.SetUp(transform); // calls the set up function of our tank health script
         tankMainGun.SetUp(); // calls the set up function of our tank main gun script
 
+        // If the tank is allowed to move 
         if(enableTankMovement)
         {
+            // Enable tank input 
             EnableInput();
         }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
       
         // Handles Basic movement position & rotation from player input (W,A,S,D)
         tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
-       
-       tankMovement.HandleCameraLook();
 
-        // Handles Firing and Aiming of Main Weapon 
+        // Handles Tank Look Aiming 
+
+       
+        tankMovement.HandleAiming(tankControls.ReturnMouseInput(MouseSensitivity));
+
+        // Handles Firing and Aim Down Sight of Main Weapon 
         tankMainGun.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire), tankControls.ReturnKeyValue(TankControls.KeyType.Aim)); // grab the input from the fire key
     }
 
@@ -65,6 +77,7 @@ public class Tank : MonoBehaviour
     private void EnableInput()
     {
         tankMovement.EnableTankMovement(true);
+        tankMovement.EnableTankAiming(true);
         tankMainGun.EnableShooting(true);
         tankMainGun.EnableAimDownSight(true);
     }
@@ -77,16 +90,16 @@ public class Tank : MonoBehaviour
     /// <param name="AmountOfDamage"></param>
     private void TankTakenDamage(Transform TankTransform, float AmountOfDamage)
     {
-        Debug.Log("Damage Taken");
+        Debug.Log("[Tank.TankTakenDamage]: " + " Tank has taken damage!");
         // if the Tank transform coming in, isn't this particular tank, ignore it.
-        if(TankTransform != transform)
+        if (TankTransform != transform)
         {
-            Debug.Log("Not the right transform");
+            Debug.LogWarning("[Tank.TankTakenDamage]: " + " Thats not the correct tank transform");
             return;
         }
         else
         {
-            Debug.Log("Damage applied?" + AmountOfDamage);
+            Debug.Log("[Tank.TankTakenDamage]: " + AmountOfDamage);
             tankHealth.ApplyHealthChange(AmountOfDamage);
         }
     }
@@ -97,11 +110,14 @@ public class Tank : MonoBehaviour
     /// <param name="ObjectDestroyed"></param>
     private void Dead(Transform ObjectDestroyed)
     {
-        if(ObjectDestroyed != transform)
+        // If the object that has been destroyed is not equal to the current transform 
+        if (ObjectDestroyed != transform)
         {
+            // Then we want to return.
             return;
         }
 
+        // Clone the explosion gameobject prefab 
         GameObject clone = Instantiate(explosionPrefab, transform.position,explosionPrefab.transform.rotation); // spawn in our explosion effect
         Destroy(clone, 2); // just cleaning up our particle effect
         gameObject.SetActive(false); // turn off our tank as we are dead

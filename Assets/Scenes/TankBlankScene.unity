@@ -622,13 +622,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1251673544}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -0.75}
+  m_LocalRotation: {x: 0.008726558, y: 0, z: 0, w: 0.999962}
+  m_LocalPosition: {x: 0, y: 1.5, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7288597493176058799}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 1, y: 0, z: 0}
 --- !u!1001 &1302245436
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6975,7 +6975,7 @@ RectTransform:
   m_GameObject: {fileID: 2504495111747510128}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_Children:
   - {fileID: 2504495110151946113}
   m_Father: {fileID: 184234770766125481}
@@ -6983,8 +6983,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1200}
-  m_SizeDelta: {x: 0, y: 1200}
+  m_AnchoredPosition: {x: 0, y: 600}
+  m_SizeDelta: {x: 0, y: -200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2504495112129026009
 CanvasRenderer:
@@ -7007,7 +7007,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7075,7 +7075,6 @@ GameObject:
   - component: {fileID: 2598633212495814463}
   - component: {fileID: 2504495111016669187}
   - component: {fileID: 2786163785280839929}
-  - component: {fileID: 2598633212495814457}
   m_Layer: 8
   m_Name: Player_01 (1)
   m_TagString: Untagged
@@ -7083,19 +7082,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2598633212495814457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2598633212495814456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17f78e9f5bca2bc4a8de2be4f66965b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mouseSensitivity: 0.7
 --- !u!54 &2598633212495814462
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7138,6 +7124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enableTankMovement: 1
+  enableTankAimDownSight: 1
   playerNumber: 1
   MouseSensitivity: 100
   tankControls:
@@ -7158,21 +7145,21 @@ MonoBehaviour:
     healthSlider: {fileID: 184234771099898529}
   tankMovement:
     speed: 12
-    turnSpeed: 180
-    cameraSlot: {fileID: 1251673547}
-    mainTurret: {fileID: 7288597493176058799}
-    cameraSensitivity: 5
+    turnSpeed: 70.1
+    cameraTurnSmoothingTime: 0.1
+    cameraTurnSmoothVelocity: 0
     tankSoundEffects:
       tankIdleSound: {fileID: 8300000, guid: ebb9c6c3d94bfd84087fb8c0fd7f7a00, type: 3}
       tankMovingSound: {fileID: 8300000, guid: 3de0a9a6424a75f4fb350d35f90385d4, type: 3}
       pitchRangeMax: 0.2
+    m_turret: {fileID: 7288597493176058799}
   tankMainGun:
     mainGunTransform: {fileID: 1074705712961947851}
     tankShellPrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
       type: 3}
-    MinimumFireForce: 15
-    MaximumFireForce: 50
-    MaximumRechargeTime: 0.75
+    minimumBulletVelocity: 15
+    maximumBulletVelocity: 50
+    maximumReloadTime: 0.25
     MainWeaponArrowIndicator: {fileID: 13212086}
     WeaponSystemAudioSource: {fileID: 1427907934}
     Charge_SoundFX: {fileID: 8300000, guid: b07c1f85edea5fb429801d35ecdf71c8, type: 3}
@@ -12236,15 +12223,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7637072163354587473}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.000010554959, y: 1.0796412, z: -0.025321364}
+  m_LocalRotation: {x: 0.052335896, y: 0, z: 0, w: 0.9986295}
+  m_LocalPosition: {x: 0.000010554959, y: 0.85, z: -0.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1251673547}
   - {fileID: 2064174398}
   m_Father: {fileID: 6489767271676681874}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 6, y: 0, z: 0}
 --- !u!1 &7637072163354587473
 GameObject:
   m_ObjectHideFlags: 0

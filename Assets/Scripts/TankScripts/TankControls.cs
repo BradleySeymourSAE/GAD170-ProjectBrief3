@@ -10,7 +10,6 @@ using UnityEngine;
 public class TankControls
 {
     public enum KeyType { Movement, Rotation, Fire, Aim };
-    public enum CameraMode { FirstPerson, ThirdPerson };
 
     public KeyCode forward = KeyCode.W; // the forward button to use
     public KeyCode backwards = KeyCode.S; // the backwards button
@@ -21,38 +20,7 @@ public class TankControls
     public KeyCode changeCamera = KeyCode.C;
     private bool fireButtonWasPressed = false; // has the fire button been pressed?
     private bool adsButtonWasPressed = false; // the aim down sight button was pressed 
-    private bool changeCameraModeWasPressed = false; // change camera mode button was pressed
-
-
-    public float ReturnCameraView(CameraMode Mode)
-	{
-        float cameraViewValue = 0;
-
-		switch (Mode)
-		{
-			case CameraMode.FirstPerson:
-                { 
-                    if (Input.GetKey(changeCamera))
-					{
-                       changeCameraModeWasPressed = true;
-                        cameraViewValue = 1;
-					}
-                }
-				break;
-			case CameraMode.ThirdPerson:
-                { 
-                    if (Input.GetKey(changeCamera) && changeCameraModeWasPressed == true)
-					{
-                        changeCameraModeWasPressed = false;
-                        cameraViewValue = -1;
-					}
-                }
-				break;
-		}
-
-        return cameraViewValue;
-	}
-
+ 
     
     /// <summary>
     /// If the value returned is postive then the postive axis has been pressed for that key.
@@ -82,7 +50,7 @@ public class TankControls
                 }
             case KeyType.Rotation:
                 {
-                    if (Input.GetKey(right)) // if we are pressing the right button
+                  if (Input.GetKey(right)) // if we are pressing the right button
                     {
                         currentValue = 1; // we are rotating positively.
                     }
@@ -129,16 +97,21 @@ public class TankControls
     }
 
 
-    public float ReturnMouseInputX(float Sensitivity)
+
+    /// <summary>
+    ///     Returns a Vector 2 (x, y) for mouse input 
+    /// </summary>
+    /// <param name="MouseSensitivity">The desired sensitivity for mouse movement</param>
+    /// <returns></returns>
+    public Vector2 ReturnMouseInput(float MouseSensitivity)
 	{
+        float x = Input.GetAxis("Mouse X") * MouseSensitivity * Time.deltaTime;
+        float y = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.deltaTime;
 
-        return Input.GetAxis("Mouse X") * Sensitivity * Time.deltaTime;
-	}
+        // Debugging Mouse Input 
+        // Debug.Log("[TankControls.ReturnMouseInput]: " + "Mouse Input: (" + x + ", " + y + ")");
+        return new Vector2(x, y).normalized;
 
-    public float ReturnMouseInputY(float Sensitivity)
-	{
-        return Input.GetAxis("Mouse Y") * Sensitivity * Time.deltaTime;
-	}
-
+    }
 }
   
