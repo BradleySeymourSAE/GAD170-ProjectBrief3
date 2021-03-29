@@ -13,6 +13,7 @@ public class TankMovement
     public float speed = 12f; // the speed our tank moves
     [Range(50f, 180f)]
     public float turnSpeed = 75f; // the speed that we can turn in degrees in seconds.
+    public float mouseSensitivity = 100f;
    
     [Header("Camera Settings")]
     public float cameraTurnSmoothingTime = 0.1f;
@@ -25,10 +26,14 @@ public class TankMovement
     private Rigidbody m_rigidbody;// a reference to the rigidbody on our tank
     private bool enableMovement = true; // if this is true we are allowed to accept input from the player
     private bool enabledAiming = true; // Allowed to accept input for weapon aim down sight 
-    private Transform m_tankReference; // a reference to the tank gameobject
-    public Transform m_turret; // reference to the tanks turret
- 
-    private Transform m_cameraReference; // a reference to the tank's camera 
+    private Transform m_tankReference; // a reference to the tank transform 
+    public Transform TurretBody; // reference to the tanks turret
+    private Transform m_cameraReference; // reference to the tanks camera  
+
+    private AudioSource audioSource;
+
+    float desiredXRotation;
+
 
     #region Public Methods 
     /// <summary>
@@ -63,6 +68,14 @@ public class TankMovement
             Debug.LogError("[TankMovement.SetUp]: " + "Could not find a camera component attached to the game object!");
 		}
 
+        if (m_tankReference.GetComponent<AudioSource>())
+		{
+            audioSource = m_tankReference.GetComponent<AudioSource>();
+		}
+        else
+		{
+            Debug.LogError("[TankMovement.Setup]: " + "Could not find an audio source!");
+		}
 
 
 
@@ -111,30 +124,28 @@ public class TankMovement
     ///     Handles mouse aim for the tank 
     /// </summary>
     /// <param name="mouseDirection"></param>
-    public void HandleAiming(Vector2 mouseDirection)
+    public void HandleAiming(Vector3 mouseDirection)
 	{
-       float xAimRotation = mouseDirection.x;
-       float yAimRotation = mouseDirection.y;
-
-        // Debugging Purposes
-       // Debug.Log("[TankMovement.HandleAiming]: " + "Mouse X: " + xAimRotation + " Mouse Y: " + yAimRotation);
-
-
-        // If Aiming is not enabled return.
+        // If we can't aim, dont.
         if (enabledAiming == false)
 		{
             return;
 		}
 
-        AimTurret(xAimRotation, yAimRotation);
-	}
+        AimTurret(mouseDirection);
+
+        if (Mathf.Abs(mouseDirection.x) > 0.1f && Mathf.Abs(mouseDirection.y) > 0.1f)
+        { 
+            tankSoundEffects.PlaySound("WeaponAiming");
+        }
+    }
     #endregion
 
-	#region Private Methods 
-	/// <summary>
-	///     Moves the tank forwards and backwards
-	/// </summary>
-	private void Move(float ForwardMovement)
+    #region Private Methods 
+    /// <summary>
+    ///     Moves the tank forwards and backwards
+    /// </summary>
+    private void Move(float ForwardMovement)
     {
         // create a vector based on the forward vector of our tank, move it forwad or backwards on nothing based on the key input, multiplied by the speed, multipled by the time between frames rendered to make it smooth
         Vector3 movementVector = m_tankReference.forward * ForwardMovement * speed * Time.deltaTime;
@@ -157,32 +168,17 @@ public class TankMovement
     /// <summary>
     ///     Aims the turret on the x & y axis 
     /// </summary>
-    /// <param name="Horizontal"></param>
-    /// <param name="Vertical"></param>
-    private void AimTurret(float Horizontal, float Vertical)
-	{
+    /// <param name="AimVertical"></param>
+    /// <param name="AimHorizontal"></param>
+    private void AimTurret(Vector3 AimPosition)
+    {           
+      
+       desiredXRotation -= AimPosition.y;
+       desiredXRotation = Mathf.Clamp(desiredXRotation, -10f, 10f);
 
-        if (m_turret == null)
-		{
-            Debug.LogError("[TankMovement.AimTurret]: " + "Main turret transform is null!");
-		    return;
-        }
+       m_cameraReference.localRotation = Quaternion.Euler(desiredXRotation, 0, 0);
 
-        Vector3 direction = new Vector3(Horizontal, 0f, Vertical);
-
-
-        // If the movement direction magnitude is greater than or equal to 1f 
-        // We want to aim in this direction 
-        if (direction.magnitude >= 0.1f)
-		{
-
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + m_cameraReference.eulerAngles.y;
-            float angle = Mathf.SmoothDampAngle(m_turret.transform.eulerAngles.y, targetAngle, ref cameraTurnSmoothVelocity, cameraTurnSmoothingTime);
-
-
-            m_turret.rotation = Quaternion.Euler(0f, angle, 0f);
-
-		}
+       TurretBody.Rotate(Vector3.up, AimPosition.x);
 	}
     #endregion
 }

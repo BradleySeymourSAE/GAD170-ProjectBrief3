@@ -4,6 +4,8 @@ using UnityEngine;
 
 
 public enum PlayerNumber { One = 1, Two = 2, Three = 3, Four = 4 } // the number for our players
+
+
 /// <summary>
 /// The main class of our tank
 /// Everything should be run from here.
@@ -11,14 +13,14 @@ public enum PlayerNumber { One = 1, Two = 2, Three = 3, Four = 4 } // the number
 public class Tank : MonoBehaviour
 {
     public bool enableTankMovement = false;
-    public bool enableTankAimDownSight = false;
     public PlayerNumber playerNumber; // the number of our players tank
-    public float MouseSensitivity = 1f;
     public TankControls tankControls = new TankControls(); // creating a new instance of our tank controls
     public TankHealth tankHealth = new TankHealth(); // creating a new instance of our tank health data class.
     public TankMovement tankMovement = new TankMovement(); // creating a new instance of our tank movement script
-    public TankMainGun tankMainGun = new TankMainGun(); // creating a new instance of our tank main gun script
-    public GameObject deathExplosionPrefab; // the prefab we will use when we have 0 left to make it go boom!
+    public TankPrimaryWeapon tankPrimary = new TankPrimaryWeapon(); // primary weapon instance 
+    public GameObject deathExplosionPrefab; // the prefab we will use when we have 0 left to make it go boom
+
+
    
     /// <summary>
     ///     OnEnable Event Methods for the Tank Instance
@@ -45,10 +47,11 @@ public class Tank : MonoBehaviour
     {   
         tankHealth.SetUp(transform); // call the set up function of our tank health script
         tankMovement.SetUp(transform); // calls the set up function of our tank health script
-        tankMainGun.SetUp(); // calls the set up function of our tank main gun script
+        tankPrimary.SetUp(); // calls primary weapon setup
+
 
         // If the tank is allowed to move 
-        if(enableTankMovement && enableTankAimDownSight)
+        if(enableTankMovement)
         {
             // Enable tank input 
             EnableInput();
@@ -56,17 +59,17 @@ public class Tank : MonoBehaviour
     }
 
     // Fixed Update is called once per frame at a fixed rate (Mouse Sensitivity is smoother at a fixed update)
-    private void FixedUpdate()
+    private void Update()
     {
-      
         // Handles Basic movement position & rotation from player input (W,A,S,D)
         tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
+        
 
-        // Handles Aiming the Tank's Turret - Mouse X & Y Axis  
-        tankMovement.HandleAiming(tankControls.ReturnMouseInput(MouseSensitivity));
+        tankMovement.HandleAiming(tankControls.ReturnMouseInput());
 
-        // Handles the Tanks Main Weapon Fire & Aim Down Sight (Mouse0, Mouse1)
-        tankMainGun.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire), tankControls.ReturnKeyValue(TankControls.KeyType.Aim)); // grab the input from the fire key
+
+        // Handles shooting of the primary weapon (Mouse0, Mouse1)
+        tankPrimary.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire), tankControls.ReturnKeyValue(TankControls.KeyType.Aim));
     }
 
     /// <summary>
@@ -76,8 +79,8 @@ public class Tank : MonoBehaviour
     {
         tankMovement.EnableTankMovement(true);
         tankMovement.EnableTankAiming(true);
-        tankMainGun.EnableShooting(true);
-        tankMainGun.EnableAimDownSight(true);
+        tankPrimary.EnableShooting(true);
+        tankPrimary.EnableAimDownSight(true);
     }
 
     /// <summary>

@@ -11,17 +11,21 @@ public class TankControls
 {
     public enum KeyType { Movement, Rotation, Fire, Aim };
 
+    public enum TankWeaponSelectionType { Primary, Secondary };
+
     public KeyCode forward = KeyCode.W; // the forward button to use
     public KeyCode backwards = KeyCode.S; // the backwards button
     public KeyCode left = KeyCode.A; // the left button
     public KeyCode right = KeyCode.D; // the right button
     public KeyCode fireButton = KeyCode.Mouse0; // the button to fire
     public KeyCode adsButton = KeyCode.Mouse1; // the aim down sight button (ads)
-    public KeyCode changeCamera = KeyCode.C;
+    public KeyCode weaponSlot1 = KeyCode.Alpha1; // Weapon Slot 1 
+    public KeyCode weaponSlot2 = KeyCode.Alpha2; // Weapon Slot 2
+    public float sensitivity = 100f;
+    
     private bool fireButtonWasPressed = false; // has the fire button been pressed?
     private bool adsButtonWasPressed = false; // the aim down sight button was pressed 
- 
-    
+
     /// <summary>
     /// If the value returned is postive then the postive axis has been pressed for that key.
     /// if the value returned is negative then the negative axis as been pressed
@@ -97,21 +101,17 @@ public class TankControls
     }
 
 
-
     /// <summary>
-    ///     Returns a Vector 2 (x, y) for mouse input 
+    ///     Returns a Vector 3 (x, y, 0) for mouse input 
     /// </summary>
     /// <param name="MouseSensitivity">The desired sensitivity for mouse movement</param>
     /// <returns></returns>
-    public Vector2 ReturnMouseInput(float MouseSensitivity)
+    public Vector3 ReturnMouseInput()
 	{
-        float x = Input.GetAxis("Mouse X") * MouseSensitivity * Time.fixedDeltaTime;
-        float y = Input.GetAxis("Mouse Y") * MouseSensitivity * Time.fixedDeltaTime;
+        float MouseXPosition = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+        float MouseYPosition = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
 
-        // Debugging Mouse Input 
-        // Debug.Log("[TankControls.ReturnMouseInput]: " + "Mouse Input: (" + x + ", " + y + ")");
-        return new Vector2(x, y).normalized;
-
+       return new Vector3(MouseXPosition, MouseYPosition, 0).normalized;
     }
 }
   

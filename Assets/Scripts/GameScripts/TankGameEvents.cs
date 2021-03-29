@@ -14,11 +14,11 @@ public static class TankGameEvents
     public delegate void OnTanksSpawned(List<GameObject> allTanksSpawnedIn); // Handles the tanks that have been spawning in 
 
   
-    public delegate void OnCollectableItemPickedUp(Transform CollectableItem);
+    public delegate void CollectSpecialItem(Transform Item); // Handles Collect Item 
+    public delegate void OnSpecialItemDestroyed(Transform ItemDestroyed); // Handles destroyed of special item 
 
-    // Collectable Item Delegates 
-    public delegate void SpawnCollectableItems(int TotalCollectableItems); // Amount of Collectable Items to spawn 
-    public delegate void OnCollectableItemSpawned(List<GameObject> allCollectableItemsSpawned); // Handle What happens when collectable items have spawned 
+    public delegate void SpawnSpecialItems(int TotalAmountOfSpecialItems); // Amount of special items to spawn 
+    public delegate void OnSpecialItemSpawned(List<GameObject> allSpecialItems); // Handles the special items that have spawned 
 
 
     // Game & Round Delegates 
@@ -32,7 +32,7 @@ public static class TankGameEvents
     public delegate void UpdateScore(PlayerNumber playerNumber, int Amount); // Update a players score 
 
 
-	#region Tank Damage Events 
+	#region Tank Events
 	/// <summary>
 	/// Called when a tank has been destroyed
 	/// </summary>
@@ -43,9 +43,6 @@ public static class TankGameEvents
     /// </summary>
     public static ObjectTakeDamage OnObjectTakeDamageEvent;
 
-	#endregion
-
-	#region Tank Spawn Events 
 	/// <summary>
 	/// Called when the tanks should be spawned in
 	/// </summary>
@@ -57,17 +54,28 @@ public static class TankGameEvents
     public static OnTanksSpawned OnTanksSpawnedEvent;
 	#endregion
 
-	#region Collectable Item Spawn Events
+
+	#region Collectable Item Events 
     /// <summary>
-    ///     Called when random collectable Items should be spawned in
+    ///     Handles when a special item is collected or picked up 
     /// </summary>
-    public static SpawnCollectableItems SpawnItemsEvent;
-    
+    public static CollectSpecialItem CollectItemEvent;
     /// <summary>
-    ///     Called after the collectable items have been spawned into the game
+    ///     Handles when a special item has been destroyed 
     /// </summary>
-    public static OnCollectableItemSpawned OnItemsSpawnedEvent;
-	#endregion
+    public static OnSpecialItemDestroyed OnSpecialItemDestroyedEvent;
+
+    /// <summary>
+    ///     Handles the spawning of special items 
+    /// </summary>
+    public static SpawnSpecialItems SpawnSpecialItemsEvent;
+    /// <summary>
+    ///  Handles what happens after the special items have been spawned in 
+    /// </summary>
+    public static OnSpecialItemSpawned OnSpecialItemSpawnedEvent;
+
+	#endregion 
+
 
 	#region Game Mode Events  
 	/// <summary>
