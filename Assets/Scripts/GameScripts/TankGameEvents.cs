@@ -13,14 +13,6 @@ public static class TankGameEvents
     public delegate void SpawnTanksIn(int NumberToSpawn); // Handles the Tank Spawn event 
     public delegate void OnTanksSpawned(List<GameObject> allTanksSpawnedIn); // Handles the tanks that have been spawning in 
 
-  
-    public delegate void CollectSpecialItem(Transform Item); // Handles Collect Item 
-    public delegate void OnSpecialItemDestroyed(Transform ItemDestroyed); // Handles destroyed of special item 
-
-    public delegate void SpawnSpecialItems(int TotalAmountOfSpecialItems); // Amount of special items to spawn 
-    public delegate void OnSpecialItemSpawned(List<GameObject> allSpecialItems); // Handles the special items that have spawned 
-
-
     // Game & Round Delegates 
     public delegate void ResetGame(); // Reset the game 
     public delegate void ResetRound(); // Reset the round 
@@ -53,29 +45,6 @@ public static class TankGameEvents
     /// </summary>
     public static OnTanksSpawned OnTanksSpawnedEvent;
 	#endregion
-
-
-	#region Collectable Item Events 
-    /// <summary>
-    ///     Handles when a special item is collected or picked up 
-    /// </summary>
-    public static CollectSpecialItem CollectItemEvent;
-    /// <summary>
-    ///     Handles when a special item has been destroyed 
-    /// </summary>
-    public static OnSpecialItemDestroyed OnSpecialItemDestroyedEvent;
-
-    /// <summary>
-    ///     Handles the spawning of special items 
-    /// </summary>
-    public static SpawnSpecialItems SpawnSpecialItemsEvent;
-    /// <summary>
-    ///  Handles what happens after the special items have been spawned in 
-    /// </summary>
-    public static OnSpecialItemSpawned OnSpecialItemSpawnedEvent;
-
-	#endregion 
-
 
 	#region Game Mode Events  
 	/// <summary>

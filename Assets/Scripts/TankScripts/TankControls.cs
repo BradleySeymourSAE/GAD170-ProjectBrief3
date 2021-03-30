@@ -9,22 +9,21 @@ using UnityEngine;
 [System.Serializable]
 public class TankControls
 {
-    public enum KeyType { Movement, Rotation, Fire, Aim };
-
-    public enum TankWeaponSelectionType { Primary, Secondary };
+    public enum KeyType { Movement, Rotation, Fire, Reload };
 
     public KeyCode forward = KeyCode.W; // the forward button to use
     public KeyCode backwards = KeyCode.S; // the backwards button
     public KeyCode left = KeyCode.A; // the left button
     public KeyCode right = KeyCode.D; // the right button
     public KeyCode fireButton = KeyCode.Mouse0; // the button to fire
-    public KeyCode adsButton = KeyCode.Mouse1; // the aim down sight button (ads)
+    public KeyCode reloadButton = KeyCode.R; // the aim down sight button (ads)
     public KeyCode weaponSlot1 = KeyCode.Alpha1; // Weapon Slot 1 
     public KeyCode weaponSlot2 = KeyCode.Alpha2; // Weapon Slot 2
     public float sensitivity = 100f;
     
     private bool fireButtonWasPressed = false; // has the fire button been pressed?
-    private bool adsButtonWasPressed = false; // the aim down sight button was pressed 
+ 
+
 
     /// <summary>
     /// If the value returned is postive then the postive axis has been pressed for that key.
@@ -80,20 +79,17 @@ public class TankControls
                     }
                     break;
                 }
-
-            case KeyType.Aim:
+            case KeyType.Reload:
 				{
-                    if (Input.GetKey(adsButton)) // if we are pressing the aim down sight button 
+                    if (Input.GetKeyDown(reloadButton))
 					{
-                        currentValue = 1; // the aim down sigt button was pressed 
-					    adsButtonWasPressed = true;
-                    }
-                    else if (Input.GetKeyUp(adsButton) && adsButtonWasPressed == true)
+                        currentValue = 1;
+					}
+                    else
 					{
-                        adsButtonWasPressed = false;
                         currentValue = -1;
 					}
-                   break;
+                    break;
 				}
         }
 
@@ -102,7 +98,7 @@ public class TankControls
 
 
     /// <summary>
-    ///     Returns a Vector 3 (x, y, 0) for mouse input 
+    ///     Returns a normalized Vector 3 (x, y, 0) for mouse input 
     /// </summary>
     /// <param name="MouseSensitivity">The desired sensitivity for mouse movement</param>
     /// <returns></returns>

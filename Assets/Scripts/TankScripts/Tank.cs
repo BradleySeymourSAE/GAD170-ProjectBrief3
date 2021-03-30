@@ -19,7 +19,7 @@ public class Tank : MonoBehaviour
     public TankMovement tankMovement = new TankMovement(); // creating a new instance of our tank movement script
     public TankPrimaryWeapon tankPrimary = new TankPrimaryWeapon(); // primary weapon instance 
     public GameObject deathExplosionPrefab; // the prefab we will use when we have 0 left to make it go boom
-
+  
 
    
     /// <summary>
@@ -45,9 +45,9 @@ public class Tank : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
-        tankHealth.SetUp(transform); // call the set up function of our tank health script
-        tankMovement.SetUp(transform); // calls the set up function of our tank health script
-        tankPrimary.SetUp(); // calls primary weapon setup
+        tankHealth.Setup(transform); // call the set up function of our tank health script
+        tankMovement.Setup(transform); // calls the set up function of our tank health script
+        tankPrimary.Setup(); // calls primary weapon setup
 
 
         // If the tank is allowed to move 
@@ -58,29 +58,29 @@ public class Tank : MonoBehaviour
         }
     }
 
-    // Fixed Update is called once per frame at a fixed rate (Mouse Sensitivity is smoother at a fixed update)
+    //  Update is called once per frame at a fixed rate (Mouse Sensitivity is smoother at a fixed update)
     private void Update()
     {
         // Handles Basic movement position & rotation from player input (W,A,S,D)
         tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
         
 
+        // Handles the aiming for the turret on the horizontal and vertical axis 
         tankMovement.HandleAiming(tankControls.ReturnMouseInput());
 
 
         // Handles shooting of the primary weapon (Mouse0, Mouse1)
-        tankPrimary.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire), tankControls.ReturnKeyValue(TankControls.KeyType.Aim));
+        tankPrimary.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire));
     }
 
     /// <summary>
-    /// Enables our tank to recieve input
+    /// Enables our tank to recieve input via the OnEnable Event 
     /// </summary>
     private void EnableInput()
     {
         tankMovement.EnableTankMovement(true);
         tankMovement.EnableTankAiming(true);
         tankPrimary.EnableShooting(true);
-        tankPrimary.EnableAimDownSight(true);
     }
 
     /// <summary>

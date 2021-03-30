@@ -27,12 +27,10 @@ public class TankMovement
     private bool enableMovement = true; // if this is true we are allowed to accept input from the player
     private bool enabledAiming = true; // Allowed to accept input for weapon aim down sight 
     private Transform m_tankReference; // a reference to the tank transform 
-    public Transform TurretBody; // reference to the tanks turret
+    public Transform MainTurret; // reference to the tanks turret
     private Transform m_cameraReference; // reference to the tanks camera  
 
-    private AudioSource audioSource;
-
-    float desiredXRotation;
+    float desiredXAxisRotation;
 
 
     #region Public Methods 
@@ -40,10 +38,9 @@ public class TankMovement
     /// Handles the set up of our tank movement script
     /// </summary>
     /// <param name="Tank"></param>
-    public void SetUp(Transform Tank)
+    public void Setup(Transform Tank)
     {
         m_tankReference = Tank; // Reference to the tank transform
-
 
         if (m_tankReference.GetComponent<Rigidbody>())
         {
@@ -68,19 +65,9 @@ public class TankMovement
             Debug.LogError("[TankMovement.SetUp]: " + "Could not find a camera component attached to the game object!");
 		}
 
-        if (m_tankReference.GetComponent<AudioSource>())
-		{
-            audioSource = m_tankReference.GetComponent<AudioSource>();
-		}
-        else
-		{
-            Debug.LogError("[TankMovement.Setup]: " + "Could not find an audio source!");
-		}
-
-
 
         tankParticleEffects.SetUpEffects(m_tankReference); // set up our tank particle effects
-        tankSoundEffects.SetUp(m_tankReference); // Set up the sounds effects for the tank
+        tankSoundEffects.Setup(m_tankReference); // Set up the sounds effects for the tank
         tankParticleEffects.PlayDustTrails(true);// start playing tank particle effects
         EnableTankMovement(false); // Initially set enable tank movement to false.
         EnableTankAiming(false); // Initially set enable tank aiming to false.
@@ -117,7 +104,7 @@ public class TankMovement
         }
         Move(ForwardMovement);
         Turn(RotationMovement);
-        tankSoundEffects.PlayTankEngine(ForwardMovement, RotationMovement); // update our audio based on our input 
+        tankSoundEffects.PlayEngineSound(ForwardMovement, RotationMovement); // update our audio based on our input 
     }
 	
     /// <summary>
@@ -132,12 +119,9 @@ public class TankMovement
             return;
 		}
 
-        AimTurret(mouseDirection);
 
-        if (Mathf.Abs(mouseDirection.x) > 0.1f && Mathf.Abs(mouseDirection.y) > 0.1f)
-        { 
-            tankSoundEffects.PlaySound("WeaponAiming");
-        }
+        // Aim the turret using the players mouse direction 
+        AimTurret(mouseDirection);
     }
     #endregion
 
@@ -171,14 +155,44 @@ public class TankMovement
     /// <param name="AimVertical"></param>
     /// <param name="AimHorizontal"></param>
     private void AimTurret(Vector3 AimPosition)
-    {           
-      
-       desiredXRotation -= AimPosition.y;
-       desiredXRotation = Mathf.Clamp(desiredXRotation, -10f, 10f);
+    {            
+        string weaponAimingKey = "T90_PrimaryWeaponAiming";
 
-       m_cameraReference.localRotation = Quaternion.Euler(desiredXRotation, 0, 0);
+        AudioSource s = AudioManager.Instance.GetAudioSource(weaponAimingKey);
 
-       TurretBody.Rotate(Vector3.up, AimPosition.x);
+        // If the aim position magnitude is greater than 0.1f 
+         if (AimPosition.magnitude >= 0.1f)
+		{
+
+            // If the weapon aim source isnt playing 
+            if (s.isPlaying == false)
+            { 
+                AudioManager.Instance.PlaySound(weaponAimingKey);
+            }
+            // Otherwise, if audio source is playing and s.volume is less than 1 
+            else if (s.isPlaying && s.volume < 1.0f)
+			{
+                // Debug.Log("Fading sound in!");
+                // Fade the audio sound effect in to 100% over 0.75 of a second.
+                AudioManager.Instance.FadeSoundEffect(weaponAimingKey, 100f, 0.75f);
+            }
+     
+
+             // Desired camera x axis rotation 
+             desiredXAxisRotation -= AimPosition.y;
+             // Clamp vertical look degrees angle 
+             desiredXAxisRotation = Mathf.Clamp(desiredXAxisRotation, 0, 0); 
+
+             m_cameraReference.localRotation = Quaternion.Euler(desiredXAxisRotation, 0, 0);
+
+            // Rotate the main turret gun on the y axis 
+             MainTurret.Rotate(Vector3.up, AimPosition.x);
+        }
+         else
+		{
+            AudioManager.Instance.FadeSoundEffect(weaponAimingKey, 0f, 1f);
+            // AudioManager.Instance.StopPlaying(weaponAimingKey);
+		}            
 	}
     #endregion
 }

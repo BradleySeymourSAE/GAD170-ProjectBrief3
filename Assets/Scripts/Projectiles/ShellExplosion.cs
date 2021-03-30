@@ -9,7 +9,7 @@ public class ShellExplosion : MonoBehaviour
     public float maxDamage = 100f; // the maximum amount of damage that my shell can do.
     public float explosionForce = 1000f; // the amount of force this shell has
     public float maxShellLifeTime = 2f; // how long should the shell live for before it goes boom!
-    public float explosionRadius = 5f; // how big is our explosion
+    public float explosionRadius = 10f; // how big is our explosion
 
 
     // is called when the trigger hits an object

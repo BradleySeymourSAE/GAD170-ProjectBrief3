@@ -65,7 +65,7 @@ public class TankHealth
             }
         }
     }
-    public void SetUp(Transform TankTransform)
+    public void Setup(Transform TankTransform)
     {
         tankParent = TankTransform;
         if(healthSlider != null)
