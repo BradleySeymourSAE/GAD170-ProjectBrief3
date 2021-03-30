@@ -77,7 +77,7 @@ public class TankUIManager : MonoBehaviour
         }
     }
 
-    private void UpdateScoreText(PlayerNumber playerNumber, int Amount)
+    private void UpdateScoreText(Player playerNumber, int Amount)
     {
         for(int i=0; i<allPlayerUI.Count;i++)
         {
@@ -89,7 +89,7 @@ public class TankUIManager : MonoBehaviour
     /// <summary>
     /// Called when the round is over
     /// </summary>
-    private void PostRound(PlayerNumber playerNumber)
+    private void PostRound(Player playerNumber)
     {
         startScreen.SetActive(false);
         inGameUI.SetActive(false);
@@ -101,7 +101,7 @@ public class TankUIManager : MonoBehaviour
 [System.Serializable]
 public class InGamePlayerUI
 {
-    public PlayerNumber playerReferenceNumber;
+    public Player playerReferenceNumber;
     public Text playerText;
 
     /// <summary>
@@ -116,7 +116,7 @@ public class InGamePlayerUI
     /// Enables the player Text
     /// </summary>
     /// <param name="PlayerNumberToCheck"></param>
-    public void EnableText(PlayerNumber PlayerNumberToCheck)
+    public void EnableText(Player PlayerNumberToCheck)
     {
         if(playerReferenceNumber == PlayerNumberToCheck)
         {
@@ -124,7 +124,7 @@ public class InGamePlayerUI
         }
     }
 
-    public void SetPlayerText(PlayerNumber playerNumberCheck, int Amount)
+    public void SetPlayerText(Player playerNumberCheck, int Amount)
     {
         if(playerNumberCheck == playerReferenceNumber)
         {

@@ -51,22 +51,22 @@ public class TankGameManager : MonoBehaviour
         {
             switch (allTanksSpawnedIn[i].playerNumber)
             {
-                case PlayerNumber.One:
+                case Player.One:
                     {
                         TankGameEvents.OnScoreUpdatedEvent?.Invoke(allTanksSpawnedIn[i].playerNumber, playerOneScore);
                         break;
                     }
-                case PlayerNumber.Two:
+                case Player.Two:
                     {
                         TankGameEvents.OnScoreUpdatedEvent?.Invoke(allTanksSpawnedIn[i].playerNumber, playerTwoScore);
                         break;
                     }
-                case PlayerNumber.Three:
+                case Player.Three:
                     {
                         TankGameEvents.OnScoreUpdatedEvent?.Invoke(allTanksSpawnedIn[i].playerNumber, playerThreeScore);
                         break;
                     }
-                case PlayerNumber.Four:
+                case Player.Four:
                     {
                         TankGameEvents.OnScoreUpdatedEvent?.Invoke(allTanksSpawnedIn[i].playerNumber, playerFourscore);
                         break;
@@ -123,7 +123,7 @@ public class TankGameManager : MonoBehaviour
 
     }
 
-    // Start is called before the first frame update
+   
     void Start()
     {
         StartCoroutine(GameLogic()); // start running our game logic 

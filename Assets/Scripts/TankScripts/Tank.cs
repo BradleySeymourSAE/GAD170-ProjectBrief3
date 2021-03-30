@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum PlayerNumber { One = 1, Two = 2, Three = 3, Four = 4 } // the number for our players
+public enum Player { One = 1, Two = 2, Three = 3, Four = 4 };
 
 
 /// <summary>
@@ -13,7 +13,7 @@ public enum PlayerNumber { One = 1, Two = 2, Three = 3, Four = 4 } // the number
 public class Tank : MonoBehaviour
 {
     public bool enableTankMovement = false;
-    public PlayerNumber playerNumber; // the number of our players tank
+    public Player playerNumber; // the number of our players tank
     public TankControls tankControls = new TankControls(); // creating a new instance of our tank controls
     public TankHealth tankHealth = new TankHealth(); // creating a new instance of our tank health data class.
     public TankMovement tankMovement = new TankMovement(); // creating a new instance of our tank movement script

@@ -19,9 +19,9 @@ public static class TankGameEvents
 
     public delegate void PreGame(); // Pre game 
     public delegate void GameStarted(); // Handles when the game launches 
-    public delegate void PostRound(PlayerNumber playerNumber); // Handle after a round has completed 
+    public delegate void PostRound(Player playerNumber); // Handle after a round has completed 
 
-    public delegate void UpdateScore(PlayerNumber playerNumber, int Amount); // Update a players score 
+    public delegate void UpdateScore(Player playerNumber, int Amount); // Update a players score 
 
 
 	#region Tank Events
