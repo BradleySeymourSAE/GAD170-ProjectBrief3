@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/FieldOfFire_StartingMenu.unity
+    guid: 7f07eccf8c8145f41bbd95d082c82197
+  - enabled: 1
+    path: Assets/Scenes/FieldOfFire_GameLevel_01.unity
+    guid: b8c19e933da51404580277377b9e7e6e
   m_configObjects: {}
