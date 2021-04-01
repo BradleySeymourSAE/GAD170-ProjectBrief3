@@ -71,6 +71,24 @@ public class AudioManager : MonoBehaviour
 	}	
 
 	/// <summary>
+	///		Finds an audio clip 
+	/// </summary>
+	/// <param name="Sound"></param>
+	/// <returns></returns>
+	public AudioClip FindAudioClip(string Sound)
+	{
+		SoundFX s = Array.Find(sounds, item => item.name == Sound);
+
+		if (s == null)
+		{
+			Debug.Log("Clip " + name + " couldn't be found!");
+			return null;
+		}
+
+		return s.clip;
+	}
+
+	/// <summary>
 	///		Handles playing an audio clip by its name  
 	/// </summary>
 	/// <param name="SoundEffectName"></param>

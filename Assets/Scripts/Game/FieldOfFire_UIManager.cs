@@ -6,12 +6,23 @@ using TMPro;
 
 public class FieldOfFire_UIManager : MonoBehaviour
 {
-
-	public GameObject StartMenu;
+	private const string styled = "---";
+	public GameObject MainMenuUI;
 	public GameObject InGameUI;
 	public GameObject PostGameUI;
 
 	public PlayerUserInterface userInterface;
+
+
+	[Header(styled + " Audio Settings " + styled)]
+	public Slider[] volumeSliders;
+
+	[Header(styled + " Video Settings " + styled)]
+	public TMP_Dropdown[] videoSettingDropdowns;
+
+	[Header(styled + " Display Settings " + styled)]
+	public Toggle toggleFullscreen;
+	public Toggle toggleEnableVSync;
 
 
 	/// <summary>

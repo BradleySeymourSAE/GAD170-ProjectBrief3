@@ -24,7 +24,7 @@ public class FieldOfFire_GameManager : MonoBehaviour
 	/// </summary>
 	private void OnEnable()
 	{
-
+		
 	}
 
 	/// <summary>
@@ -40,7 +40,7 @@ public class FieldOfFire_GameManager : MonoBehaviour
 	/// </summary>
 	/// <param name="EnemyTanksSpawned"></param>
 	/// <param name="EnemyCharactersSpawned"></param>
-	private void SpawnEnemyAI(List<GameObject> EnemyTanksSpawned, List<GameObject> EnemyCharactersSpawned)
+	private void SpawnEnemyAI(List<GameObject> EnemyAICharacters, List<GameObject> EnemyAITanks)
 	{
 
 		enemyTanksRemaining.Clear(); // clear the list of enemy ai tanks remaining 

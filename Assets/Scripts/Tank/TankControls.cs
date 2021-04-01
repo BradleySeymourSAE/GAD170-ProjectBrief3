@@ -23,8 +23,6 @@ public class TankControls
     
     private bool fireButtonWasPressed = false; // has the fire button been pressed?
  
-
-
     /// <summary>
     /// If the value returned is postive then the postive axis has been pressed for that key.
     /// if the value returned is negative then the negative axis as been pressed
@@ -95,7 +93,6 @@ public class TankControls
 
         return currentValue;
     }
-
 
     /// <summary>
     ///     Returns a normalized Vector 3 (x, y, 0) for mouse input 
