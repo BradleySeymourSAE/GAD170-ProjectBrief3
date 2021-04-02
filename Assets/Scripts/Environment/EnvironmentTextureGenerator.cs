@@ -24,7 +24,6 @@ public static class EnvironmentTextureGenerator
 		return newTexture;
 	}
 
-
 	/// <summary>
 	///		Returns a 2d texture map 
 	/// </summary>

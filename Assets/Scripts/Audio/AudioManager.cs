@@ -7,16 +7,19 @@ using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour
 {
+	/// <summary>
+	///		Audio Manager Instance 
+	/// </summary>
+	public static AudioManager Instance;
 
-	// Audio Manager Instance 
-	public static AudioManager Instance; // reference to the audio manager instance 
-
-	// Audio Mixer Group 
-	public AudioMixerGroup MasterAudioMixer; // reference to the audio mixer
-
-	private const string MasterVolumeParamKey = "Volume";
-
-	// Array of sound effects 
+	/// <summary>
+	///		Audio Mixer Group 
+	/// </summary>
+	public AudioMixerGroup MasterAudioMixer;
+	
+	/// <summary>
+	///		Array of Sound Effects 
+	/// </summary>
 	public SoundFX[] sounds;
 
 	/// <summary>
@@ -71,24 +74,6 @@ public class AudioManager : MonoBehaviour
 	}	
 
 	/// <summary>
-	///		Finds an audio clip 
-	/// </summary>
-	/// <param name="Sound"></param>
-	/// <returns></returns>
-	public AudioClip FindAudioClip(string Sound)
-	{
-		SoundFX s = Array.Find(sounds, item => item.name == Sound);
-
-		if (s == null)
-		{
-			Debug.Log("Clip " + name + " couldn't be found!");
-			return null;
-		}
-
-		return s.clip;
-	}
-
-	/// <summary>
 	///		Handles playing an audio clip by its name  
 	/// </summary>
 	/// <param name="SoundEffectName"></param>
@@ -109,7 +94,7 @@ public class AudioManager : MonoBehaviour
 	}
 
 	/// <summary>
-	///		Handles stop playing an audio clip by its name 
+	///		Stops playing an audio clip by the audio sources name 
 	/// </summary>
 	/// <param name="Sound"></param>
 	public void StopPlaying(string Sound)
@@ -128,11 +113,6 @@ public class AudioManager : MonoBehaviour
 		s.source.Stop();
 	}
 
-	// Sets the master volume 
-	public void SetMasterVolume(float volume)
-	{
-		MasterAudioMixer.audioMixer.SetFloat(MasterVolumeParamKey, volume);
-	}
 	/// <summary>
 	///		Starts the Fade out sound effect using a coroutine
 	/// </summary>
@@ -145,9 +125,11 @@ public class AudioManager : MonoBehaviour
 	}
 
 	/// <summary>
-	///		Fades out a audio sound by sound name 
+	///		Fades out a audio sound by an audio sources name name 
 	/// </summary>
-	/// <param name="Sound"></param>
+	/// <param name="Sound">The audio source name</param>
+	/// <param name="p_targetVolume">The target volume to fade to</param>
+	/// <param name="p_fadeSpeed">The speed of the fade to apply</param>
 	/// <returns></returns>
 	private IEnumerator Fade(string Sound, float p_targetVolume, float p_fadeSpeed)
 	{
