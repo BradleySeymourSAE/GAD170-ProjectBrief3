@@ -68,7 +68,6 @@ public class Tank : MonoBehaviour
         // Handles the aiming for the turret on the horizontal and vertical axis 
         tankMovement.HandleAiming(tankControls.ReturnMouseInput());
 
-
         // Handles shooting of the primary weapon (Mouse0, Mouse1)
         tankPrimary.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire));
     }

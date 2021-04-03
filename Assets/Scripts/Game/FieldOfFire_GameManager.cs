@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FieldOfFire_GameManager : MonoBehaviour
 {
+	private const string FieldOfFireThemeAudioKey = "BackgroundThemeTrack";
   
 	[Header("Game Timers")]
 	public float preGameSetupTimer = 3f; // seconds before game starts 
@@ -136,7 +137,10 @@ public class FieldOfFire_GameManager : MonoBehaviour
 	/// <returns></returns>
 	private IEnumerator StartFieldOfFire()
 	{
-		
+		if (AudioManager.Instance != null)
+		{
+			AudioManager.Instance.PlaySound(FieldOfFireThemeAudioKey);
+		}
 		// Invoke Game Reset Event 
 
 		// Invoke pre game event 
