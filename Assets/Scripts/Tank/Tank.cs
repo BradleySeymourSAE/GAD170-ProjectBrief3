@@ -19,13 +19,13 @@ public class Tank : MonoBehaviour
     public TankMovement tankMovement = new TankMovement(); // creating a new instance of our tank movement script
     public TankPrimaryWeapon tankPrimary = new TankPrimaryWeapon(); // primary weapon instance 
     public GameObject deathExplosionPrefab; // the prefab we will use when we have 0 left to make it go boom
-  
 
-   
-    /// <summary>
-    ///     OnEnable Event Methods for the Tank Instance
-    /// </summary>
-    private void OnEnable()
+
+
+	/// <summary>
+	///     OnEnable Event Methods for the Tank Instance
+	/// </summary>
+	private void OnEnable()
     {
         TankGameEvents.OnObjectDestroyedEvent += Dead; // add dead function to the event for when a tank is destroyed
         TankGameEvents.OnObjectTakeDamageEvent += TankTakenDamage; // assign our health function to our event so we can take damage
@@ -45,6 +45,8 @@ public class Tank : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {   
+
+
         tankHealth.Setup(transform); // call the set up function of our tank health script
         tankMovement.Setup(transform); // calls the set up function of our tank health script
         tankPrimary.Setup(transform); // calls primary weapon setup
@@ -61,6 +63,13 @@ public class Tank : MonoBehaviour
     //  Update is called once per frame at a fixed rate (Mouse Sensitivity is smoother at a fixed update)
     private void Update()
     {
+        if (Cursor.lockState == CursorLockMode.None)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+
+
         // Handles Basic movement position & rotation from player input (W,A,S,D)
         tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
         

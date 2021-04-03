@@ -15,20 +15,18 @@ public class AudioManager : MonoBehaviour
 	/// <summary>
 	///		Audio Mixer Group 
 	/// </summary>
-	public AudioMixerGroup MasterAudioMixer;
+	public AudioMixerGroup AudioMixer;
 	
 	/// <summary>
-	///		Array of Sound Effects 
+	///		Game sound effects, Tanks, Infantry etc
 	/// </summary>
-	public SoundFX[] sounds;
+	public SoundFX[] GameSoundEffects;
 
 	/// <summary>
 	///		Called before the start method 
 	/// </summary>
 	private void Awake()
 	{
-
-
 		if (Instance != null)
 		{
 			Destroy(gameObject);
@@ -40,7 +38,7 @@ public class AudioManager : MonoBehaviour
 		}
 
 
-		foreach (SoundFX s in sounds)
+		foreach (SoundFX s in GameSoundEffects)
 		{
 				s.source = gameObject.AddComponent<AudioSource>();
 
@@ -49,10 +47,11 @@ public class AudioManager : MonoBehaviour
 				s.source.clip = s.clip;
 				s.source.loop = s.loop;
 
-				s.source.outputAudioMixerGroup = MasterAudioMixer;
+				s.source.outputAudioMixerGroup = AudioMixer;
 		
 		}
 	}
+
 
 	/// <summary>
 	///		Gets an audio source reference by the sound name 
@@ -62,7 +61,7 @@ public class AudioManager : MonoBehaviour
 	public AudioSource GetAudioSource(string Sound)
 	{
 
-		SoundFX s = Array.Find(sounds, item => item.name == Sound);
+		SoundFX s = Array.Find(GameSoundEffects, item => item.name == Sound);
 
 		if (s == null)
 		{
@@ -79,7 +78,7 @@ public class AudioManager : MonoBehaviour
 	/// <param name="SoundEffectName"></param>
 	public void PlaySound(string soundEffect)
 	{
-		SoundFX s = Array.Find(sounds, item => item.name == soundEffect);
+		SoundFX s = Array.Find(GameSoundEffects, item => item.name == soundEffect);
 	
 		if (s == null)
 		{
@@ -99,7 +98,7 @@ public class AudioManager : MonoBehaviour
 	/// <param name="Sound"></param>
 	public void StopPlaying(string Sound)
 	{
-		SoundFX s = Array.Find(sounds, item => item.name == Sound);
+		SoundFX s = Array.Find(GameSoundEffects, item => item.name == Sound);
 
 		if (s == null)
 		{

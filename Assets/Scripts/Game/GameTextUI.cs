@@ -13,10 +13,12 @@ public static class GameTextUI
 	/// <summary>
 	///		Main Menu UI Elements
 	/// </summary>
-	public static string MainMenuTitle = "";
-	public static string MainMenuPlayButton = "";
-	public static string MainMenuCreditsButton = "";
-	public static string MainMenuQuitButton = "";
+	public static string MainMenu_GameTitle = "Field of Fire";
+	public static string MainMenu_GameSubtitle = "Ready to do the pew pew?";
+	public static string MainMenu_GameVersion = "v1.0.0-Alpha";
+	public static string MainMenu_Start = "Start Game";
+	public static string MainMenu_Credits = "Credits";
+	public static string MainMenu_Quit = "Leave";
 	#endregion
 
 	#region Credits Menu UI Text Elements
@@ -24,8 +26,11 @@ public static class GameTextUI
 	/// <summary>
 	///		Credits Menu UI Elements 
 	/// </summary>
-	public static string CreditsMenuTitle = "";
-	public static string CreditsMenuReturnButton = "";
+	public static string CreditsMenu_GameTitle = "Field of Fire - Credits";
+	public static string CreditsMenu_DevelopmentTeamTitle = "Ventiii Development Team";
+	public static string CreditsMenu_DevelopmentTeamRole = "Lead Team";
+	public static string CreditsMenu_Developer = "Bradley Seymour";
+	public static string CreditsMenu_Exit = "Return to main menu";
 
 	#endregion
 

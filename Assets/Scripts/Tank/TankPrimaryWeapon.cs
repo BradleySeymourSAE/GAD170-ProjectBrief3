@@ -17,11 +17,6 @@ public class TankPrimaryWeapon
     public float maximumReloadTime = 5f; // the maximum amount of time we will allow to charge up and fire
     public float maximumAmmunition = 20; // the maximum amount of ammunition in a tank 
     public float maximumAmmunitionPerClip = 1; // the maximum amount of ammunition per shot 
-    public float range = 100f;
-    
-    private const string PrimaryWeaponFireKey = "T90_PrimaryWeaponFire";
-    private const string PrimaryWeaponReloadKey = "T90_PrimaryWeaponReload";
-
 
    [SerializeField] private float currentBulletVelocity; // the force we should use to fire our shell
    [SerializeField] private float currentReloadSpeed; // how fast we should charge up our weapon
@@ -36,7 +31,8 @@ public class TankPrimaryWeapon
    [SerializeField] private float nextTimeToFire;
 
     private Transform m_tankReference;
-    private Camera m_tankCamera;
+
+
 
     /// <summary>
     /// Sets up all the necessary variables for our main gun script
@@ -44,11 +40,6 @@ public class TankPrimaryWeapon
     public void Setup(Transform Tank)
     {
         m_tankReference = Tank;
-        
-        if (m_tankReference.GetComponentInChildren<Camera>() != null)
-		{
-            m_tankCamera = m_tankReference.GetComponentInChildren<Camera>();
-		}
 
 
         currentBulletVelocity = minimumBulletSpeed; // set our current launch force to the min
@@ -157,7 +148,7 @@ public class TankPrimaryWeapon
         Object.Destroy(clone,5f);
         if (AudioManager.Instance != null)
 		{
-            AudioManager.Instance.PlaySound(PrimaryWeaponFireKey);
+            AudioManager.Instance.PlaySound(GameAudio.T90_PrimaryWeapon_Fire);
 		}
 
         // Reset the bullet velocity 
@@ -175,7 +166,6 @@ public class TankPrimaryWeapon
         }
     }
 
-    
     /// <summary>
     ///     Handles the tanks primary weapon reload 
     /// </summary>
@@ -188,7 +178,7 @@ public class TankPrimaryWeapon
         if (AudioManager.Instance != null)
         {
             // If the audio manager instance isnt null play the weapon reload sound 
-            AudioManager.Instance.PlaySound(PrimaryWeaponReloadKey);
+            AudioManager.Instance.PlaySound(GameAudio.T90_PrimaryWeapon_Reload);
         }
 
         // Wait X amount of reload seconds 
@@ -202,7 +192,6 @@ public class TankPrimaryWeapon
     
         weaponReloading = false;
      }
-
 
 	#endregion
 }

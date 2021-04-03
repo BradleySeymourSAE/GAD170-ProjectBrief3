@@ -23,6 +23,9 @@ public class TankMovement
     private TankParticleEffects tankParticleEffects = new TankParticleEffects(); // creating a new instance of our tank particle effects class
     public TankSoundEffects tankSoundEffects = new TankSoundEffects(); // creating a new instance of our tank sound effects class
 
+    [SerializeField] private float durationSecond = 1f;
+    [SerializeField] private float aimVolumeMin = 0, aimVolumeMax = 100;
+
     private Rigidbody m_rigidbody;// a reference to the rigidbody on our tank
     private bool enableMovement = true; // if this is true we are allowed to accept input from the player
     private bool enabledAiming = true; // Allowed to accept input for weapon aim down sight 
@@ -156,9 +159,8 @@ public class TankMovement
     /// <param name="AimHorizontal"></param>
     private void AimTurret(Vector3 AimPosition)
     {            
-        string weaponAimingKey = "T90_PrimaryWeaponAiming";
 
-        AudioSource s = AudioManager.Instance.GetAudioSource(weaponAimingKey);
+        AudioSource s = AudioManager.Instance.GetAudioSource(GameAudio.T90_PrimaryWeapon_Aiming);
 
         // If the aim position magnitude is greater than 0.1f 
          if (AimPosition.magnitude >= 0.1f)
@@ -167,20 +169,21 @@ public class TankMovement
             // If the weapon aim source isnt playing 
             if (s.isPlaying == false)
             { 
-                AudioManager.Instance.PlaySound(weaponAimingKey);
+                AudioManager.Instance.PlaySound(GameAudio.T90_PrimaryWeapon_Aiming);
             }
             // Otherwise, if audio source is playing and s.volume is less than 1 
             else if (s.isPlaying && s.volume < 1.0f)
 			{
                 // Debug.Log("Fading sound in!");
                 // Fade the audio sound effect in to 100% over 0.75 of a second.
-                AudioManager.Instance.FadeSoundEffect(weaponAimingKey, 100f, 0.75f);
+                AudioManager.Instance.FadeSoundEffect(GameAudio.T90_PrimaryWeapon_Aiming, aimVolumeMax, (durationSecond - 0.15f));
             }
      
 
              // Desired camera x axis rotation 
              desiredXAxisRotation -= AimPosition.y;
-             // Clamp vertical look degrees angle 
+            
+            // Clamp vertical look degrees angle 
              desiredXAxisRotation = Mathf.Clamp(desiredXAxisRotation, 0, 0); 
 
              m_cameraReference.localRotation = Quaternion.Euler(desiredXAxisRotation, 0, 0);
@@ -190,8 +193,7 @@ public class TankMovement
         }
          else
 		{
-            AudioManager.Instance.FadeSoundEffect(weaponAimingKey, 0f, 1f);
-            // AudioManager.Instance.StopPlaying(weaponAimingKey);
+            AudioManager.Instance.FadeSoundEffect(GameAudio.T90_PrimaryWeapon_Aiming, aimVolumeMin, durationSecond);
 		}            
 	}
     #endregion
