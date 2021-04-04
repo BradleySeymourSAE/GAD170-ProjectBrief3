@@ -12,24 +12,8 @@ public class FireMode_UIManager : MonoBehaviour
 {
 	private const string styled = "---";
 
-
-	public MainMenu mainMenu; // reference to main menu 
-	public CreditsMenu creditsMenu; // reference to credits menu 
 	public GameObject InGameWaveUI;
 	public GameObject PostGameResultsUI;
-
-	/// <summary>
-	///		Called before the first frame update
-	/// </summary>
-	private void Start()
-	{
-		mainMenu.Setup(this);
-		creditsMenu.Setup(this);
-
-		creditsMenu.ShowDisplay(false);
-		mainMenu.ShowDisplay(true);
-	}
-
 
 
 	/// <summary>
@@ -49,22 +33,7 @@ public class FireMode_UIManager : MonoBehaviour
 	}
 
 
-	/// <summary>
-	///		Opens the credits menu 
-	/// </summary>
-	public void DisplayCredits(bool show)
-	{
-		creditsMenu.ShowDisplay(show);
-	}
-
-	/// <summary>
-	///		Shows the main menu 
-	/// </summary>
-	public void DisplayMainMenu(bool show)
-	{
-		mainMenu.ShowDisplay(show);
-	}
-
+	
 
 	/// <summary>
 	///		Displays UI Pre Game 

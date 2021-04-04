@@ -21,9 +21,9 @@ public class CreditsMenu
 	public Button Exit; // exit button ref
 
 
-	private FireMode_UIManager m_UIManager; // ui manager reference class 
+	private FieldOfFire_UIManager m_UIManager; // ui manager reference class 
 
-	public void Setup(FireMode_UIManager UIManager)
+	public void Setup(FieldOfFire_UIManager UIManager)
 	{
 		m_UIManager = UIManager;
 

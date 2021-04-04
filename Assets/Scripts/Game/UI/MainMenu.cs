@@ -21,9 +21,9 @@ public class MainMenu
 	public Button Credits; // reference to credits button
 	public Button Leave; // reference to leave button
 
-	private FireMode_UIManager m_UIManager; // reference to our UI manager 
+	private FieldOfFire_UIManager m_UIManager; // reference to our UI manager 
 
-	public void Setup(FireMode_UIManager UIManager)
+	public void Setup(FieldOfFire_UIManager UIManager)
 	{
 		m_UIManager = UIManager;
 

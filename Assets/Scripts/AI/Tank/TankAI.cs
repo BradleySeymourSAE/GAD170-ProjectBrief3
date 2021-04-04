@@ -45,7 +45,12 @@ public class TankAI : MonoBehaviour
 	[SerializeField] Quaternion startingRot;
 
 	public bool enableSpawn = false;
+
+
 	public TankHealth tankHealth = new TankHealth();
+	public TankParticleEffects tankParticleEffects = new TankParticleEffects();
+	// public TankSoundEffects tankSoundEffects = new TankSoundEffects();
+	
 	public GameObject enemyDeathPrefab; 
 
 	private void OnEnable()
@@ -67,7 +72,15 @@ public class TankAI : MonoBehaviour
 
 	private void Start()
 	{
-		tankHealth.Setup(transform); // setup the enemy ai's health 
+		tankHealth.Setup(transform); // setup the enemy ai's health
+		tankParticleEffects.SetUpEffects(transform); // Setup the tanks particle effects
+		tankParticleEffects.PlayDustTrails(true); // should play dust trail effects
+
+		if (Agent != null)
+		{
+			// Disable Auto Braking
+			Agent.autoBraking = false;
+		}
 
 		startPos = transform.position;
 		startingRot = transform.rotation;
@@ -81,6 +94,8 @@ public class TankAI : MonoBehaviour
 		playerInViewDistanceRange = Physics.CheckSphere(transform.position, viewDistanceRange, PlayerMask);
 		playerInViewDistanceFiringRange = Physics.CheckSphere(transform.position, viewDistanceFiringRange, PlayerMask);
 
+
+		
 
 		if (!playerInViewDistanceRange && !playerInViewDistanceFiringRange)
 		{
@@ -108,12 +123,6 @@ public class TankAI : MonoBehaviour
 			Search();
 		}
 
-		if (movePointSet)
-		{
-			Agent.SetDestination(movePoint);
-		}
-
-
 		Vector3 movementDistance = transform.position - movePoint;
 
 		if (movementDistance.magnitude < 1f)
@@ -121,6 +130,12 @@ public class TankAI : MonoBehaviour
 			movePointSet = false;
 		}
 
+
+
+		if (movePointSet)
+		{
+			Agent.SetDestination(movePoint);
+		}
 	}
 
 	private void Search()
@@ -141,6 +156,9 @@ public class TankAI : MonoBehaviour
 		Agent.SetDestination(PlayerTarget.position);
 	}
 
+	/// <summary>
+	///		Within shooting distance 
+	/// </summary>
 	private void Aggressive()
 	{
 		// Stop the enemy 
