@@ -72,7 +72,7 @@ public class MainMenu
 	private void OpenCreditsMenu()
 	{
 		ShowDisplay(false);
-		m_UIManager.DisplayCredits(true);
+		m_UIManager.DisplayCreditsMenu(true);
 	}
 
 	/// <summary>

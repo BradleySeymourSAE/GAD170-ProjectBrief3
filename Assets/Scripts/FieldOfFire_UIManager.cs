@@ -5,36 +5,43 @@ using UnityEngine;
 [System.Serializable]
 public class FieldOfFire_UIManager : MonoBehaviour
 {
+	public MainMenu MainMenuUI;
+	public CreditsMenu CreditsMenuUI;
 
-	public MainMenu mainMenu;
-	public CreditsMenu creditsMenu;
 
 
+	private void Awake()
+	{
+		if (AudioManager.Instance != null)
+		{
+			AudioManager.Instance.PlaySound(GameAudio.BackgroundThemeTrack);
+		}
+	}
 
 	private void Start()
 	{
-		mainMenu.Setup(this);
-		creditsMenu.Setup(this);
+		MainMenuUI.Setup(this);
+		CreditsMenuUI.Setup(this);
 
 		
 
 		DisplayMainMenu(true);
-		DisplayCredits(false);
+		DisplayCreditsMenu(false);
 	}
 	/// <summary>
 	///		Opens the credits menu 
 	/// </summary>
-	public void DisplayCredits(bool show)
+	public void DisplayMainMenu(bool show)
 	{
-		creditsMenu.ShowDisplay(show);
+		MainMenuUI.ShowDisplay(show);
 	}
 
 	/// <summary>
 	///		Shows the main menu 
 	/// </summary>
-	public void DisplayMainMenu(bool show)
+	public void DisplayCreditsMenu(bool show)
 	{
-		mainMenu.ShowDisplay(show);
+		CreditsMenuUI.ShowDisplay(show);
 	}
 
 }
