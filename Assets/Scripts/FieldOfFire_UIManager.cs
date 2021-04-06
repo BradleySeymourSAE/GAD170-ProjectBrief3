@@ -9,17 +9,14 @@ public class FieldOfFire_UIManager : MonoBehaviour
 	public CreditsMenu CreditsMenuUI;
 
 
-
-	private void Awake()
+	private void Start()
 	{
 		if (AudioManager.Instance != null)
 		{
 			AudioManager.Instance.PlaySound(GameAudio.BackgroundThemeTrack);
 		}
-	}
 
-	private void Start()
-	{
+
 		MainMenuUI.Setup(this);
 		CreditsMenuUI.Setup(this);
 

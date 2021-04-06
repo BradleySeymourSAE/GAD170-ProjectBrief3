@@ -1,0 +1,46 @@
+# Blender MTL File: 'Afghan buildings 3D-3E-3F-3G.blend'
+# Material Count: 4
+
+newmtl Mesh_0007.rip
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd H:\SteamLibrary\steamapps\common\Syrian Warfare\bin2\_NinjaRipper\2018.12.30_20.48.16_SW_editor.exe_5132\2018.12.30_20.49.49_SW_editor.exe\Tex_0013_0.dds
+
+newmtl Mesh_0011.rip
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd H:\SteamLibrary\steamapps\common\Syrian Warfare\bin2\_NinjaRipper\2018.12.30_20.48.16_SW_editor.exe_5132\2018.12.30_20.49.49_SW_editor.exe\Tex_0021_0.dds
+
+newmtl Mesh_10001.rip
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd H:\SteamLibrary\steamapps\common\Syrian Warfare\bin2\_NinjaRipper\2018.12.30_20.48.16_SW_editor.exe_5132\2018.12.30_20.49.49_SW_editor.exe\Tex_0025_0.dds
+
+newmtl Mesh_2068.rip
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd H:\SteamLibrary\steamapps\common\Syrian Warfare\bin2\_NinjaRipper\2018.12.30_20.48.16_SW_editor.exe_5132\2018.12.30_20.49.49_SW_editor.exe\Tex_0023_0.dds

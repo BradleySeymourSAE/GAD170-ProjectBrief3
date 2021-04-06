@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -159,7 +160,7 @@ public class FireMode_GameManager : MonoBehaviour
 		FireModeEvents.OnResetWaveEvent?.Invoke();
 		
 
-		// Invokes StartEnemyWaves() 
+		FireModeEvents.OnWaveStartedEvent?.Invoke();
 	}
 
 	/// <summary>
@@ -185,10 +186,7 @@ public class FireMode_GameManager : MonoBehaviour
 	/// <returns></returns>
 	private IEnumerator StartFieldOfFire()
 	{
-		if (AudioManager.Instance != null)
-		{
-			AudioManager.Instance.PlaySound(GameAudio.BackgroundThemeTrack);
-		}
+		
 		// Invoke Game Reset Event 
 
 		FireModeEvents.OnRestartGameEvent?.Invoke(); // invoke restart game 
@@ -198,11 +196,11 @@ public class FireMode_GameManager : MonoBehaviour
 		
 
 		// We use a pre game wait timer so we have time to setup the game events before
-		// starting
 		yield return new WaitForSeconds(preGameSetupTimer);
 
 		// Run the game started event 
 
+		FireModeEvents.OnWaveStartedEvent?.Invoke();
 
 		// Then spawn in the enemy ai 
 
