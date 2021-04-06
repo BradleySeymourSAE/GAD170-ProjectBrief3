@@ -6,10 +6,11 @@ using UnityEngine;
 public class TankSoundEffects
 {
     [Header("Movement Audio")]
-    public AudioClip EngineIdle; // the tank idling clip
-    public AudioClip EngineMoving; // the tank moving clip
+    [SerializeField] private AudioClip EngineIdle; // the tank idling clip
+    [SerializeField] private AudioClip EngineDriving; // the tank moving clip
 
-    public float pitchRangeMax = 0.2f; // the maximum amount our pitch can be changed by
+    [Range(1, 3)]
+    public float pitchRangeMax = 1f; // the maximum amount our pitch can be changed by
     private float originalPitchLevel; // the starting pitch level before we modify it 
     private AudioSource EngineAudioSource; // a reference to our audio source component
 
@@ -20,14 +21,13 @@ public class TankSoundEffects
     public void Setup(Transform Tank)
     {
         if (Tank.GetComponent<AudioSource>() != null)
-        {
-            EngineAudioSource = Tank.GetComponent<AudioSource>(); // find a reference to the audio source
-            originalPitchLevel = EngineAudioSource.pitch; // set the starting pitch
-        }
-        else
-        {
-            Debug.LogError("No Audio Source found on the tank");
-        }
+		{
+            EngineAudioSource = Tank.GetComponent<AudioSource>();
+            Debug.Log("[TankSoundEffects.Setup]: " + "Audio Source Instance found!");
+            EngineIdle = AudioManager.Instance.GetAudioClip(GameAudio.T90_EngineIdle);
+            EngineDriving = AudioManager.Instance.GetAudioClip(GameAudio.T90_EngineDriving);
+		}
+   
     }
 
     /// <summary>
@@ -40,20 +40,20 @@ public class TankSoundEffects
         // If we arent moving we should be setting the sources audio to idle 
         if (Mathf.Abs(MoveInput) < 0.1f && Mathf.Abs(RotationInput) < 0.1f)
         {
-            if (EngineAudioSource.clip != EngineIdle)
-            {
-                EngineAudioSource.clip = EngineIdle; // set the audio to our idle sound
-                EngineAudioSource.Play(); // play our new clip
-            }
+           if (EngineAudioSource.clip != EngineIdle)
+			{
+                EngineAudioSource.clip = EngineIdle;
+                EngineAudioSource.Play();
+			}
         }
         else
         {
             // Then we are moving and we should be playing this clip instead 
-            if (EngineAudioSource.clip != EngineMoving)
-            {
-                EngineAudioSource.clip = EngineMoving; // set the audio to our move sound
-                EngineAudioSource.Play(); // play our new clip
-            }
+            if (EngineAudioSource.clip != EngineDriving)
+			{
+                EngineAudioSource.clip = EngineDriving;
+                EngineAudioSource.Play();
+			}
         }
     }
 }

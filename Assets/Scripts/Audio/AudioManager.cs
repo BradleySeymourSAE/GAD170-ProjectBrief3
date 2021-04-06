@@ -72,6 +72,28 @@ public class AudioManager : MonoBehaviour
 		return s.source;
 	}	
 
+
+	/// <summary>
+	///		Get Audio Clip by the Audio Source name 
+	/// </summary>
+	/// <param name="AudioSourceName">The name of the audio source </param>
+	/// <returns></returns>
+	public AudioClip GetAudioClip(string AudioSourceName)
+	{
+		SoundFX s = Array.Find(GameSoundEffects, soundEffect => soundEffect.name == AudioSourceName);
+
+		if (s == null)
+		{
+
+			Debug.LogWarning("Audio Source Sound " + name + " could not be found!");
+			return null;
+		}
+
+
+		return s.source.clip;
+	}
+
+
 	/// <summary>
 	///		Handles playing an audio clip by its name  
 	/// </summary>

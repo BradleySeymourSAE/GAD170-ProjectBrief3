@@ -2,40 +2,36 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = System.Random;
+using Ventiii.DevelopmentTools;
 
+
+[System.Serializable]
 public class FireMode_SpawnManager : MonoBehaviour
 {
 
 	/// <summary>
 	///		Spawn Points & Starting Spawn Positions 
 	/// </summary>
-	public List<Transform> possibleEnemySpawnPoints = new List<Transform>(); // list of enemy spawn points 
-	private List<Transform> startingPossibleEnemySpawnPoints = new List<Transform>(); // store starting spawn points 
+	public List<Transform> SpawnPoints = new List<Transform>(); // list of enemy spawn points 
+	private List<Transform> possibleSpawnPoints = new List<Transform>(); // store starting spawn points 
+	
+	
+	public GameObject TankPrefab;
+	public GameObject InfantryPrefab;
+	public List<GameObject> aliveEnemiesSpawned = new List<GameObject>();
 
-
-	/// <summary>
-	///		Enemy Character Prefabs (Soldiers) 
-	/// </summary>
-	public List<GameObject> enemyCharacterPrefabs = new List<GameObject>(); // list of possible enemy character prefabs 
-	private List<GameObject> aliveEnemyCharactersSpawned = new List<GameObject>(); // The currently alive enemy characters spawned in 
-
-	/// <summary>
-	///		Enemy Tank Prefabs & Spawned in Tanks
-	/// </summary>
-	public List<GameObject> enemyTankPrefabs = new List<GameObject>(); // List of enemy tank prefabs to spawn in 
-	private List<GameObject> aliveEnemyTanksSpawned = new List<GameObject>(); // currently alive enemy tanks spawned in 
-
-
-
+	private int currentWave;
 	/// <summary>
 	///		Enemy Spawn Manager Event Listeners 
 	/// </summary>
 	private void OnEnable()
 	{
-		FireModeEvents.SpawnEnemyWaveEvent += SpawnEnemies;
-		FireModeEvents.OnResetWaveEvent += ResetWave;
-		FireModeEvents.OnRestartGameEvent += RestartGame;
+		FireModeEvents.SpawnEnemyWaveEvent += SpawnEnemyWave; // spawns in the enemies 
+		
+		
+		FireModeEvents.OnResetWaveEvent += ResetWave; // resets the current wave 
+		FireModeEvents.OnRestartGameEvent += Restart; // restarts the game, sets wave to 1 
 	}
 
 	/// <summary>
@@ -43,47 +39,42 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// </summary>
 	private void OnDisable()
 	{
-		FireModeEvents.SpawnEnemyWaveEvent -= SpawnEnemies;
-		FireModeEvents.OnResetWaveEvent -= ResetWave;
-		FireModeEvents.OnRestartGameEvent -= RestartGame;
+		FireModeEvents.SpawnEnemyWaveEvent -= SpawnEnemyWave; // removes enemy listener  
+		
+		
+		FireModeEvents.OnResetWaveEvent -= ResetWave; // Restarts the current wave 
+		FireModeEvents.OnRestartGameEvent -= Restart; // Restarts the game, sets wave to 1 
 	}
 
 	/// <summary>
-	///		Debugging Helper
+	///		Debugging
 	/// </summary>
 	private void OnDrawGizmos()
 	{
-		for (int i = 0; i < possibleEnemySpawnPoints.Count; i++)
+		for (int i = 0; i < SpawnPoints.Count; i++)
 		{
 			Gizmos.color = Color.red;
-			Gizmos.DrawSphere(possibleEnemySpawnPoints[i].position, 0.5f);
+			Gizmos.DrawSphere(SpawnPoints[i].position, 0.5f);
 		}
 	}
 
 	/// <summary>
-	///		Restarts the game 
+	///		Restarts the game - destroys current enemies! 
 	/// </summary>
-	private void RestartGame()
+	private void Restart()
 	{
-
-		for (int i = 0; i < aliveEnemyTanksSpawned.Count; i++)
+		for (int i = 0; i < aliveEnemiesSpawned.Count; i++)
 		{
-			Destroy(aliveEnemyTanksSpawned[i]);
+			Destroy(aliveEnemiesSpawned[i]);
 		}
 
-		for (int i = 0; i < aliveEnemyCharactersSpawned.Count; i++)
+		aliveEnemiesSpawned.Clear(); // clear enemies list 
+		possibleSpawnPoints.Clear(); // 
+
+
+		for (int i = 0; i < SpawnPoints.Count; i++)
 		{
-			Destroy(aliveEnemyCharactersSpawned[i]);
-		}
-
-		aliveEnemyTanksSpawned.Clear(); // clear enemy tanks list 
-		aliveEnemyCharactersSpawned.Clear(); // clear enemy characters list 
-		startingPossibleEnemySpawnPoints.Clear(); // 
-
-
-		for (int i = 0; i < possibleEnemySpawnPoints.Count; i++)
-		{
-			startingPossibleEnemySpawnPoints.Add(possibleEnemySpawnPoints[i]);
+			possibleSpawnPoints.Add(SpawnPoints[i]);
 		}
 	}
 
@@ -92,57 +83,88 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// </summary>
 	private void ResetWave()
 	{
-		Debug.Log("[FieldOfFire_SpawnManager.RestartWave]: " + "Restarting Wave");
+
+		if (FireMode_GameManager.Instance != null)
+		{
+			int currentWaveIndex = FireMode_GameManager.Instance.GetCurrentWave();
+
+			currentWave = currentWaveIndex;
+
+			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Resetting the current wave " + currentWaveIndex);
 		
+		
+			for (int i = 0; i < aliveEnemiesSpawned.Count; i++)
+			{
+				Destroy(aliveEnemiesSpawned[i]);
+			}
+
+			aliveEnemiesSpawned.Clear();
+			possibleSpawnPoints.Clear();
+
+			for (int i = 0; i < SpawnPoints.Count; i++)
+			{
+				possibleSpawnPoints.Add(SpawnPoints[i]);
+			}
+		}
 	}
 
 
 	/// <summary>
 	///		Spawns in an enemy wave
 	/// </summary>
-	/// <param name="AmountOfCharacters"></param>
+	/// <param name="AmountOfInfantry"></param>
 	/// <param name="AmountOfTanks"></param>
-	private void SpawnEnemies(int AmountOfCharacters, int AmountOfTanks)
+	private void SpawnEnemyWave(int AmountOfInfantry, int AmountOfTanks)
 	{
-		Debug.Log("[FieldOfFire_SpawnManager.SpawnEnemyWave]: " + "Spawning Enemy Wave. Enemy AI Characters: " + AmountOfCharacters + " Enemy AI Tanks: " + AmountOfTanks);
-		// Check if tank prefabs count is less than or equal to amountoftanks to spawn and that all spawnpoints.count is greater than or equal to amount of tanks to spawn 
-		if (enemyCharacterPrefabs.Count >= AmountOfCharacters && enemyTankPrefabs.Count >= AmountOfTanks && possibleEnemySpawnPoints.Count >= (AmountOfCharacters + AmountOfTanks))
+		Debug.Log("[FieldOfFire_SpawnManager.SpawnEnemyWave]: " + "Spawning Enemy Wave. Enemy AI Characters: " + AmountOfInfantry + " Enemy AI Tanks: " + AmountOfTanks);
+		
+		// Loop through the amount of characters we need to spawn 
+		for (int i = 0; i < AmountOfInfantry; i++)
 		{
-			// Spawn in the enemy characters 
-			for (int i = 0; i < AmountOfCharacters; i++)
-			{		
-				Transform tempCharacterSpawnPosition = startingPossibleEnemySpawnPoints[Random.Range(0, startingPossibleEnemySpawnPoints.Count)];
+			// Get a random index 
+			Random rand = Utility.GetRandomIndex();
 
-				GameObject clonedEnemy = Instantiate(enemyCharacterPrefabs[i], tempCharacterSpawnPosition.position, Quaternion.identity);
+			// random spawn point index 
+			int randomSpawnPointIndex = rand.Next(possibleSpawnPoints.Count);
 
-				startingPossibleEnemySpawnPoints.Remove(tempCharacterSpawnPosition);
+			// Create a temporary spawn point position within the possible spawn points array 
+			Transform temporarySpawnPoint = possibleSpawnPoints[randomSpawnPointIndex];
 
-				aliveEnemyCharactersSpawned.Add(clonedEnemy);
-			}
+			// Clone the game object in preparation to spawn in 
+			GameObject cloneCharacter = Instantiate(InfantryPrefab, temporarySpawnPoint.position, InfantryPrefab.transform.rotation);
 
+			// remove temp spawn point from the list 
+			possibleSpawnPoints.Remove(temporarySpawnPoint);
 
-			// Spawn in the enemy tanks 
-			for (int i = 0; i < AmountOfTanks; i++)
-			{
-				Transform tempEnemyTankSpawnPosition = startingPossibleEnemySpawnPoints[Random.Range(0, startingPossibleEnemySpawnPoints.Count)];
-
-				GameObject clonedEnemyTank = Instantiate(enemyTankPrefabs[i], tempEnemyTankSpawnPosition.position, Quaternion.identity);
-
-				startingPossibleEnemySpawnPoints.Remove(tempEnemyTankSpawnPosition);
-
-				aliveEnemyTanksSpawned.Add(clonedEnemyTank);
-			}
-
-
-		}
-		else
-		{
-			// Error handling 
-			Debug.LogError("[FieldOfFire_SpawnManager.SpawnEnemyWave]: " + "Enemy tanks and characters could not be spawned from the spawn points!");
+			// Add the cloned character to the alive enemies list 
+			aliveEnemiesSpawned.Add(cloneCharacter);
 		}
 
+		// Repeat the process for the amount of tanks we want in the round 
+		for (int i = 0; i < AmountOfTanks; i++)
+		{
+			Random rand = Utility.GetRandomIndex();
 
-		// Tell the game our tanks have been spawned in!
-		FireModeEvents.OnEnemyWaveSpawnedEvent?.Invoke(aliveEnemyCharactersSpawned, aliveEnemyTanksSpawned);
+			int randomSpawnIndex = rand.Next(possibleSpawnPoints.Count);
+
+			Transform temporarySpawn = possibleSpawnPoints[randomSpawnIndex];
+
+			GameObject clonedTank = Instantiate(TankPrefab, temporarySpawn.position, TankPrefab.transform.rotation);
+
+			possibleSpawnPoints.Remove(temporarySpawn);
+
+			aliveEnemiesSpawned.Add(clonedTank);
+		}
+
+
+		foreach (GameObject _enemy in aliveEnemiesSpawned)
+		{
+			// Debugging 
+			Debug.Log("[FireMode_SpawnManager.SpawnEnemyWave]: " + _enemy.name);
+		}
+
+
+		// Tell the game our tanks have been spawned in, what do we do with them? 
+		FireModeEvents.OnEnemyWaveSpawnedEvent?.Invoke(aliveEnemiesSpawned);
 	}
 }

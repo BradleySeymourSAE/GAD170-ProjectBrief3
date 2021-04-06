@@ -11,12 +11,12 @@ public class TankHealth
 {
     public float minHealth = 0; // our min health
     public float maxHealth = 100; // our max health
-    private float currentHealth; // our current health
+    [SerializeField] private float currentHealth; // our current health
     public bool isDead = true; // is our character alive?
     public Color fullHealthColour = Color.green; // our full health colour
     public Color warningHealthColor = Color.yellow; // warning health colour (50%)
     public Color zeroHealthColour = Color.red; // colour of no health
-    private Transform tankParent; // reference to the tank that this script is attached to
+    private Transform m_tankReference; // reference to the tank that this script is attached to
     public Slider healthSlider; // reference to the health Slider
     private Image fillImage; // reference to the fill image component of our slider;
 
@@ -38,7 +38,7 @@ public class TankHealth
                 isDead = true;
                 // if we are dead we'd want some explosions
                 // call an event for the players death
-                TankGameEvents.OnObjectDestroyedEvent?.Invoke(tankParent); // so pass in our tank's health script into the tank destroyed event
+                TankGameEvents.OnObjectDestroyedEvent?.Invoke(m_tankReference); // so pass in our tank's health script into the tank destroyed event
             }
             else
             {
@@ -67,7 +67,8 @@ public class TankHealth
     }
     public void Setup(Transform TankTransform)
     {
-        tankParent = TankTransform;
+        m_tankReference = TankTransform;
+       
         if(healthSlider != null)
         {
             if(healthSlider.fillRect != null)

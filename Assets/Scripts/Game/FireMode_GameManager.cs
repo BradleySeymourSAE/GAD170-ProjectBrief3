@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,34 +8,40 @@ using UnityEngine;
 public class FireMode_GameManager : MonoBehaviour
 { 
   
+	/// <summary>
+	///		Instance of the fire mode game manager 
+	/// </summary>
+	public static FireMode_GameManager Instance;
+
 	[Header("Game Mode Timers")]
 	public float preGameSetupTimer = 3f; // seconds before game starts 
 	public float nextWaveTimer = 15f; // seconds before the next wave 
 	public float resetRoundTimer = 3f; // seconds before the round is restarted    
 
 	[Header("Game Mode Settings")]
-	public float startingEnemyTanks = 3;
-	public float startingEnemyInfantry = 3;
+	public int startingEnemyTanks = 3;
+	public int startingEnemyInfantry = 3;
 
-
-	[SerializeField] private List<TankAI> enemyTanksSpawnedIn = new List<TankAI>(); // list of all the enemy AI tanks remaining 
-	[SerializeField] private List<InfantryAI> enemyInfantrySpawnedIn = new List<InfantryAI>(); // list of enemy ai infantry remaining 
 	[SerializeField] private float totalEnemiesRemaining; // enemies remaining 
-	[SerializeField] private int currentWaveIndex; // the current wave the player is on 						 
+	[SerializeField] private int m_currentWaveCount; // the current wave the player is on 						 
 
 	// Testing adding both tank lists to this one 
 	[SerializeField] private List<GameObject> aliveEnemiesRemaining = new List<GameObject>();
 
-	private Tank currentPlayer; // the player 
+	private Tank m_currentPlayerReference; // the player 
 	[SerializeField] private int totalKillCount; // the total amount of player kills
+
+
+	[SerializeField] private int m_spawnTankCount;
+	[SerializeField] private int m_spawnInfantryCount;
 
 	/// <summary>
 	///		Handles spawning of the player, Enemy AI & Collectable Items 
 	/// </summary>
 	private void OnEnable()
 	{
-		FireModeEvents.OnEnemyWaveSpawnedEvent += SpawnedEnemyAI;
-		FireModeEvents.OnObjectDestroyedEvent += DespawnEnemy;
+		FireModeEvents.OnEnemyWaveSpawnedEvent += SpawnedEntitys;
+		FireModeEvents.OnObjectDestroyedEvent += DespawnEntity;
 	}
 
 	/// <summary>
@@ -44,8 +49,14 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	private void OnDisable()
 	{
-		FireModeEvents.OnEnemyWaveSpawnedEvent -= SpawnedEnemyAI;
-		FireModeEvents.OnObjectDestroyedEvent -= DespawnEnemy;
+		FireModeEvents.OnEnemyWaveSpawnedEvent -= SpawnedEntitys;
+		FireModeEvents.OnObjectDestroyedEvent -= DespawnEntity;
+	}
+
+
+	public int GetCurrentWave()
+	{
+		return m_currentWaveCount;
 	}
 
 	/// <summary>
@@ -53,114 +64,81 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	/// <param name="EnemyTanksSpawned"></param>
 	/// <param name="EnemyCharactersSpawned"></param>
-	private void SpawnedEnemyAI(List<GameObject> spawnedAICharacters, List<GameObject> spawnedAITanks)
+	private void SpawnedEntitys(List<GameObject> enemiesSpawned)
 	{
 
-		enemyTanksSpawnedIn.Clear(); // clear the list of enemy ai tanks remaining 
-		enemyInfantrySpawnedIn.Clear();
 		aliveEnemiesRemaining.Clear();
 
-		int spawnedInfantryIndex = 0;
-		int spawnedTankIndex = 0;
-
-		for (int i = 0; i < spawnedAICharacters.Count; i++)
+		for (int i = 0; i < enemiesSpawned.Count; i++)
 		{
-			if (!enemyInfantrySpawnedIn[i].GetComponent<InfantryAI>())
-			{
-				// Check for the infantry AI script 
-				continue;
-			}
-			InfantryAI infantry = spawnedAICharacters[i].GetComponent<InfantryAI>();
 
-			enemyInfantrySpawnedIn.Add(infantry);
-
-
-			aliveEnemiesRemaining.Add(infantry.gameObject);
-
-			spawnedInfantryIndex++;
-		}
-
-		for (int i = 0; i < spawnedAITanks.Count; i++)
-		{
-			if (!enemyTanksSpawnedIn[i].GetComponent<TankAI>())
+			if (!enemiesSpawned[i].GetComponent<TankAI>() || !enemiesSpawned[i].GetComponent<InfantryAI>())
 			{
 				continue;
 			}
-			TankAI tankAI = spawnedAITanks[i].GetComponent<TankAI>();
+		
+			GameObject _enemy = enemiesSpawned[i];
 
-			enemyTanksSpawnedIn.Add(tankAI);
-
-			aliveEnemiesRemaining.Add(tankAI.gameObject);
-
-			spawnedTankIndex++;
+			aliveEnemiesRemaining.Add(_enemy);
 		}
 
+		totalEnemiesRemaining = enemiesSpawned.Count;
 
-		totalEnemiesRemaining = spawnedInfantryIndex + spawnedTankIndex;
+		FireModeEvents.OnUpdateWaveCountEvent?.Invoke(m_currentWaveCount);
 	}
 
 	/// <summary>
 	///		Handles Despawning of an enemy AI entity 
 	/// </summary>
 	/// <param name="EnemyEntity"></param>
-	private void DespawnEnemy(Transform EnemyEntity)
+	private void DespawnEntity(Transform EnemyEntity)
 	{
-		if (EnemyEntity.GetComponent<TankAI>() == null && EnemyEntity.GetComponent<InfantryAI>() == null)
+		Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Despawning Entity " + EnemyEntity.name);
+		
+		if (EnemyEntity.GetComponent<TankAI>() || EnemyEntity.GetComponent<Tank>() || EnemyEntity.GetComponent<InfantryAI>())
 		{
+			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Entity not found " + EnemyEntity.name);
 			return;
 		}
+
+
+
+		aliveEnemiesRemaining.Remove(EnemyEntity.gameObject);
+
 		
 
-		bool isTankAI = EnemyEntity.GetComponent<TankAI>() == true;
-		bool isInfantryAI = EnemyEntity.GetComponent<InfantryAI>() == true;
+
+		totalEnemiesRemaining = aliveEnemiesRemaining.Count;
+
+		Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Enemies Remaining:  " + totalEnemiesRemaining);
 
 
 		
-
-		if (isTankAI)
-		{
-			enemyTanksSpawnedIn.Remove(EnemyEntity.GetComponent<TankAI>());
-		}
-		else if (isInfantryAI)
-		{
-			enemyInfantrySpawnedIn.Remove(EnemyEntity.GetComponent<InfantryAI>());
-		}
-
-
-		if (aliveEnemiesRemaining.Count <= 1)
-		{
-			Debug.Log("Alive Enemies Remaining: " + aliveEnemiesRemaining.Count + " Total Enemies Remaining: " + totalEnemiesRemaining);
-
-
-
-			FireModeEvents.OnPostWaveEvent?.Invoke();
-
-			// Invoke("ResetRound", resetRoundTimer); (3 seconds or whatever) 
-			Invoke("ResetEnemyWave", resetRoundTimer);
-		}
 	}
 
 	/// <summary>
-	///		Updates the games scoreboard 
+	///		Updates the players kill count
 	/// </summary>
 	private void UpdatePlayerKillCount()
 	{
-		if (currentPlayer != null)
-		{
-			FireModeEvents.UpdatePlayerKillsEvent?.Invoke(totalKillCount);
-		}
+			FireModeEvents.OnUpdatePlayerKillsEvent?.Invoke(totalKillCount);
+	}
+
+	private void UpdateWaveCount()
+	{
+		FireModeEvents.OnUpdateWaveCountEvent?.Invoke(m_currentWaveCount);
 	}
 
 
 	/// <summary>
-	///		Invokes events that happen on the rounds reset 
+	///		Resets the game 
 	/// </summary>
-	private void ResetEnemyWave()
+	private void RestartGameEvent()
 	{
-		FireModeEvents.OnResetWaveEvent?.Invoke();
+		FireModeEvents.OnRestartGameEvent?.Invoke();
 		
 
-		FireModeEvents.OnWaveStartedEvent?.Invoke();
+		Invoke(nameof(StartFirstEnemyWave), preGameSetupTimer);
 	}
 
 	/// <summary>
@@ -168,8 +146,11 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	private void StartFirstEnemyWave()
 	{
-		currentWaveIndex = 1;
+		m_currentWaveCount = 1;
+		m_spawnTankCount = startingEnemyTanks;
+		m_spawnInfantryCount = startingEnemyInfantry;
 
+		FireModeEvents.SpawnEnemyWaveEvent(m_spawnInfantryCount, m_spawnTankCount);
 	}
 
 	/// <summary>
@@ -186,25 +167,24 @@ public class FireMode_GameManager : MonoBehaviour
 	/// <returns></returns>
 	private IEnumerator StartFieldOfFire()
 	{
-		
 		// Invoke Game Reset Event 
 
 		FireModeEvents.OnRestartGameEvent?.Invoke(); // invoke restart game 
-													
-		FireModeEvents.OnPreWaveEvent?.Invoke(); // call pre game event 
+
+		// Spawn the player in 
+		FireModeEvents.SpawnPlayerEvent?.Invoke();
 
 		
+		FireModeEvents.OnPreWaveEvent?.Invoke(); // call pre wave event which will display wave count down timer  
 
 		// We use a pre game wait timer so we have time to setup the game events before
 		yield return new WaitForSeconds(preGameSetupTimer);
 
-		// Run the game started event 
+		FireModeEvents.SpawnEnemyWaveEvent(startingEnemyInfantry, startingEnemyTanks); // spawns the enemies...
 
-		FireModeEvents.OnWaveStartedEvent?.Invoke();
-
-		// Then spawn in the enemy ai 
-
-
+		// Starts the first round! 
+		FireModeEvents.OnWaveStartedEvent?.Invoke(); // makes the enemies aggressive! 
+		
 
 		yield return null; // Tells coroutine when the next update is 
 	}

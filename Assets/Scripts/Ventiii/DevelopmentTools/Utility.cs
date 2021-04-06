@@ -1591,7 +1591,7 @@ namespace Ventiii.DevelopmentTools
 	///		Returns a randomly seeded hash code, Helpful for getting random index's from within a list of game objects 
 	/// </summary>
 	/// <returns></returns>
-	public static Random GenerateRandomSeed()
+	public static Random GetRandomIndex()
     {
         return new Random(DateTime.Now.ToString().GetHashCode());
     }
@@ -1603,7 +1603,7 @@ namespace Ventiii.DevelopmentTools
     /// <returns></returns>
     public static int SelectRandomIndexFromArray(List<GameObject> listOfGameObjects)
     {
-       Random rand = GenerateRandomSeed();
+       Random rand = GetRandomIndex();
 
         int selected = rand.Next(listOfGameObjects.Count);
 

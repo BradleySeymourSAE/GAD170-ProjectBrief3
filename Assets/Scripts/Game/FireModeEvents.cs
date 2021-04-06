@@ -12,26 +12,24 @@ using UnityEngine;
 public static class FireModeEvents
 {
 
-
-
 	public delegate void RestartGame(); // restart the game to first round  
 	public delegate void ResetWave(); // Resets the current wave 
 
 	public delegate void PreWave(); // before the game starts 
 	public delegate void WaveStarted(); // Called to start the game 
-	public delegate void PostWave(); // Called after the wave has finished 
+	public delegate void WaveOver(); // Called after the wave has finished 
 
 	public delegate void UpdateWaveCount(int Wave); // update the current wave 
 	public delegate void UpdatePlayerKills(int PlayerKills);
 	
-	public delegate void SpawnPlayer(Transform PlayerTank);
+	public delegate void SpawnPlayer();
 	public delegate void OnPlayerSpawned();
 
 	public delegate void OnObjectDestroyed(Transform DestroyedObject);
 	public delegate void ReceivedDamage(Transform DamagedObject, float DamageAmount);
 
 	public delegate void SpawnEnemyWave(int NumberOfInfantry, int NumberOfEnemyTanks);
-	public delegate void OnEnemyWaveSpawned(List<GameObject> EnemyAIInfantry, List<GameObject> EnemyAITanks);
+	public delegate void OnEnemyWaveSpawned(List<GameObject> Enemies);
 
  
 	/// <summary>
@@ -57,16 +55,16 @@ public static class FireModeEvents
 	/// <summary>
 	///		Handles that happens after the game has started 
 	/// </summary>
-	public static PostWave OnPostWaveEvent;
+	public static WaveOver OnWaveOverEvent;
 	
 	/// <summary>
 	///		Handles updated the players kill count 
 	/// </summary>
 	/// <param name="PlayerReference">The current player enum</param>
 	/// <param name="Amount">The kill count of the player</param>
-	public static UpdateWaveCount UpdateWaveCountEvent;
+	public static UpdateWaveCount OnUpdateWaveCountEvent;
 
-	public static UpdatePlayerKills UpdatePlayerKillsEvent;
+	public static UpdatePlayerKills OnUpdatePlayerKillsEvent;
 
 	/// <summary>
 	///		Handles the spawning of the player 

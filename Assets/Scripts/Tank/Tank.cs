@@ -27,9 +27,9 @@ public class Tank : MonoBehaviour
 	/// </summary>
 	private void OnEnable()
     {
-        TankGameEvents.OnObjectDestroyedEvent += Dead; // add dead function to the event for when a tank is destroyed
-        TankGameEvents.OnObjectTakeDamageEvent += TankTakenDamage; // assign our health function to our event so we can take damage
-        TankGameEvents.OnGameStartedEvent += EnableInput; // assign our tank movement function to the game started event
+        FireModeEvents.OnObjectDestroyedEvent += Dead; // add dead function to the event for when a tank is destroyed
+        FireModeEvents.OnDamageReceivedEvent += ReceivedDamage; // assign our health function to our event so we can take damage
+        FireModeEvents.OnPlayerSpawnedEvent += EnableInput; // assign our tank movement function to the game started event
     }
 
     /// <summary>
@@ -37,16 +37,14 @@ public class Tank : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        TankGameEvents.OnObjectDestroyedEvent -= Dead; // add dead function to the event for when a tank is destroyed
-        TankGameEvents.OnObjectTakeDamageEvent -= TankTakenDamage; // assign our health function to our event so we can take damage
-        TankGameEvents.OnGameStartedEvent -= EnableInput; // assign our tank movement function to the game started event
+        FireModeEvents.OnObjectDestroyedEvent -= Dead; // add dead function to the event for when a tank is destroyed
+        FireModeEvents.OnDamageReceivedEvent -= ReceivedDamage; // assign our health function to our event so we can take damage
+        FireModeEvents.OnPlayerSpawnedEvent -= EnableInput; // assign our tank movement function to the game started event
     }
 
     // Start is called before the first frame update
     void Start()
     {   
-
-
         tankHealth.Setup(transform); // call the set up function of our tank health script
         tankMovement.Setup(transform); // calls the set up function of our tank health script
         tankPrimary.Setup(transform); // calls primary weapon setup
@@ -97,7 +95,7 @@ public class Tank : MonoBehaviour
     /// </summary>
     /// <param name="TankTransform"></param>
     /// <param name="AmountOfDamage"></param>
-    private void TankTakenDamage(Transform TankTransform, float AmountOfDamage)
+    private void ReceivedDamage(Transform TankTransform, float AmountOfDamage)
     {
         Debug.Log("[Tank.TankTakenDamage]: " + " Tank has taken damage!");
         // if the Tank transform coming in, isn't this particular tank, ignore it.
