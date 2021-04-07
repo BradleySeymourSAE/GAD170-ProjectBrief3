@@ -11,7 +11,7 @@ public class TankHealth
 {
     public float minHealth = 0; // our min health
     public float maxHealth = 100; // our max health
-    [SerializeField] private float currentHealth; // our current health
+    [SerializeField] private float CurrentHealth; // our current health
     public bool isDead = true; // is our character alive?
     public Color fullHealthColour = Color.green; // our full health colour
     public Color warningHealthColor = Color.yellow; // warning health colour (50%)
@@ -20,25 +20,25 @@ public class TankHealth
     public Slider healthSlider; // reference to the health Slider
     private Image fillImage; // reference to the fill image component of our slider;
 
-    public float CurrentHealth
+    public float Health
     {
         get
         {
-            return currentHealth; // return our current health
+            return CurrentHealth; // return our current health
         }
         set
         {
-            currentHealth = value; // set our currenthealth to the value coming in.
+            CurrentHealth = value; // set our currenthealth to the value coming in.
 
-            currentHealth = Mathf.Clamp(currentHealth, minHealth, maxHealth); // making sure that what our damage is, it clamps it between 0 and 100
+            CurrentHealth = Mathf.Clamp(CurrentHealth, minHealth, maxHealth); // making sure that what our damage is, it clamps it between 0 and 100
 
             // so if we have less than 0 health we must be dead. 
-            if (currentHealth <= 0)
+            if (CurrentHealth <= 0)
             {
                 isDead = true;
                 // if we are dead we'd want some explosions
                 // call an event for the players death
-                TankGameEvents.OnObjectDestroyedEvent?.Invoke(m_tankReference); // so pass in our tank's health script into the tank destroyed event
+                FireModeEvents.OnObjectDestroyedEvent?.Invoke(m_tankReference); // so pass in our tank's health script into the tank destroyed event
             }
             else
             {
@@ -47,15 +47,15 @@ public class TankHealth
 
             if(healthSlider != null)
             {
-                healthSlider.value = CurrentHealth;
+                healthSlider.value = Health;
 
-                if (CurrentHealth > 0 && CurrentHealth <= 50f && fillImage != null)
+                if (Health > 0 && Health <= 50f && fillImage != null)
 				{
-                    fillImage.color = Color.Lerp(zeroHealthColour, warningHealthColor, CurrentHealth / maxHealth);
+                    fillImage.color = Color.Lerp(zeroHealthColour, warningHealthColor, Health / maxHealth);
 				}
-                else if (CurrentHealth > 50f && CurrentHealth <= 100f && fillImage != null)
+                else if (Health > 50f && Health <= 100f && fillImage != null)
 				{
-                    fillImage.color = Color.Lerp(warningHealthColor, fullHealthColour, CurrentHealth / maxHealth);
+                    fillImage.color = Color.Lerp(warningHealthColor, fullHealthColour, Health / maxHealth);
 				}
                 
             }
@@ -81,7 +81,7 @@ public class TankHealth
                 Debug.LogError("There is no health slider image");
             }
         }
-        CurrentHealth = maxHealth; // set our current health to max health
+        Health = maxHealth; // set our current health to max health
 
     }
 
@@ -93,6 +93,6 @@ public class TankHealth
     public void ApplyHealthChange(float Amount)
     {
         Debug.Log(Amount);
-        CurrentHealth += Amount; // increase our health by the amount
+        Health += Amount; // increase our health by the amount
     }
 }

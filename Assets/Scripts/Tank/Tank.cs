@@ -20,16 +20,16 @@ public class Tank : MonoBehaviour
     public TankPrimaryWeapon tankPrimary = new TankPrimaryWeapon(); // primary weapon instance 
     public GameObject deathExplosionPrefab; // the prefab we will use when we have 0 left to make it go boom
 
-
+    [SerializeField] private bool CursorIsLocked;
 
 	/// <summary>
 	///     OnEnable Event Methods for the Tank Instance
 	/// </summary>
 	private void OnEnable()
     {
-        FireModeEvents.OnObjectDestroyedEvent += Dead; // add dead function to the event for when a tank is destroyed
-        FireModeEvents.OnDamageReceivedEvent += ReceivedDamage; // assign our health function to our event so we can take damage
-        FireModeEvents.OnPlayerSpawnedEvent += EnableInput; // assign our tank movement function to the game started event
+        FireModeEvents.OnObjectDestroyedEvent += OnDeath; // add dead function to the event for when a tank is destroyed
+        FireModeEvents.OnDamageReceivedEvent += OnHit; // assign our health function to our event so we can take damage
+        FireModeEvents.SpawnPlayerEvent += EnableInput; // assign our tank movement function to the game started event
     }
 
     /// <summary>
@@ -37,14 +37,14 @@ public class Tank : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        FireModeEvents.OnObjectDestroyedEvent -= Dead; // add dead function to the event for when a tank is destroyed
-        FireModeEvents.OnDamageReceivedEvent -= ReceivedDamage; // assign our health function to our event so we can take damage
-        FireModeEvents.OnPlayerSpawnedEvent -= EnableInput; // assign our tank movement function to the game started event
+        FireModeEvents.OnObjectDestroyedEvent -= OnDeath; // add dead function to the event for when a tank is destroyed
+        FireModeEvents.OnDamageReceivedEvent -= OnHit; // assign our health function to our event so we can take damage
+        FireModeEvents.SpawnPlayerEvent -= EnableInput; // assign our tank movement function to the game started event
     }
 
     // Start is called before the first frame update
     void Start()
-    {   
+    {  
         tankHealth.Setup(transform); // call the set up function of our tank health script
         tankMovement.Setup(transform); // calls the set up function of our tank health script
         tankPrimary.Setup(transform); // calls primary weapon setup
@@ -61,11 +61,8 @@ public class Tank : MonoBehaviour
     //  Update is called once per frame at a fixed rate (Mouse Sensitivity is smoother at a fixed update)
     private void Update()
     {
-        if (Cursor.lockState == CursorLockMode.None)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
+        // Hanldes locking of the cursor...
+        LockCursor();
 
 
         // Handles Basic movement position & rotation from player input (W,A,S,D)
@@ -89,13 +86,29 @@ public class Tank : MonoBehaviour
         tankPrimary.EnableShooting(true);
     }
 
+    private void LockCursor()
+	{
+        if (Input.GetKeyDown(KeyCode.Escape) && !CursorIsLocked)
+		{
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = (false);
+            CursorIsLocked = true;
+		}
+        else if (Input.GetKeyDown(KeyCode.Escape) && CursorIsLocked)
+		{
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = (true);
+            CursorIsLocked = false;
+		}
+	}
+
     /// <summary>
     /// Called when an objects takes damage, if the object taking damage is this tank
     /// deal damage to it, else ignore it.
     /// </summary>
     /// <param name="TankTransform"></param>
     /// <param name="AmountOfDamage"></param>
-    private void ReceivedDamage(Transform TankTransform, float AmountOfDamage)
+    private void OnHit(Transform TankTransform, float AmountOfDamage)
     {
         Debug.Log("[Tank.TankTakenDamage]: " + " Tank has taken damage!");
         // if the Tank transform coming in, isn't this particular tank, ignore it.
@@ -115,7 +128,7 @@ public class Tank : MonoBehaviour
     /// Called when the object destroyed event has been called
     /// </summary>
     /// <param name="ObjectDestroyed"></param>
-    private void Dead(Transform ObjectDestroyed)
+    private void OnDeath(Transform ObjectDestroyed)
     {
         // If the object that has been destroyed is not equal to the current transform 
         if (ObjectDestroyed != transform)
@@ -128,5 +141,10 @@ public class Tank : MonoBehaviour
         GameObject clone = Instantiate(deathExplosionPrefab, transform.position, deathExplosionPrefab.transform.rotation); // spawn in our explosion effect
         Destroy(clone, 2); // just cleaning up our particle effect
         gameObject.SetActive(false); // turn off our tank as we are dead
+    
+    
+    
+       // Call the game over event, as the player has died! 
+       FireModeEvents.OnGameOverEvent?.Invoke();
     }
 }

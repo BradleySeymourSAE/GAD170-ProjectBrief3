@@ -7431,7 +7431,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2868688716373407744}
   serializedVersion: 7
-  lengthInSec: 0.75
+  lengthInSec: 1.14
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -12901,22 +12901,24 @@ MonoBehaviour:
   tankHealth:
     minHealth: 0
     maxHealth: 100
-    currentHealth: 0
+    CurrentHealth: 0
     isDead: 1
     fullHealthColour: {r: 0, g: 1, b: 0, a: 1}
     warningHealthColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     zeroHealthColour: {r: 1, g: 0, b: 0, a: 1}
     healthSlider: {fileID: 2868688715892324499}
   tankMovement:
-    speed: 12
+    speed: 15
     turnSpeed: 50
     mouseSensitivity: 100
     cameraTurnSmoothingTime: 0.1
     cameraTurnSmoothVelocity: 0
     tankSoundEffects:
-      pitchRangeMax: 0.2
+      EngineIdle: {fileID: 8300000, guid: 12d0ab36cc31e954baaef244477a70ce, type: 3}
+      EngineDriving: {fileID: 8300000, guid: 2d20d594839e4004b80b9e7a0dd53939, type: 3}
+      pitchRangeMax: 1
     durationSecond: 1
-    aimVolumeMin: 0
+    aimVolumeMin: 40
     aimVolumeMax: 100
     MainTurret: {fileID: 2868688715311997765}
   tankPrimary:
@@ -12924,10 +12926,10 @@ MonoBehaviour:
     tankShellPrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
       type: 3}
     minimumBulletSpeed: 250
-    maximumBulletSpeed: 500
-    maximumReloadTime: 3.5
-    maximumAmmunition: 20
-    maximumAmmunitionPerClip: 1
+    maximumBulletSpeed: 1000
+    maximumReloadTime: 5
+    maximumAmmunition: 40
+    maximumAmmunitionPerClip: 2
     currentBulletVelocity: 0
     currentReloadSpeed: 0
     primaryWeaponAmmunitionInChamber: 0
@@ -12948,7 +12950,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 12d0ab36cc31e954baaef244477a70ce, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

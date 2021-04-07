@@ -186,7 +186,7 @@ public class TankMovement
             // Clamp vertical look degrees angle 
              desiredXAxisRotation = Mathf.Clamp(desiredXAxisRotation, 0, 0); 
 
-             m_cameraReference.rotation = Quaternion.Euler(desiredXAxisRotation, 0, 0);
+             m_cameraReference.localRotation = Quaternion.Euler(desiredXAxisRotation, 0, 0);
 
             // Rotate the main turret gun on the y axis 
              MainTurret.Rotate(Vector3.up, AimPosition.x);

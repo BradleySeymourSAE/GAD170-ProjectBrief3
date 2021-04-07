@@ -97,15 +97,6 @@ public class TankPrimaryWeapon
             // EDIT: This is actually just useless code, as we are reloading straight after firing the primary weapon. 
             // However, this could be moreso useful for the turret weapon? 
 
-            /* if (primaryWeaponAmmunitionInChamber <= 0)
-            {
-                 // Reload the weapon 
-                 Debug.Log("[TankPrimaryWeapon.UpdateMainGun]: " + "Reloading weapon!");
-                 m_tankReference.GetComponent<Tank>().StartCoroutine(ReloadWeapon());
-                 return;
-            }
-            */
-
             Debug.Log("[TankPrimaryWeapon.UpdateMainGun]: " + "Firing primary weapon!");
             FireWeapon();
 

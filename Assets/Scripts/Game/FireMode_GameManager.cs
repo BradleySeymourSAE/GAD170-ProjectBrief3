@@ -19,11 +19,15 @@ public class FireMode_GameManager : MonoBehaviour
 	public float resetRoundTimer = 3f; // seconds before the round is restarted    
 
 	[Header("Game Mode Settings")]
-	public int startingEnemyTanks = 3;
-	public int startingEnemyInfantry = 3;
+	public int startingEnemyTanks = 2;
+	public int startingEnemyInfantry = 5;
+
+
+	[SerializeField] private float nextWaveTankScalingFactor;
+	[SerializeField] private float nextWaveInfantryScalingFactor;
 
 	[SerializeField] private float totalEnemiesRemaining; // enemies remaining 
-	[SerializeField] private int m_currentWaveCount; // the current wave the player is on 						 
+	[SerializeField] private int m_currentWaveCount = 1; // the current wave the player is on 						 
 
 	// Testing adding both tank lists to this one 
 	[SerializeField] private List<GameObject> aliveEnemiesRemaining = new List<GameObject>();
@@ -40,6 +44,7 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	private void OnEnable()
 	{
+		FireModeEvents.OnPlayerSpawnedEvent += SpawnedPlayerEntity;
 		FireModeEvents.OnEnemyWaveSpawnedEvent += SpawnedEntitys;
 		FireModeEvents.OnObjectDestroyedEvent += DespawnEntity;
 	}
@@ -49,14 +54,29 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	private void OnDisable()
 	{
+		FireModeEvents.OnPlayerSpawnedEvent -= SpawnedPlayerEntity;
 		FireModeEvents.OnEnemyWaveSpawnedEvent -= SpawnedEntitys;
 		FireModeEvents.OnObjectDestroyedEvent -= DespawnEntity;
 	}
 
-
-	public int GetCurrentWave()
+	/// <summary>
+	///		Gets the current wave index 
+	/// </summary>
+	public int GetCurrentWave
 	{
-		return m_currentWaveCount;
+		get
+		{
+			return m_currentWaveCount;
+		}
+	}
+
+
+	private void SpawnedPlayerEntity(Transform PlayerEntity)
+	{
+		if (PlayerEntity.GetComponent<Tank>())
+		{
+			m_currentPlayerReference = PlayerEntity.GetComponent<Tank>();
+		}
 	}
 
 	/// <summary>
@@ -74,6 +94,7 @@ public class FireMode_GameManager : MonoBehaviour
 
 			if (!enemiesSpawned[i].GetComponent<TankAI>() || !enemiesSpawned[i].GetComponent<InfantryAI>())
 			{
+				Debug.Log("[FireMode_GameManager.SpawnedEntitys]: " + "Could not find enemies spawned script");
 				continue;
 			}
 		
@@ -102,18 +123,35 @@ public class FireMode_GameManager : MonoBehaviour
 		}
 
 
+		// Then the player has lost 
+		if (EnemyEntity.GetComponent<Tank>())
+		{
+			Tank currentPlayer = EnemyEntity.GetComponent<Tank>();
 
-		aliveEnemiesRemaining.Remove(EnemyEntity.gameObject);
+			bool isDead = currentPlayer.tankHealth.Health <= 0;
 
-		
+			if (isDead)
+			{ 
+				FireModeEvents.OnGameOverEvent?.Invoke();
+			}
+		}
+		else
+		{ 
+
+			aliveEnemiesRemaining.Remove(EnemyEntity.gameObject);
+			totalEnemiesRemaining = aliveEnemiesRemaining.Count;
+			totalKillCount += 1;
+			
+			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Enemies Remaining:  " + totalEnemiesRemaining);
+			FireModeEvents.OnUpdatePlayerKillsEvent?.Invoke(totalKillCount);
 
 
-		totalEnemiesRemaining = aliveEnemiesRemaining.Count;
-
-		Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Enemies Remaining:  " + totalEnemiesRemaining);
-
-
-		
+			if (totalEnemiesRemaining <= 0)
+			{
+				// Then we want to run the next round 
+				FireModeEvents.OnWaveOverEvent?.Invoke();
+			}
+		}
 	}
 
 	/// <summary>
@@ -135,9 +173,16 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	private void RestartGameEvent()
 	{
+
+		// Restarts the game 
 		FireModeEvents.OnRestartGameEvent?.Invoke();
 		
 
+		// Respawns the player in 
+		FireModeEvents.SpawnPlayerEvent?.Invoke();
+
+
+		// Calls the first enemy wave! 
 		Invoke(nameof(StartFirstEnemyWave), preGameSetupTimer);
 	}
 
@@ -156,6 +201,26 @@ public class FireMode_GameManager : MonoBehaviour
 	/// <summary>
 	/// 	Initializes the start of Field of Fire 
 	/// </summary>
+
+
+	private void Awake()
+	{
+
+		if (Instance != null)
+		{
+			Destroy(gameObject);
+		}
+		else
+		{
+			Instance = this;
+			DontDestroyOnLoad(gameObject);
+		}
+
+
+		m_currentWaveCount = 1;
+	}
+
+
 	private void Start()
 	{
 		StartCoroutine(StartFieldOfFire());

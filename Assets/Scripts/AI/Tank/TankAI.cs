@@ -6,7 +6,7 @@ using UnityEngine.AI;
 [System.Serializable]
 public class TankAI : MonoBehaviour
 {
-	public Transform PlayerTarget;
+	private Transform Target;
 	
 
 	public Transform TurretTransform;
@@ -21,9 +21,13 @@ public class TankAI : MonoBehaviour
 	/// <summary>
 	///		Patrolling 
 	/// </summary>
-	public Vector3 movePoint;
-	[SerializeField] private bool movePointSet;
-	public float movementPointRange;
+	public Vector3 movementDirection;
+	[SerializeField] private bool movementDirectionSet;
+	public float movementRange;
+
+	private float maximumMovementRange = 10f;
+	private float movementWaypointTimer = 3f;
+	
 	
 	/// <summary>
 	///		Attacking 
@@ -35,21 +39,18 @@ public class TankAI : MonoBehaviour
 	///		States 
 	/// </summary>
 	/// 
-	public float viewDistanceRange;
-	public float viewDistanceFiringRange;
-	[SerializeField] private bool playerInViewDistanceRange;
-	[SerializeField] private bool playerInViewDistanceFiringRange;
+	public float viewDistanceAlertedRange;
+	public float viewDistanceAttackRange;
+	[SerializeField] private bool aiAlerted;
+	[SerializeField] private bool aiAggressive;
 
-	[SerializeField] Vector3 startPos;
-	[SerializeField] Vector3 startLocalRot;
-	[SerializeField] Quaternion startingRot;
 
-	public bool enableSpawn = false;
+	[SerializeField] private bool enableAIMovement = false;
 
 
 	public TankHealth tankHealth = new TankHealth();
 	public TankParticleEffects tankParticleEffects = new TankParticleEffects();
-	// public TankSoundEffects tankSoundEffects = new TankSoundEffects();
+	public TankSoundEffects tankSoundEffects = new TankSoundEffects();
 	
 	public GameObject enemyDeathPrefab; 
 
@@ -57,17 +58,29 @@ public class TankAI : MonoBehaviour
 	{
 		FireModeEvents.OnObjectDestroyedEvent += OnDeath;
 		FireModeEvents.OnDamageReceivedEvent += OnDamageEvent;
+		FireModeEvents.OnWaveStartedEvent += EnableAI;
 	}
 
 	private void OnDisable()
 	{
 		FireModeEvents.OnObjectDestroyedEvent -= OnDeath;
 		FireModeEvents.OnDamageReceivedEvent -= OnDamageEvent;
+		FireModeEvents.OnWaveStartedEvent -= EnableAI;
 	}
 
 	private void Awake()
 	{
-		Agent = GetComponent<NavMeshAgent>();
+		if (GetComponent<NavMeshAgent>() != null)
+		{ 
+			Agent = GetComponent<NavMeshAgent>();
+			Agent.autoBraking = false;
+		}
+
+
+		if (FindObjectOfType<Tank>().transform != null)
+		{ 
+			Target = FindObjectOfType<Tank>().transform;
+		}
 	}
 
 	private void Start()
@@ -75,85 +88,133 @@ public class TankAI : MonoBehaviour
 		tankHealth.Setup(transform); // setup the enemy ai's health
 		tankParticleEffects.SetUpEffects(transform); // Setup the tanks particle effects
 		tankParticleEffects.PlayDustTrails(true); // should play dust trail effects
-
-		if (Agent != null)
+		tankSoundEffects.Setup(transform);
+		
+		if (enableAIMovement)
 		{
-			// Disable Auto Braking
-			Agent.autoBraking = false;
-		}
+			EnableAI();
+		}	
+	}
 
-		startPos = transform.position;
-		startingRot = transform.rotation;
-		startLocalRot = transform.rotation.eulerAngles;
-		enableSpawn = true;
+	private void EnableMovement(bool Enable)
+	{
+		enableAIMovement = Enable;
+	}
+
+	private void EnableAI()
+	{
+		// tankWeapon.EnableWeaponFiring(true);
+		
+		EnableMovement(true);
 	}
 
 
 	private void Update()
 	{
-		playerInViewDistanceRange = Physics.CheckSphere(transform.position, viewDistanceRange, PlayerMask);
-		playerInViewDistanceFiringRange = Physics.CheckSphere(transform.position, viewDistanceFiringRange, PlayerMask);
 
-
-		
-
-		if (!playerInViewDistanceRange && !playerInViewDistanceFiringRange)
+		if (!enableAIMovement)
 		{
-			Looking();
-		}
-		
-
-
-		if (playerInViewDistanceRange && !playerInViewDistanceFiringRange)
-		{
-			Alerted();
+			return;
 		}
 
+		Agent.updatePosition = true;
+		Agent.updateRotation = false;
+		Agent.updateUpAxis = false;
 
-		if (playerInViewDistanceFiringRange && playerInViewDistanceRange)
+		// Check the view distance 
+		CheckViewDistance(transform.position);
+		
+		
+
+
+
+		if (!aiAlerted && !aiAggressive)
 		{
-			Aggressive();
+			SearchForPlayer();
+		}
+		else
+		{
+			if (aiAlerted && !aiAggressive)
+			{
+				Alerted();
+			}
+			else if (aiAggressive && aiAlerted)
+			{
+				Aggressive();
+			}
 		}
 	}
 
-	private void Looking()
+	/// <summary>
+	///		Checks for the player within the view distance that is set 
+	/// </summary>
+	/// <param name="_position"></param>
+	private void CheckViewDistance(Vector3 _position)
 	{
-		if (!movePointSet)
+		aiAlerted = Physics.CheckSphere(_position, viewDistanceAlertedRange, PlayerMask);
+		aiAggressive = Physics.CheckSphere(_position, viewDistanceAttackRange, PlayerMask);
+	}
+
+
+	#region AI States 
+	private void SearchForPlayer()
+	{
+		if (!movementDirectionSet)
 		{
-			Search();
+			StartCoroutine(SetMovementWaypoint());
+			return;
 		}
 
-		Vector3 movementDistance = transform.position - movePoint;
-
-		if (movementDistance.magnitude < 1f)
+		if (movementDirectionSet == true && movementDirection.magnitude <= 1f)
 		{
-			movePointSet = false;
+			movementDirectionSet = false;
+		}
+		
+
+
+		if (movementDirectionSet)
+		{	
+			Debug.Log("[TankAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
+			Agent.SetDestination(movementDirection);
+		}
+	}
+
+	private IEnumerator SetMovementWaypoint()
+	{
+		yield return new WaitForSeconds(movementWaypointTimer);
+
+		float randomXPosition = Random.Range(1, maximumMovementRange);
+		float randomZPosition = Random.Range(1, maximumMovementRange);
+
+
+		movementDirection = new Vector3(transform.position.x + randomXPosition, transform.position.y, transform.position.z + randomZPosition);
+
+
+		if (Physics.Raycast(movementDirection, -transform.up, 2f, GroundMask))
+		{
+			movementDirectionSet = true;
 		}
 
 
-
-		if (movePointSet)
-		{
-			Agent.SetDestination(movePoint);
-		}
+		yield return null;
 	}
 
 	private void Search()
 	{
-		float randZ = Random.Range(-movementPointRange, movementPointRange);
-		float randX = Random.Range(-movementPointRange, movementPointRange);
+		float randZ = Random.Range(-movementRange, movementRange);
+		float randX = Random.Range(-movementRange, movementRange);
 
-		movePoint = new Vector3(transform.position.x + randX, transform.position.y, transform.position.z + randZ);
+		movementDirection = new Vector3(transform.position.x + randX, transform.position.y, transform.position.z + randZ);
 
-		if (Physics.Raycast(movePoint, -transform.up, 2f, GroundMask))
+		if (Physics.Raycast(movementDirection, -transform.up, 2f, GroundMask))
 		{
-			movePointSet = true;
+			movementDirectionSet = true;
 		}
 	}
 
 	private void Alerted()
 	{
-		Agent.SetDestination(PlayerTarget.position);
+		Agent.SetDestination(Target.position);
 	}
 
 	/// <summary>
@@ -164,7 +225,7 @@ public class TankAI : MonoBehaviour
 		// Stop the enemy 
 		Agent.SetDestination(transform.position);
 
-		TurretTransform.transform.LookAt(PlayerTarget);
+		TurretTransform.transform.LookAt(Target);
 
 		if (!alreadyAttacking)
 		{
@@ -182,17 +243,14 @@ public class TankAI : MonoBehaviour
 			Invoke(nameof(ResetAttack), attackWaitTime);
 		}
 	}
+	#endregion
 
+
+	#region Events 
 	private void ResetAttack()
 	{
 		alreadyAttacking = false;
 	}
-
-	private void EnableAggression()
-	{
-		enableSpawn = true;
-	}
-
 
 	private void OnDamageEvent(Transform TankReference, float DamageAmount)
 	{
@@ -226,17 +284,18 @@ public class TankAI : MonoBehaviour
 		gameObject.SetActive(false);
 	}
 
+	#endregion
 
 
-
+	#region Debugging 
 	private void OnDrawGizmosSelected()
 	{
 		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere(transform.position, viewDistanceFiringRange);
+		Gizmos.DrawWireSphere(transform.position, viewDistanceAttackRange);
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawWireSphere(transform.position, viewDistanceRange);
+		Gizmos.DrawWireSphere(transform.position, viewDistanceAlertedRange);
 	}
 
-
+	#endregion
 }
 

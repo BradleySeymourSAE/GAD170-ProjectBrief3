@@ -19,11 +19,13 @@ public static class FireModeEvents
 	public delegate void WaveStarted(); // Called to start the game 
 	public delegate void WaveOver(); // Called after the wave has finished 
 
+	public delegate void GameOver(); // Called if the player dies, Restarts the game 
+
 	public delegate void UpdateWaveCount(int Wave); // update the current wave 
 	public delegate void UpdatePlayerKills(int PlayerKills);
 	
 	public delegate void SpawnPlayer();
-	public delegate void OnPlayerSpawned();
+	public delegate void OnPlayerSpawned(Transform PlayerReference);
 
 	public delegate void OnObjectDestroyed(Transform DestroyedObject);
 	public delegate void ReceivedDamage(Transform DamagedObject, float DamageAmount);
@@ -38,7 +40,7 @@ public static class FireModeEvents
 	public static RestartGame OnRestartGameEvent;
 	
 	/// <summary>
-	///		Calls wave reset evebt 
+	///		Calls wave reset event 
 	/// </summary>
 	public static ResetWave OnResetWaveEvent;
 	
@@ -53,9 +55,15 @@ public static class FireModeEvents
 	public static WaveStarted OnWaveStartedEvent;
 
 	/// <summary>
-	///		Handles that happens after the game has started 
+	///		Handles that happens after the wave is over 
 	/// </summary>
 	public static WaveOver OnWaveOverEvent;
+
+
+	/// <summary>
+	///		Called once a player dies. Restarts the game.
+	/// </summary>
+	public static GameOver OnGameOverEvent;
 	
 	/// <summary>
 	///		Handles updated the players kill count 
