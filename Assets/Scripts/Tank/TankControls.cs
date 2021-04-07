@@ -9,7 +9,7 @@ using UnityEngine;
 [System.Serializable]
 public class TankControls
 {
-    public enum KeyType { Movement, Rotation, Fire, Reload };
+    public enum KeyType { Movement, Rotation, Fire, Reload, SwitchToPrimary, SwitchToSecondary };
 
     public KeyCode forward = KeyCode.W; // the forward button to use
     public KeyCode backwards = KeyCode.S; // the backwards button
@@ -19,10 +19,14 @@ public class TankControls
     public KeyCode reloadButton = KeyCode.R; // the aim down sight button (ads)
     public KeyCode weaponSlot1 = KeyCode.Alpha1; // Weapon Slot 1 
     public KeyCode weaponSlot2 = KeyCode.Alpha2; // Weapon Slot 2
-    public float sensitivity = 100f;
+    public float sensitivity = 50f;
+    public float sensMultiplier = 1f;
     
     private bool fireButtonWasPressed = false; // has the fire button been pressed?
- 
+    private bool reloadButtonWasPressed = false; // has the reload button been pressed? 
+   
+    
+    
     /// <summary>
     /// If the value returned is postive then the postive axis has been pressed for that key.
     /// if the value returned is negative then the negative axis as been pressed
@@ -30,7 +34,6 @@ public class TankControls
     /// </summary>
     /// <param name="codeToCheck"></param>
     /// <returns></returns>
- 
     public float ReturnKeyValue(KeyType codeToCheck)
     {
         float currentValue = 0; // the current input value of the code to check
@@ -83,7 +86,32 @@ public class TankControls
 					{
                         currentValue = 1;
 					}
-                    else
+                    else if (Input.GetKeyUp(reloadButton) && reloadButtonWasPressed == true)
+					{
+                        reloadButtonWasPressed = false;
+                        currentValue = -1;
+					}
+                    break;
+				}
+            case KeyType.SwitchToPrimary:
+				{
+                    if (Input.GetKeyDown(weaponSlot1))
+					{
+                        currentValue = 1;
+					}
+                    else if (Input.GetKeyDown(weaponSlot2))
+					{
+                        currentValue = -1;
+					}
+                    break;
+				}
+            case KeyType.SwitchToSecondary:
+				{
+                    if (Input.GetKeyDown(weaponSlot2))
+					{
+                        currentValue = 1;
+					}
+                    else if (Input.GetKeyDown(weaponSlot1))
 					{
                         currentValue = -1;
 					}
@@ -101,8 +129,8 @@ public class TankControls
     /// <returns></returns>
     public Vector3 ReturnMouseInput()
 	{
-        float MouseXPosition = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
-        float MouseYPosition = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+        float MouseXPosition = Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
+        float MouseYPosition = Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime * sensMultiplier;
 
        return new Vector3(MouseXPosition, MouseYPosition, 0).normalized;
     }

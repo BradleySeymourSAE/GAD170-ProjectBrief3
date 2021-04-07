@@ -45,6 +45,10 @@ public class Tank : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {  
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         tankHealth.Setup(transform); // call the set up function of our tank health script
         tankMovement.Setup(transform); // calls the set up function of our tank health script
         tankPrimary.Setup(transform); // calls primary weapon setup
@@ -64,14 +68,25 @@ public class Tank : MonoBehaviour
         // Hanldes locking of the cursor...
         LockCursor();
 
-
-        // Handles Basic movement position & rotation from player input (W,A,S,D)
-        tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation)); 
-        
+        if (!enableTankMovement)
+		{
+            return;
+		}
 
         // Handles the aiming for the turret on the horizontal and vertical axis 
         tankMovement.HandleAiming(tankControls.ReturnMouseInput());
+    }
 
+	private void FixedUpdate()
+	{
+        if (!enableTankMovement)
+		{
+            return;
+		}
+
+
+        // Handles Basic movement position & rotation from player input (W,A,S,D)
+        tankMovement.HandleMovement(tankControls.ReturnKeyValue(TankControls.KeyType.Movement), tankControls.ReturnKeyValue(TankControls.KeyType.Rotation));
         // Handles shooting of the primary weapon (Mouse0, Mouse1)
         tankPrimary.UpdateMainGun(tankControls.ReturnKeyValue(TankControls.KeyType.Fire));
     }
@@ -91,13 +106,13 @@ public class Tank : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && !CursorIsLocked)
 		{
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = (false);
+            Cursor.visible = false;
             CursorIsLocked = true;
 		}
         else if (Input.GetKeyDown(KeyCode.Escape) && CursorIsLocked)
 		{
             Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = (true);
+            Cursor.visible = true;
             CursorIsLocked = false;
 		}
 	}

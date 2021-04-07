@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,22 +14,30 @@ public class FireMode_SpawnManager : MonoBehaviour
 	public GameObject InfantryPrefab; // Enemy Infantry AI Prefab 
 
 	public Transform playerSpawnPosition;
+	public Transform waveSpawnPosition;
 
-	[Range(50, 500)]
 	public float maximumXSpawnPosition = 50;
-	[Range(50, 500)]
-	public float maximumYSpawnPosition = 50;
-	public List<GameObject> aliveEnemiesSpawned = new List<GameObject>();
+	public float maximumZSpawnPosition = 50;
+	
+	
+	[SerializeField] private List<GameObject> aliveEnemiesSpawned = new List<GameObject>();
 
-	[SerializeField] private int currentWave;
+
+	private Vector3 spawnPosition;
 	private Tank m_playerReference;
-	private float waveScalingFactor = 3;
+
+	[SerializeField] private int currentWave = 1;
+	[SerializeField] private float waveScalingFactor = 3f;
+	[SerializeField] private int nextRoundInfantry;
+	[SerializeField] private int nextRoundTanks;
+	
+	
 	/// <summary>
 	///		Enemy Spawn Manager Event Listeners 
 	/// </summary>
 	private void OnEnable()
 	{
-		FireModeEvents.SpawnPlayerEvent += SpawnPlayer;
+		FireModeEvents.SpawnPlayerEvent += SpawnPlayer; // spawns the player into the game 
 		FireModeEvents.SpawnEnemyWaveEvent += SpawnEnemyWave; // spawns in the enemies 
 		
 		
@@ -43,7 +50,7 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// </summary>
 	private void OnDisable()
 	{
-		FireModeEvents.SpawnPlayerEvent -= SpawnPlayer;
+		FireModeEvents.SpawnPlayerEvent -= SpawnPlayer; // spawns player in the game 
 		FireModeEvents.SpawnEnemyWaveEvent -= SpawnEnemyWave; // removes enemy listener  
 		
 		FireModeEvents.OnResetWaveEvent -= ResetWave; // Restarts the current wave 
@@ -53,6 +60,8 @@ public class FireMode_SpawnManager : MonoBehaviour
 
 	private void Start()
 	{
+		spawnPosition = waveSpawnPosition.position;
+
 		if (FireMode_GameManager.Instance)
 		{ 
 			currentWave = FireMode_GameManager.Instance.GetCurrentWave;
@@ -62,14 +71,15 @@ public class FireMode_SpawnManager : MonoBehaviour
 	private void SpawnPlayer()
 	{
 
-		if (FindObjectOfType<Tank>() != null)
+		if (FindObjectOfType<Tank>())
 		{
 			m_playerReference = FindObjectOfType<Tank>();
-
-			GameObject player = m_playerReference.gameObject;
-
-			Destroy(player);
+			GameObject playerRef = m_playerReference.gameObject;
+			
+			Destroy(playerRef);
 		}
+		 
+
 
 		Instantiate(PlayerPrefab, playerSpawnPosition.position, PlayerPrefab.transform.rotation);
 
@@ -113,12 +123,13 @@ public class FireMode_SpawnManager : MonoBehaviour
 
 			aliveEnemiesSpawned.Clear();
 
-			int newTanks = (int)(Random.Range(1f, currentWave) + waveScalingFactor);
-			int newInfantry = (int)(Random.Range(1, currentWave) + waveScalingFactor);
+			nextRoundTanks = Mathf.RoundToInt(currentWave * waveScalingFactor);
+			nextRoundInfantry = Mathf.RoundToInt(currentWave * waveScalingFactor);
 
 
+			FireModeEvents.OnUpdateWaveCountEvent?.Invoke(currentWave);
 			// Invoke the Wave 
-			FireModeEvents.SpawnEnemyWaveEvent?.Invoke(newInfantry, newTanks);
+			FireModeEvents.SpawnEnemyWaveEvent?.Invoke(nextRoundInfantry, nextRoundTanks);
 		}
 	}
 
@@ -135,15 +146,13 @@ public class FireMode_SpawnManager : MonoBehaviour
 		// Loop through the amount of characters we need to spawn 
 		for (int i = 0; i < AmountOfInfantry; i++)
 		{
+			float xPosition = Random.Range(-maximumXSpawnPosition, maximumXSpawnPosition);
+			float zPosition = Random.Range(-maximumZSpawnPosition, maximumZSpawnPosition);
 
-			float xPosition = Random.Range(1f, maximumXSpawnPosition);
-			float yPosition = Random.Range(1f, maximumYSpawnPosition);
-
-			Vector3 tempSpawnPoint = new Vector3(xPosition, 0, yPosition);
-
+			Vector3 tempSpawnPosition = new Vector3(spawnPosition.x + xPosition, 0f, spawnPosition.z + zPosition);
 
 			// Clone the game object in preparation to spawn in 
-			GameObject cloneCharacter = Instantiate(InfantryPrefab, tempSpawnPoint, InfantryPrefab.transform.rotation);
+			GameObject cloneCharacter = Instantiate(InfantryPrefab, tempSpawnPosition, InfantryPrefab.transform.rotation);
 
 			// Add the cloned character to the alive enemies list 
 			aliveEnemiesSpawned.Add(cloneCharacter);
@@ -152,22 +161,12 @@ public class FireMode_SpawnManager : MonoBehaviour
 		// Repeat the process for the amount of tanks we want in the round 
 		for (int i = 0; i < AmountOfTanks; i++)
 		{
-			// Random rand = Utility.GetRandomIndex();
+			float xPosition = Random.Range(-maximumXSpawnPosition, maximumXSpawnPosition);
+			float zPosition = Random.Range(-maximumZSpawnPosition, maximumZSpawnPosition);
 
-			// int randomSpawnIndex = rand.Next(possibleSpawnPoints.Count);
+			Vector3 tempSpawnPosition = new Vector3(spawnPosition.x + xPosition, 0f, spawnPosition.z + zPosition);
 
-			// Transform temporarySpawn = possibleSpawnPoints[randomSpawnIndex];
-
-		//	GameObject clonedTank = Instantiate(TankPrefab, temporarySpawn.position, TankPrefab.transform.rotation);
-
-			float xPosition = Random.Range(1, maximumXSpawnPosition);
-			float yPosition = Random.Range(1, maximumYSpawnPosition);
-
-			Vector3 temporarySpawnPosition = new Vector3(xPosition, 0, yPosition);
-
-			GameObject clonedTank = Instantiate(TankPrefab, temporarySpawnPosition, TankPrefab.transform.rotation);
-
-			// possibleSpawnPoints.Remove(temporarySpawn);
+			GameObject clonedTank = Instantiate(TankPrefab, tempSpawnPosition, TankPrefab.transform.rotation);
 
 			aliveEnemiesSpawned.Add(clonedTank);
 		}

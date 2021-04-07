@@ -13,14 +13,16 @@ public class FireModeUI : MonoBehaviour
 	/// <summary>
 	///		UI Instance 
 	/// </summary>
-	public static FireModeUI Instance;
+	public static FireModeUI Instance; // the game mode ui instance 
 
-	private const string styled = "---";
+	[Header("User Interfaces")]
+	public PreWaveUI PreGameWaveUI; // pre game ui data class  
+	public InGameWaveUI InGameWaveUI; // in game wave ui data class 
+	public PostWaveUI PostWaveUI; // post wave game ui data class 
 
-	[Header(styled + " UI Containers " + styled)]
-	public PreWaveUI PreGameWaveUI;
-	public InGameWaveUI InGameWaveUI;
-	public PostWaveUI PostWaveUI;
+	[SerializeField] private GameObject PreGameUI; //ref 
+	[SerializeField] private GameObject InGameUI; // ref 
+	[SerializeField] private GameObject PostGameUI; // ref 
 
 
 	/// <summary>
@@ -45,6 +47,9 @@ public class FireModeUI : MonoBehaviour
 		FireModeEvents.OnWaveOverEvent -= DisplayPostWaveUI;
 	}
 
+	/// <summary>
+	///		Creates a persistant instance across scenes 
+	/// </summary>
 	private void Awake()
 	{
 		if (Instance != null)

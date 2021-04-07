@@ -9,31 +9,37 @@ using UnityEngine;
 [System.Serializable]
 public class TankMovement 
 {
-    [Header("General Tank Movement Settings")]
-    public float speed = 12f; // the speed our tank moves
-    [Range(50f, 180f)]
-    public float turnSpeed = 75f; // the speed that we can turn in degrees in seconds.
-    public float mouseSensitivity = 100f;
-   
+    [Header("General Movement Settings")]
+    public float speed = 16f; // the speed our tank moves
+    public float turnSpeed = 50f; // the speed that we can turn in degrees in seconds.
+
+
     [Header("Camera Settings")]
-    public float cameraTurnSmoothingTime = 0.1f;
-    [SerializeField] float cameraTurnSmoothVelocity;
+    public Transform m_cameraReference; // reference to the tanks camera  
+    public float cameraClampMin = 85f;
+    public float cameraClampMax = 90f;
 
     [Header("Special Effects")]
     private TankParticleEffects tankParticleEffects = new TankParticleEffects(); // creating a new instance of our tank particle effects class
     public TankSoundEffects tankSoundEffects = new TankSoundEffects(); // creating a new instance of our tank sound effects class
 
-    [SerializeField] private float durationSecond = 1f;
-    [SerializeField] private float aimVolumeMin = 0, aimVolumeMax = 100;
+    /// <summary>
+    ///     Params for Tank Sound Effects  
+    /// </summary>
+    float durationSecond = 1f;
+    float aimVolumeMin = 0;
+    float aimVolumeMax = 100;
 
     private Rigidbody m_rigidbody;// a reference to the rigidbody on our tank
+    private Transform m_tankReference; // a reference to the tank transform 
     private bool enableMovement = true; // if this is true we are allowed to accept input from the player
     private bool enabledAiming = true; // Allowed to accept input for weapon aim down sight 
-    private Transform m_tankReference; // a reference to the tank transform 
-    public Transform MainTurret; // reference to the tanks turret
-    private Transform m_cameraReference; // reference to the tanks camera  
+    
 
-    float desiredXAxisRotation;
+    public Transform MainTurret; // reference to the tanks turret
+
+    float xRotation;
+
 
 
     #region Public Methods 
@@ -151,6 +157,8 @@ public class TankMovement
         // update our rigidboy with this new rotation
         m_rigidbody.MoveRotation(m_rigidbody.rotation * turnRotation); // rotate our rigidbody based on our input.
     }
+
+    private float desiredX;
 	
     /// <summary>
     ///     Aims the turret on the x & y axis 
@@ -178,18 +186,17 @@ public class TankMovement
                 // Fade the audio sound effect in to 100% over 0.75 of a second.
                 AudioManager.Instance.FadeSoundEffect(GameAudio.T90_PrimaryWeapon_Aiming, aimVolumeMax, (durationSecond - 0.15f));
             }
-     
 
              // Desired camera x axis rotation 
-             desiredXAxisRotation -= AimPosition.y;
+             xRotation -= AimPosition.y;
             
             // Clamp vertical look degrees angle 
-             desiredXAxisRotation = Mathf.Clamp(desiredXAxisRotation, 0, 0); 
+             xRotation = Mathf.Clamp(xRotation, 0, 0); 
 
-             m_cameraReference.localRotation = Quaternion.Euler(desiredXAxisRotation, 0, 0);
+    
 
-            // Rotate the main turret gun on the y axis 
-             MainTurret.Rotate(Vector3.up, AimPosition.x);
+           m_cameraReference.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);
+           MainTurret.Rotate(Vector3.up, AimPosition.x);
         }
          else
 		{

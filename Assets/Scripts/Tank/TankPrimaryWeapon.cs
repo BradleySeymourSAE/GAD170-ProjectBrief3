@@ -20,18 +20,41 @@ public class TankPrimaryWeapon
 
    [SerializeField] private float currentBulletVelocity; // the force we should use to fire our shell
    [SerializeField] private float currentReloadSpeed; // how fast we should charge up our weapon
-   [SerializeField] private float primaryWeaponAmmunitionInChamber; // current ammunition remaining in primary weapon 
+   [SerializeField] private float currentAmmunitionLoaded; // current ammunition remaining in primary weapon 
    [SerializeField] private float totalAmmunitionRemaining; // total ammunition remaining 
 
    [SerializeField] private bool weaponReloading; // are we currently reloading?
    [SerializeField] private bool weaponHasFired; // have we just fired our weapon?
-   [SerializeField] private bool weaponAimingDownSight; // are we aiming down sight 
 
    [SerializeField] private bool enableWeaponFiring; // should we be allowed to fire?
    [SerializeField] private float nextTimeToFire;
 
     private Transform m_tankReference;
 
+
+
+
+    /// <summary>
+    ///  Returns the current reload speed for the tank 
+    /// </summary>
+    public float returnReloadSpeed
+	{
+        get
+		{
+            return currentReloadSpeed;
+		}
+	}
+
+    /// <summary>
+    ///     Gets the currently loaded ammunition for the tank
+    /// </summary>
+    public string ReturnCurrentLoadedAmmunition
+	{
+        get
+		{
+            return currentAmmunitionLoaded.ToString() + "/" + totalAmmunitionRemaining.ToString();
+        }
+	}
 
 
     /// <summary>
@@ -45,7 +68,7 @@ public class TankPrimaryWeapon
         currentBulletVelocity = minimumBulletSpeed; // set our current launch force to the min
         currentReloadSpeed =  maximumReloadTime; // get the range between the max and min, and divide it by how quickly we charge
         totalAmmunitionRemaining = maximumAmmunition - maximumAmmunitionPerClip; // max ammo is 19 (20 - 1)
-        primaryWeaponAmmunitionInChamber = maximumAmmunitionPerClip;  // set the current chamber ammo to 1
+        currentAmmunitionLoaded = maximumAmmunitionPerClip;  // set the current chamber ammo to 1
 
         // Set the weapon to not currently reloading 
         weaponReloading = false;
@@ -84,11 +107,11 @@ public class TankPrimaryWeapon
 		{
 
             // If the total ammo we have is less than or equal to 0 and there isnt any ammo in the chamber
-            if (totalAmmunitionRemaining <= 0 && primaryWeaponAmmunitionInChamber <= 0)
+            if (totalAmmunitionRemaining <= 0 && currentAmmunitionLoaded <= 0)
             {
                 totalAmmunitionRemaining = 0;
-                primaryWeaponAmmunitionInChamber = 0;
-                Debug.Log("[TankPrimaryWeapon.UpdateMainGun]: " + "You have run out of ammunition! Ammo in Primary: " + primaryWeaponAmmunitionInChamber + "Total Ammunition Left: " + totalAmmunitionRemaining);
+                currentAmmunitionLoaded = 0;
+                Debug.Log("[TankPrimaryWeapon.UpdateMainGun]: " + "You have run out of ammunition! Ammo in Primary: " + currentAmmunitionLoaded + "Total Ammunition Left: " + totalAmmunitionRemaining);
                 // Then we want to return.
                 return;
             }
@@ -146,7 +169,7 @@ public class TankPrimaryWeapon
         currentBulletVelocity = Random.Range(minimumBulletSpeed, maximumBulletSpeed);
 
         // Decrease the amount of ammunition remaining 
-        primaryWeaponAmmunitionInChamber--;
+        currentAmmunitionLoaded--;
 
         
 
@@ -156,6 +179,9 @@ public class TankPrimaryWeapon
             weaponHasFired = false;
         }
     }
+    
+
+    // TODO: Could also add the weapon fire here aswell as an IEnumerator ? 
 
     /// <summary>
     ///     Handles the tanks primary weapon reload 
@@ -176,8 +202,8 @@ public class TankPrimaryWeapon
         yield return new WaitForSeconds(currentReloadSpeed);
 
        
-        primaryWeaponAmmunitionInChamber = maximumAmmunitionPerClip; // set current ammunition in clip to max ammo in clip 
-        totalAmmunitionRemaining -= primaryWeaponAmmunitionInChamber;
+        currentAmmunitionLoaded = maximumAmmunitionPerClip; // set current ammunition in clip to max ammo in clip 
+        totalAmmunitionRemaining -= currentAmmunitionLoaded;
       
 
     

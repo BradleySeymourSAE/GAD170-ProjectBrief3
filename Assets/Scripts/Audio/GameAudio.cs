@@ -30,8 +30,8 @@ public static class GameAudio
 	public const string T90_PrimaryWeapon_Aiming = "T90_PrimaryWeapon_Aiming";
 
 	public const string T90_SecondaryWeapon_Fire = "T90_SecondaryWeapon_Fire";
+	public const string T90_SecondaryWeapon_DoubleShot = "T90_SecondaryWeapon_DoubleShot";
 	public const string T90_SecondaryWeapon_Overheat = "T90_SecondaryWeapon_Overheat";
-	public const string T90_SecondaryWeapon_Aiming = "T90_SecondaryWeapon_Aiming";
 
 	#endregion
 
@@ -73,7 +73,6 @@ public static class GameAudio
 	public const string TAURUS_SecondaryWeapon_Fire = "TAURUS_SecondaryWeapon_Fire";
 	public const string TAURUS_SecondaryWeapon_Reload = "TAURUS_SecondaryWeapon_Reload";
 	public const string TAURUS_SecondaryWeapon_Empty = "TAURUS_SecondaryWeapon_Empty";
-
 
 	#endregion
 

@@ -4,19 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
 [System.Serializable]
-public class PostWaveUI
+public class PreWaveUI
 {
 
-	public TMP_Text Title;
-	public TMP_Text TotalKillsText;
-	public Image BackgroundImage;
-
 	private FireModeUI m_FireModeUI;
+	public Image BackgroundImage;
+	public Image ForgroundImage;
+	public TMP_Text PreWaveLabel;
+	public TMP_Text PreWaveCounter;
+
 
 	public void Setup(FireModeUI FireModeUI)
 	{
 		m_FireModeUI = FireModeUI;
+
 	}
 }

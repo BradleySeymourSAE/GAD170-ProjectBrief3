@@ -6,7 +6,7 @@ public class TankShell : MonoBehaviour
 {
     
 
-        public LayerMask Tank, Infantry;
+        public LayerMask Tank;
         public float maximumDamage = 40f;
         public float force = 1000f;
         public float maximumShellLifetime = 10f;
@@ -39,13 +39,12 @@ public class TankShell : MonoBehaviour
 	private void ExplodeShell()
 	{
 
-		Collider[] TankColliders = Physics.OverlapSphere(transform.position, explosionRadius, Tank);
-		Collider[] InfantryColliders = Physics.OverlapSphere(transform.position, explosionRadius, Infantry);
+		Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, Tank);
 
 
-		for (int i = 0; i < TankColliders.Length; i++)
+		for (int i = 0; i < colliders.Length; i++)
 		{
-			Rigidbody targetRigidbody = TankColliders[i].GetComponent<Rigidbody>();
+			Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>();
 
 
 			if (!targetRigidbody)
@@ -62,23 +61,7 @@ public class TankShell : MonoBehaviour
 			FireModeEvents.OnDamageReceivedEvent?.Invoke(targetRigidbody.transform, -inflictedDamage);
 		}
 
-		for (int i = 0; i < InfantryColliders.Length; i++)
-		{
-			Rigidbody targetInfantryRigidbody = InfantryColliders[i].GetComponent<Rigidbody>();
 
-			if (!targetInfantryRigidbody)
-			{
-				Debug.LogWarning("[TankShell.ExplodeShell]: " + "This Infantry Character doesn't have a rigidbody!! Continuing anyway..");
-				continue;
-			}
-
-
-			targetInfantryRigidbody.AddExplosionForce(force, transform.position, explosionRadius);
-
-			float inflictDamage = CalculateDamageFromRange(targetInfantryRigidbody.position);
-
-			FireModeEvents.OnDamageReceivedEvent?.Invoke(targetInfantryRigidbody.transform, -inflictDamage);
-		}
 
 		GameObject clonedExplosion = Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
 		Destroy(clonedExplosion, maximumShellLifetime);

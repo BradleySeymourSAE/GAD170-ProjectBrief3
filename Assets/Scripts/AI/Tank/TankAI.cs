@@ -21,12 +21,13 @@ public class TankAI : MonoBehaviour
 	/// <summary>
 	///		Patrolling 
 	/// </summary>
-	public Vector3 movementDirection;
+	public Vector3 movementDirection = new Vector3(0,0,0);
 	[SerializeField] private bool movementDirectionSet;
-	public float movementRange;
+	public float movementRange = 5;
 
 	private float maximumMovementRange = 10f;
 	private float movementWaypointTimer = 3f;
+	private float shellResetTimer = 2f;
 	
 	
 	/// <summary>
@@ -44,15 +45,14 @@ public class TankAI : MonoBehaviour
 	[SerializeField] private bool aiAlerted;
 	[SerializeField] private bool aiAggressive;
 
-
+	[SerializeField] private float checkForPlayerTimer = 5f;
 	[SerializeField] private bool enableAIMovement = false;
 
 
 	public TankHealth tankHealth = new TankHealth();
 	public TankParticleEffects tankParticleEffects = new TankParticleEffects();
 	public TankSoundEffects tankSoundEffects = new TankSoundEffects();
-	
-	public GameObject enemyDeathPrefab; 
+	public GameObject tankDeathPrefab; 
 
 	private void OnEnable()
 	{
@@ -74,12 +74,6 @@ public class TankAI : MonoBehaviour
 		{ 
 			Agent = GetComponent<NavMeshAgent>();
 			Agent.autoBraking = false;
-		}
-
-
-		if (FindObjectOfType<Tank>().transform != null)
-		{ 
-			Target = FindObjectOfType<Tank>().transform;
 		}
 	}
 
@@ -123,9 +117,7 @@ public class TankAI : MonoBehaviour
 
 		// Check the view distance 
 		CheckViewDistance(transform.position);
-		
-		
-
+	
 
 
 		if (!aiAlerted && !aiAggressive)
@@ -157,23 +149,24 @@ public class TankAI : MonoBehaviour
 
 
 	#region AI States 
-	private void SearchForPlayer()
+	IEnumerator SearchForPlayer()
 	{
 		if (!movementDirectionSet)
 		{
 			StartCoroutine(SetMovementWaypoint());
-			return;
+			yield return null;
 		}
 
-		if (movementDirectionSet == true && movementDirection.magnitude <= 1f)
+		if (movementDirectionSet && movementDirection.magnitude < 1f)
 		{
 			movementDirectionSet = false;
 		}
 		
 
 
-		if (movementDirectionSet)
-		{	
+		if (movementDirectionSet == true)
+		{
+			yield return new WaitForSeconds(checkForPlayerTimer);
 			Debug.Log("[TankAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
 			Agent.SetDestination(movementDirection);
 		}
@@ -187,7 +180,7 @@ public class TankAI : MonoBehaviour
 		float randomZPosition = Random.Range(1, maximumMovementRange);
 
 
-		movementDirection = new Vector3(transform.position.x + randomXPosition, transform.position.y, transform.position.z + randomZPosition);
+		movementDirection = new Vector3(transform.position.x + randomXPosition, 0f, transform.position.z + randomZPosition);
 
 
 		if (Physics.Raycast(movementDirection, -transform.up, 2f, GroundMask))
@@ -197,19 +190,6 @@ public class TankAI : MonoBehaviour
 
 
 		yield return null;
-	}
-
-	private void Search()
-	{
-		float randZ = Random.Range(-movementRange, movementRange);
-		float randX = Random.Range(-movementRange, movementRange);
-
-		movementDirection = new Vector3(transform.position.x + randX, transform.position.y, transform.position.z + randZ);
-
-		if (Physics.Raycast(movementDirection, -transform.up, 2f, GroundMask))
-		{
-			movementDirectionSet = true;
-		}
 	}
 
 	private void Alerted()
@@ -230,13 +210,19 @@ public class TankAI : MonoBehaviour
 		if (!alreadyAttacking)
 		{
 
-			// Shooting / Firing 
+			// Shooting / Firing
+			GameObject shellClone = Instantiate(shellPrefab, TurretFirePoint.position, TurretFirePoint.rotation);
 
-			Rigidbody rb = Instantiate(shellPrefab, TurretFirePoint.position, Quaternion.identity).GetComponent<Rigidbody>();
+			if (shellClone.GetComponent<Rigidbody>())
+			{
+				Rigidbody rb = shellClone.GetComponent<Rigidbody>();
 
-			rb.AddForce(TurretFirePoint.forward * 200f, ForceMode.Impulse);
+				rb.AddForce(TurretFirePoint.forward * 200f, ForceMode.Impulse);
+			}
 
-
+			
+			
+			Destroy(shellClone, shellResetTimer);
 
 
 			alreadyAttacking = true;
@@ -277,7 +263,7 @@ public class TankAI : MonoBehaviour
 		}
 
 
-		GameObject clone = Instantiate(enemyDeathPrefab, transform.position, enemyDeathPrefab.transform.rotation);
+		GameObject clone = Instantiate(tankDeathPrefab, transform.position, tankDeathPrefab.transform.rotation);
 	
 		Destroy(clone, 3);
 	

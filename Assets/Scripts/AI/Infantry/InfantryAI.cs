@@ -8,19 +8,20 @@ using UnityEngine.AI;
 public class InfantryAI : MonoBehaviour
 { 
 	private Transform Target;
+	private Transform m_InfantryAIBody;
 
 	public Transform weaponFirePoint;
 	public GameObject PrimaryHand;
 	public GameObject PrimaryHide;
 	public GameObject SecondaryHand;
 	public GameObject SecondaryHide;
-	public Transform UpperBody;
 	public float bulletVelocity = 500f;
 	public float bulletSpread = 5f;
 	public float fireRate = 800f;
 	
 	
 	public GameObject bulletPrefab;
+	[SerializeField] private float bulletResetTimer = 3f;
 	public GameObject deathPrefab;
 
 	public LayerMask GroundMask, PlayerMask;
@@ -59,8 +60,14 @@ public class InfantryAI : MonoBehaviour
 
 	// public WeaponEffects weaponFx = new WeaponEffects();
 
-	private Animator m_animator;
-
+	[Header("Animation")]
+	[SerializeField] private Animator m_animator;
+	float VelocityZ;
+	float VelocityX;
+	float Acceleration;
+	float Deceleration;
+	float maximumWalkingVelocity;
+	float maximumRunningVelocity;
 
 	private void OnEnable()
 	{
@@ -79,18 +86,24 @@ public class InfantryAI : MonoBehaviour
 
 	private void Awake()
 	{
-		if (GetComponent<NavMeshAgent>() != null)
+
+		if (GetComponent<Transform>())
+		{
+			m_InfantryAIBody = GetComponent<Transform>();
+		}
+
+		if (GetComponent<NavMeshAgent>())
 		{
 			Agent = GetComponent<NavMeshAgent>();
 			Agent.autoBraking = false;
 		}
 
-		if (GetComponent<Animator>() != null)
+		if (GetComponent<Animator>())
 		{
 			m_animator = GetComponent<Animator>();
 		}
 
-		if (FindObjectOfType<Tank>() != null)
+		if (FindObjectOfType<Tank>())
 		{
 			Target = FindObjectOfType<Tank>().transform;
 		}
@@ -130,10 +143,10 @@ public class InfantryAI : MonoBehaviour
 		Agent.updatePosition = true;
 		Agent.updateRotation = false;
 		Agent.updateUpAxis = false;
-
-
 		
 		CheckViewDistance(transform.position);
+
+		Debug.DrawRay(transform.forward, Target.position, Color.red, 15f);
 
 		// If the AI is not alerted or aggressive, They should be looking for a player (Setting a movement point) 
 		if (!aiAlerted && !aiAggressive)
@@ -191,7 +204,12 @@ public class InfantryAI : MonoBehaviour
 		if (movementDirectionSet == true)
 			{
 
-				Debug.Log("[InfantryAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
+				Debug.DrawLine(transform.forward, movementDirection, Color.blue, 15f);
+				
+				// Infantry Debug from BODY 
+				Debug.DrawRay(m_InfantryAIBody.forward, movementDirection, Color.cyan, 50f);
+
+				// Debug.Log("[InfantryAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
 				Agent.SetDestination(movementDirection);
 			}	
 	}
@@ -201,8 +219,8 @@ public class InfantryAI : MonoBehaviour
 
 		yield return new WaitForSeconds(movementWaypointTimer);
 
-		float randomXPosition = Random.Range(1, maximumMovementRange);
-		float randomZPosition = Random.Range(1, maximumMovementRange);
+		float randomXPosition = Random.Range(-maximumMovementRange, maximumMovementRange);
+		float randomZPosition = Random.Range(-maximumMovementRange, maximumMovementRange);
 
 		
 
@@ -233,17 +251,26 @@ public class InfantryAI : MonoBehaviour
 
 		Agent.SetDestination(transform.position);
 
-		UpperBody.transform.LookAt(Target);
+		m_InfantryAIBody.transform.LookAt(Target);
 
 		// If the bot isnt already attacking the player 
-		if (!isAttackingPlayer == true)
+		if (!isAttackingPlayer)
 		{
-			Rigidbody rb = Instantiate(bulletPrefab, weaponFirePoint.position, bulletPrefab.transform.rotation).GetComponent<Rigidbody>();
+			isAttackingPlayer = true;
 
-			// Add force to the bullet (bullet velocity) 
+			GameObject bulletClone = Instantiate(bulletPrefab, weaponFirePoint.position, bulletPrefab.transform.rotation);
 
-			rb.AddForce(weaponFirePoint.forward * bulletVelocity, ForceMode.Impulse);
+			if (bulletClone.GetComponent<Rigidbody>())
+			{
+				Rigidbody rb = bulletClone.GetComponent<Rigidbody>();
 
+				rb.AddForce(weaponFirePoint.forward * bulletVelocity, ForceMode.Impulse);
+				
+			}
+	
+
+			Destroy(bulletClone, bulletResetTimer);
+			
 
 			isAttackingPlayer = true;
 			Invoke(nameof(ResetAttack), attackWaitTimer);

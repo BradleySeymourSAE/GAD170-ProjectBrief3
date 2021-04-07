@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
 /// <summary>
 /// Handles everything in regards to our tanks health system
 /// </summary>
@@ -17,8 +19,9 @@ public class TankHealth
     public Color warningHealthColor = Color.yellow; // warning health colour (50%)
     public Color zeroHealthColour = Color.red; // colour of no health
     private Transform m_tankReference; // reference to the tank that this script is attached to
-    public Slider healthSlider; // reference to the health Slider
-    private Image fillImage; // reference to the fill image component of our slider;
+
+
+
 
     public float Health
     {
@@ -44,43 +47,17 @@ public class TankHealth
             {
                 isDead = false;
             }
-
-            if(healthSlider != null)
-            {
-                healthSlider.value = Health;
-
-                if (Health > 0 && Health <= 50f && fillImage != null)
-				{
-                    fillImage.color = Color.Lerp(zeroHealthColour, warningHealthColor, Health / maxHealth);
-				}
-                else if (Health > 50f && Health <= 100f && fillImage != null)
-				{
-                    fillImage.color = Color.Lerp(warningHealthColor, fullHealthColour, Health / maxHealth);
-				}
-                
-            }
-            else
-            {
-                Debug.LogError("There is no health slider");
-            }
         }
     }
+
+    /// <summary>
+    ///     Setup Tank's Health 
+    /// </summary>
+    /// <param name="TankTransform"></param>
     public void Setup(Transform TankTransform)
     {
         m_tankReference = TankTransform;
        
-        if(healthSlider != null)
-        {
-            if(healthSlider.fillRect != null)
-            {
-                fillImage = healthSlider.fillRect.transform.GetComponent<Image>(); // grab a reference to our health slider image
-                Debug.Log("Got instance");
-            }
-            else
-            {
-                Debug.LogError("There is no health slider image");
-            }
-        }
         Health = maxHealth; // set our current health to max health
 
     }

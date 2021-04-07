@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-
+/// <summary>
+///		Displays In-Game UI
+/// </summary>
 [System.Serializable]
 public class InGameWaveUI
 {
@@ -22,26 +24,30 @@ public class InGameWaveUI
 }
 
 
+
+/// <summary>
+///		Player Kills Data Class
+/// </summary>
 [System.Serializable]
 public class PlayerKillsUI
-{ 
-	public TMP_Text Title;
-	public TMP_Text KillCountText;
-	public TMP_Text EnemiesRemainingText;
+{
 	public Image BackgroundImage;
-
-
-
+	public TMP_Text TotalKillsLabel;
+	public TMP_Text TotalAllTimeKills;
+	public TMP_Text WaveKillsLabel;
+	public TMP_Text WaveKills;
 }
 
+
+/// <summary>
+///	 Wave Counter Data Class 
+/// </summary>
 [System.Serializable]
 public class WaveCounterUI
 {
-	public TMP_Text Title;
-	public TMP_Text CurrentWave;
-	public TMP_Text TotalEnemies;
 	public Image BackgroundImage;
-
-
-
+	public TMP_Text CurrentWaveLabel;
+	public TMP_Text EnemiesAliveLabel;
+	public TMP_Text CurrentWave;
+	public TMP_Text EnemiesAlive;
 }
