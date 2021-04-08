@@ -22,22 +22,37 @@ public class FireMode_GameManager : MonoBehaviour
 	public int startingEnemyTanks = 2;
 	public int startingEnemyInfantry = 5;
 
+	[Header("Item Pickup Settings")]
+	public int startingPickupAmount = 10;
+	
+	[SerializeField] private float nextSpawnedItemsScalingFactor; // Every round that goes past increases the val
 
-	[SerializeField] private float nextWaveTankScalingFactor;
-	[SerializeField] private float nextWaveInfantryScalingFactor;
+	[SerializeField] private float nextWaveTankScalingFactor; // next wave amount of tanks to spawn 
+	[SerializeField] private float nextWaveInfantryScalingFactor; // next wave amount of infantry to spawn 
 
-	[SerializeField] private float totalEnemiesRemaining; // enemies remaining 
+	[SerializeField] private float totalEnemiesRemaining; // total amount enemies remaining 
 	[SerializeField] private int m_currentWaveCount = 1; // the current wave the player is on 						 
 
 	// Testing adding both tank lists to this one 
-	[SerializeField] private List<GameObject> aliveEnemiesRemaining = new List<GameObject>();
+	[SerializeField] private List<GameObject> aliveEnemiesRemaining = new List<GameObject>(); // list of currently alive enemies 
+	[SerializeField] private List<GameObject> spawnedCollectableItemsRemaining = new List<GameObject>(); // list of remaining collectable items 
 
 	private Tank m_currentPlayerReference; // the player 
 	[SerializeField] private int totalKillCount; // the total amount of player kills
 
-
+	/// <summary>
+	///		Current amont of spawned in enemy AI tanks 
+	/// </summary>
 	[SerializeField] private int m_spawnTankCount;
+	/// <summary>
+	///		Current total amount of spawned in AI infantry amount 
+	/// </summary>
 	[SerializeField] private int m_spawnInfantryCount;
+
+	/// <summary>
+	///		The currently spawned in weapon pickups amount 
+	/// </summary>
+	[SerializeField] private int m_spawnedInPickupAmount;
 
 	/// <summary>
 	///		Handles spawning of the player, Enemy AI & Collectable Items 
@@ -46,6 +61,7 @@ public class FireMode_GameManager : MonoBehaviour
 	{
 		FireModeEvents.OnPlayerSpawnedEvent += SpawnedPlayerEntity;
 		FireModeEvents.OnEnemyWaveSpawnedEvent += SpawnedEntitys;
+		FireModeEvents.OnPickupSpawnedEvent += SpawnedPickups;
 		FireModeEvents.OnObjectDestroyedEvent += DespawnEntity;
 	}
 
@@ -56,6 +72,7 @@ public class FireMode_GameManager : MonoBehaviour
 	{
 		FireModeEvents.OnPlayerSpawnedEvent -= SpawnedPlayerEntity;
 		FireModeEvents.OnEnemyWaveSpawnedEvent -= SpawnedEntitys;
+		FireModeEvents.OnPickupSpawnedEvent -= SpawnedPickups;
 		FireModeEvents.OnObjectDestroyedEvent -= DespawnEntity;
 	}
 
@@ -92,9 +109,14 @@ public class FireMode_GameManager : MonoBehaviour
 		for (int i = 0; i < enemiesSpawned.Count; i++)
 		{
 
-			if (!enemiesSpawned[i].GetComponent<TankAI>() || !enemiesSpawned[i].GetComponent<InfantryAI>())
+			if (!enemiesSpawned[i].GetComponent<TankAI>())
 			{
-				Debug.Log("[FireMode_GameManager.SpawnedEntitys]: " + "Could not find enemies spawned script");
+				Debug.Log("[FireMode_GameManager.SpawnedEntitys]: " + "Could not find enemy tank ai script");
+				continue;
+			}
+			else if (!enemiesSpawned[i].GetComponent<InfantryAI>())
+			{
+				Debug.Log("[FireMode_GameManager.SpawnedEntitys]: " + "Could not find enemy infantry ai script");
 				continue;
 			}
 		
@@ -154,12 +176,30 @@ public class FireMode_GameManager : MonoBehaviour
 		}
 	}
 
+
+
+	/// <summary>
+	///		Handles spawning of the pickups 
+	/// </summary>
+	private void SpawnedPickups(List<GameObject> SpawnedPickups)
+	{
+
+		spawnedCollectableItemsRemaining.Clear();
+
+		for (int i = 0; i < SpawnedPickups.Count; i++)
+		{
+
+		
+		}
+	}
+
+
 	/// <summary>
 	///		Updates the players kill count
 	/// </summary>
 	private void UpdatePlayerKillCount()
 	{
-			FireModeEvents.OnUpdatePlayerKillsEvent?.Invoke(totalKillCount);
+		FireModeEvents.OnUpdatePlayerKillsEvent?.Invoke(totalKillCount);
 	}
 
 	private void UpdateWaveCount()
@@ -167,6 +207,10 @@ public class FireMode_GameManager : MonoBehaviour
 		FireModeEvents.OnUpdateWaveCountEvent?.Invoke(m_currentWaveCount);
 	}
 
+	private void UpdatePlayerAmmunition()
+	{
+		
+	}
 
 	/// <summary>
 	///		Resets the game 
@@ -180,6 +224,8 @@ public class FireMode_GameManager : MonoBehaviour
 
 		// Respawns the player in 
 		FireModeEvents.SpawnPlayerEvent?.Invoke();
+
+		// Probably want to spawn in the items here lol 
 
 
 		// Calls the first enemy wave! 
@@ -195,14 +241,12 @@ public class FireMode_GameManager : MonoBehaviour
 		m_spawnTankCount = startingEnemyTanks;
 		m_spawnInfantryCount = startingEnemyInfantry;
 
-		FireModeEvents.SpawnEnemyWaveEvent(m_spawnInfantryCount, m_spawnTankCount);
+		FireModeEvents.SpawnEnemyWaveEvent?.Invoke(m_spawnInfantryCount, m_spawnTankCount);
 	}
 
 	/// <summary>
 	/// 	Initializes the start of Field of Fire 
 	/// </summary>
-
-
 	private void Awake()
 	{
 
@@ -241,6 +285,8 @@ public class FireMode_GameManager : MonoBehaviour
 
 		
 		FireModeEvents.OnPreWaveEvent?.Invoke(); // call pre wave event which will display wave count down timer  
+
+		FireModeEvents.SpawnPickupEvent?.Invoke(startingPickupAmount);
 
 		// We use a pre game wait timer so we have time to setup the game events before
 		yield return new WaitForSeconds(preGameSetupTimer);

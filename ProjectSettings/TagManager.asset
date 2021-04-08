@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - AI_EnemyCharacter
+  - Health
+  - Ammunition
   layers:
   - Default
   - TransparentFX
@@ -16,7 +18,7 @@ TagManager:
   - Ground
   - Player
   - AI_EnemyCharacter
-  - 
+  - Item Pickup
   - 
   - 
   - 

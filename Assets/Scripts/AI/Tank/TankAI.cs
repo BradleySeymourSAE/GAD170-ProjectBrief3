@@ -16,7 +16,7 @@ public class TankAI : MonoBehaviour
 	
 	public LayerMask GroundMask, PlayerMask;
 	
-	public NavMeshAgent Agent;
+	private NavMeshAgent Agent;
 
 	/// <summary>
 	///		Patrolling 
@@ -70,9 +70,9 @@ public class TankAI : MonoBehaviour
 
 	private void Awake()
 	{
-		if (GetComponent<NavMeshAgent>() != null)
+		if (transform.GetComponent<NavMeshAgent>())
 		{ 
-			Agent = GetComponent<NavMeshAgent>();
+			Agent = transform.GetComponent<NavMeshAgent>();
 			Agent.autoBraking = false;
 		}
 	}
@@ -88,6 +88,10 @@ public class TankAI : MonoBehaviour
 		{
 			EnableAI();
 		}	
+		if (FindObjectOfType<Tank>())
+		{
+			Target = FindObjectOfType<Tank>().transform;
+		}
 	}
 
 	private void EnableMovement(bool Enable)
@@ -118,11 +122,11 @@ public class TankAI : MonoBehaviour
 		// Check the view distance 
 		CheckViewDistance(transform.position);
 	
-
+		// Debugging: Agent.SetDestination(Target.transform.position);
 
 		if (!aiAlerted && !aiAggressive)
 		{
-			SearchForPlayer();
+			StartCoroutine(SearchForPlayer());
 		}
 		else
 		{
@@ -194,6 +198,7 @@ public class TankAI : MonoBehaviour
 
 	private void Alerted()
 	{
+		transform.LookAt(Target);
 		Agent.SetDestination(Target.position);
 	}
 

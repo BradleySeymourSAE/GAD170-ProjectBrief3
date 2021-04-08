@@ -49,7 +49,7 @@ public class TankShell : MonoBehaviour
 
 			if (!targetRigidbody)
 			{
-				Debug.LogWarning("[TankShell.ExplodeShell]: " + "This T90 Tank doesn't have a rigidbody!! Continuing anyway..");
+				// Debug.LogWarning("[TankShell.ExplodeShell]: " + "This T90 Tank doesn't have a rigidbody!! Continuing anyway..");
 				continue;
 			}
 

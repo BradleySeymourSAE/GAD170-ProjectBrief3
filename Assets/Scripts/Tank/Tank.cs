@@ -129,7 +129,6 @@ public class Tank : MonoBehaviour
         // if the Tank transform coming in, isn't this particular tank, ignore it.
         if (TankTransform != transform)
         {
-            Debug.LogWarning("[Tank.TankTakenDamage]: " + " Thats not the correct tank transform");
             return;
         }
         else
