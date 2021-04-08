@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4606365875639573701}
   - component: {fileID: 5842679432111710084}
   - component: {fileID: 5069352994292644565}
-  - component: {fileID: 2614836417949769605}
+  - component: {fileID: 7610438725439863937}
   m_Layer: 0
   m_Name: AEK971Bullet
   m_TagString: Untagged
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8296631927549396228, guid: eef4ea781b74b824085af958ba4fc4cf, type: 3}
+  - {fileID: 2100000, guid: 11f78c8d8cd1cfc4cb16d3a914a6e937, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,8 +99,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!136 &2614836417949769605
-CapsuleCollider:
+--- !u!64 &7610438725439863937
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -109,7 +109,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.008
-  m_Height: 0.075
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: -0.003}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7789395277841250538, guid: eef4ea781b74b824085af958ba4fc4cf, type: 3}

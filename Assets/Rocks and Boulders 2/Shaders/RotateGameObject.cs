@@ -15,7 +15,9 @@ public class RotateGameObject : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		if (local) {
+#pragma warning disable CS0618 // Type or member is obsolete
 			transform.RotateAroundLocal(transform.up, Time.fixedDeltaTime*rot_speed_x);
+#pragma warning restore CS0618 // Type or member is obsolete
 		} else {
 			transform.Rotate(Time.fixedDeltaTime*new Vector3(rot_speed_x,rot_speed_y,rot_speed_z), Space.World);
 		}

@@ -233,12 +233,10 @@ MonoBehaviour:
   PickupSpawnContainer: {fileID: 936082015}
   HealthPackPrefab: {fileID: 1436435221243773122, guid: 13307f9489db2b9449e2987b07df6583,
     type: 3}
+  AmmunitionPackPrefab: {fileID: 8566082739271975305, guid: d43a2adf532504c4e831593e193b3db5,
+    type: 3}
   range: 100
-  spawnAmount: 10
-  pickupSpawnTimer: 10
-  totalPickupsBeforeRespawn: 5
-  m_spawnedIndex: 0
-  currentPickupsSpawnedIn: []
+  currentlySpawnedInCollectableItems: []
   spawnPoint: {x: 0, y: 0, z: 0}
 --- !u!1 &936082014
 GameObject:
@@ -313,23 +311,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e87c4c40258174a4eb0146a9d484384d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  preGameSetupTimer: 3
+  preWaveSetupTimer: 15
   nextWaveTimer: 15
   resetRoundTimer: 3
-  startingEnemyTanks: 3
-  startingEnemyInfantry: 3
-  startingPickupAmount: 10
-  nextSpawnedItemsScalingFactor: 0
-  nextWaveTankScalingFactor: 0
-  nextWaveInfantryScalingFactor: 0
-  totalEnemiesRemaining: 0
-  m_currentWaveCount: 0
-  aliveEnemiesRemaining: []
-  spawnedCollectableItemsRemaining: []
-  totalKillCount: 0
-  m_spawnTankCount: 0
-  m_spawnInfantryCount: 0
-  m_spawnedInPickupAmount: 0
+  startingEnemyTanks: 2
+  startingEnemyInfantry: 4
+  startingHealthPacksSpawned: 4
+  startingAmmunitionPacksSpawned: 5
 --- !u!1 &1321749085
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,13 +385,9 @@ MonoBehaviour:
     type: 3}
   playerSpawnPosition: {fileID: 546290472}
   waveSpawnPosition: {fileID: 1321749086}
+  Magnitude: 1
   maximumXSpawnPosition: 50
   maximumZSpawnPosition: 50
-  aliveEnemiesSpawned: []
-  currentWave: 0
-  waveScalingFactor: 3
-  nextRoundInfantry: 0
-  nextRoundTanks: 0
 --- !u!4 &1324235995
 Transform:
   m_ObjectHideFlags: 0
@@ -416,7 +400,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1529101657
 GameObject:
@@ -482,7 +466,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1547203217
 GameObject:
@@ -512,14 +496,14 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Color: {r: 1, g: 0.8842755, b: 0.43867922, a: 1}
+  m_Intensity: 1.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -552,7 +536,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -716,95 +700,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.size
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[2].loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[6].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3e57fd4dda770654faa28a6572e5d8e1, type: 3}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[6].loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[6].name
-      value: T90_SecondaryWeapon_Fire
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[7].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 6e0e52a770f0a9541a7edfb1a9e5fccb, type: 3}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[7].loop
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[7].name
-      value: T90_SecondaryWeapon_DoubleShot
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[8].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 0a975a4894028dc448161100cec96dbc, type: 3}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[8].loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[8].name
-      value: T90_SecondaryWeapon_Overheat
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[6].pitch
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[7].pitch
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[8].pitch
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[6].volume
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[7].volume
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
-        type: 3}
-      propertyPath: GameSoundEffects.Array.data[8].volume
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7657194901933773972, guid: 2d86e0d1014797b45bca1e339abd6404,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7657194901933773972, guid: 2d86e0d1014797b45bca1e339abd6404,
         type: 3}
@@ -910,7 +809,7 @@ PrefabInstance:
     - target: {fileID: 2399191395531733500, guid: 4232e57135887d74f8fd50a66ed78eea,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2399191395531733500, guid: 4232e57135887d74f8fd50a66ed78eea,
         type: 3}
@@ -1021,6 +920,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: --- Fire Mode UI Manager ---
+      objectReference: {fileID: 0}
+    - target: {fileID: 2399191395531733503, guid: 4232e57135887d74f8fd50a66ed78eea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4232e57135887d74f8fd50a66ed78eea, type: 3}

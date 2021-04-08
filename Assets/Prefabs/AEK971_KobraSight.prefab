@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1973947364520663915}
   - component: {fileID: 6748947907466104825}
   - component: {fileID: 1658283921902002815}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: AEK971_MeshBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6444676495924450365}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: SightAttachmentPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 8874214702810452628}
   - component: {fileID: 3613259250809858831}
   - component: {fileID: 8505767347487216154}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 5187907112105168864}
   - component: {fileID: 2440465795631692684}
   - component: {fileID: 3538606168486117397}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 4169878017816500660}
   - component: {fileID: 331934717169725339}
   - component: {fileID: 5971028038669277314}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3432077730673706053}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: AEKFirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,7 +458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5509536069461573559}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: TPhotometr.target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -488,7 +488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8464942267612129363}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: TPhotomet2.target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -518,7 +518,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7980837374963434942}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: AEK971_KobraSight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -554,7 +554,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4176685850805028479}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: TPhotomet1.target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -584,7 +584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5658944392908743192}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: TPhotomet0.target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -671,6 +671,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: KobraSightAttachment
+      objectReference: {fileID: 0}
+    - target: {fileID: 2015730476985395360, guid: 5589f4a1d275acc4dbc4c684a7fea2ac,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4220683788732131436, guid: 5589f4a1d275acc4dbc4c684a7fea2ac,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7382697007531937913, guid: 5589f4a1d275acc4dbc4c684a7fea2ac,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5589f4a1d275acc4dbc4c684a7fea2ac, type: 3}

@@ -1921,6 +1921,89 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6023956175487135188, guid: d7d1f80cf7378ab428d57f5f9570a834, type: 3}
+--- !u!1 &3330527829690836495
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8012918667551173462}
+  - component: {fileID: 316866241609057463}
+  - component: {fileID: 1113298555363410112}
+  m_Layer: 7
+  m_Name: MainCamera
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8012918667551173462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330527829690836495}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: -6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7356180211436946919}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &316866241609057463
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330527829690836495}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.6179246, g: 0.76977515, b: 1, a: 1}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 1
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 33.853077
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.1
+  far clip plane: 3000
+  field of view: 70.333824
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!81 &1113298555363410112
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3330527829690836495}
+  m_Enabled: 1
 --- !u!1 &3395119634299715027
 GameObject:
   m_ObjectHideFlags: 0
@@ -5281,89 +5364,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -1707248547373420074, guid: d7d1f80cf7378ab428d57f5f9570a834, type: 3}
---- !u!1 &7356180210107616462
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7356180210107616461}
-  - component: {fileID: 7356180210107616460}
-  - component: {fileID: 7356180210107616463}
-  m_Layer: 7
-  m_Name: Main Camera
-  m_TagString: MainCamera
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7356180210107616461
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7356180210107616462}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: -6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 7356180211436946919}
-  m_RootOrder: 21
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &7356180210107616460
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7356180210107616462}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.43867922, g: 0.9623519, b: 1, a: 1}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 1
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.1
-  far clip plane: 1000
-  field of view: 48.910923
-  orthographic: 0
-  orthographic size: 20
-  m_Depth: -1
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!81 &7356180210107616463
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7356180210107616462}
-  m_Enabled: 1
 --- !u!1 &7356180210314323167
 GameObject:
   m_ObjectHideFlags: 0
@@ -15277,7 +15277,7 @@ Transform:
   - {fileID: 5276777384379303507}
   - {fileID: 6736069807606101240}
   - {fileID: 3402938770847930619}
-  - {fileID: 7356180210107616461}
+  - {fileID: 8012918667551173462}
   m_Father: {fileID: 7033742528294893396}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15647,11 +15647,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7698638841374273006}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dcbc84631449394fa06a2c1f68ed15a, type: 3}
+  m_Script: {fileID: 11500000, guid: 88428cce422f0ac48bc65ca5b6dabaa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   enableTankMovement: 1
-  playerNumber: 1
   tankControls:
     forward: 119
     backwards: 115
@@ -15672,24 +15671,20 @@ MonoBehaviour:
     warningHealthColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
     zeroHealthColour: {r: 1, g: 0, b: 0, a: 1}
   tankMovement:
-    speed: 15
-    turnSpeed: 50
-    m_cameraReference: {fileID: 7356180210107616461}
-    cameraClampMin: 10
-    cameraClampMax: 10
-    tankSoundEffects:
-      EngineIdle: {fileID: 8300000, guid: 12d0ab36cc31e954baaef244477a70ce, type: 3}
-      EngineDriving: {fileID: 8300000, guid: 2d20d594839e4004b80b9e7a0dd53939, type: 3}
-      pitchRangeMax: 1
     MainTurret: {fileID: 7356180211436946919}
+    speed: 16
+    turnSpeed: 50
+    tankSoundEffects:
+      ShouldLoop: 1
+    m_cameraReference: {fileID: 8012918667551173462}
   tankPrimary:
     barrelEnd: {fileID: 7356180210749329291}
     tankShellPrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
       type: 3}
-    minimumBulletSpeed: 850
-    maximumBulletSpeed: 1000
-    maximumReloadTime: 3
-    maximumAmmunition: 40
+    minimumBulletSpeed: 500
+    maximumBulletSpeed: 600
+    maximumReloadTime: 5
+    maximumAmmunition: 15
     maximumAmmunitionPerClip: 2
     currentBulletVelocity: 0
     currentReloadSpeed: 0
@@ -15700,7 +15695,6 @@ MonoBehaviour:
     enableWeaponFiring: 0
     nextTimeToFire: 0
   deathExplosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 3}
-  CursorIsLocked: 0
 --- !u!82 &7698638841374273007
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15711,7 +15705,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 12d0ab36cc31e954baaef244477a70ce, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

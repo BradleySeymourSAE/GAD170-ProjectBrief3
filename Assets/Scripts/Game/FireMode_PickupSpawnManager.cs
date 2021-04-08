@@ -13,17 +13,12 @@ public class FireMode_PickupSpawnManager : MonoBehaviour
 	public Transform PickupSpawnContainer; // weapon pickup spawn reference 
 
 	public GameObject HealthPackPrefab;
+	public GameObject AmmunitionPackPrefab;
+
 	[Range(50, 150)]
 	public float range = 100f;
 
-	[SerializeField] private int spawnAmount = 10;
-	[SerializeField] private float pickupSpawnTimer = 10f;
-
-	[SerializeField] private int totalPickupsBeforeRespawn = 5;
-	[SerializeField] private int m_spawnedIndex;
-
-
-	[SerializeField] private List<GameObject> currentPickupsSpawnedIn = new List<GameObject>();
+	[SerializeField] private List<GameObject> currentlySpawnedInCollectableItems = new List<GameObject>();
 
 	[SerializeField] private Vector3 spawnPoint;
 
@@ -74,20 +69,20 @@ public class FireMode_PickupSpawnManager : MonoBehaviour
 	{
 		get
 		{
-			return currentPickupsSpawnedIn.Count;
+			return currentlySpawnedInCollectableItems.Count;
 		}
 	}
 
 
 	/// <summary>
-	///		Amount of pickups to spawn 
+	///		 Spawns ammo and health packs throughout the map! 
 	/// </summary>
-	/// <param name="SpawnAmount"></param>
-	private void SpawnPickups(int SpawnAmount)
+	/// <param name="HealthPacks">The amount of health packs to spawn</param>
+	/// <param name="AmmunitionPacks">The amount of ammunition packs to spawn</param>
+	private void SpawnPickups(int HealthPacks, int AmmunitionPacks)
 	{
-		for (int i = 0; i < SpawnAmount; i++)
+		for (int i = 0; i < HealthPacks; i++)
 		{
-
 			float xPos = Random.Range(10f, range);
 			float zPos = Random.Range(10f, range);
 
@@ -95,12 +90,25 @@ public class FireMode_PickupSpawnManager : MonoBehaviour
 
 			GameObject newCollectableItem = Instantiate(HealthPackPrefab, newSpawnPosition, HealthPackPrefab.transform.rotation);
 
-			currentPickupsSpawnedIn.Add(newCollectableItem);
+			currentlySpawnedInCollectableItems.Add(newCollectableItem);
+		}
+
+		for (int a = 0; a < AmmunitionPacks; a++)
+		{
+			float x = Random.Range(10f, range);
+			float z = Random.Range(10f, range);
+
+			Vector3 spawnPos = new Vector3(spawnPoint.x + x, spawnPoint.y, spawnPoint.z + z);
+			GameObject newAmmoPack = Instantiate(AmmunitionPackPrefab, spawnPos, AmmunitionPackPrefab.transform.rotation);
+
+			currentlySpawnedInCollectableItems.Add(newAmmoPack);
 		}
 
 
-		FireModeEvents.OnPickupSpawnedEvent?.Invoke(currentPickupsSpawnedIn);
+		FireModeEvents.OnPickupSpawnedEvent?.Invoke(currentlySpawnedInCollectableItems);
 	}
+
+
 	/// <summary>
 	///		Handles when an item is collected 
 	/// </summary>
@@ -108,7 +116,7 @@ public class FireMode_PickupSpawnManager : MonoBehaviour
 	private void Collected(Transform CurrentPlayer)
 	{
 
-		if (CurrentPlayer.GetComponent<Tank>())
+		if (CurrentPlayer.GetComponent<MainPlayerTank>())
 		{
 			Debug.Log("Yeap! Its a tank player...");
 		}

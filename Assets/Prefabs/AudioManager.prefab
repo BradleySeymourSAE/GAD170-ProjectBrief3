@@ -58,7 +58,7 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 8d2fa28c227716248ad48a6c136323ce, type: 3}
     source: {fileID: 0}
   - name: T90_EngineDriving
-    loop: 0
+    loop: 1
     volume: 1
     pitch: 1
     clip: {fileID: 8300000, guid: 2d20d594839e4004b80b9e7a0dd53939, type: 3}
@@ -80,4 +80,22 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     clip: {fileID: 8300000, guid: 8bd44faf2be60514bb28c74503e27d9a, type: 3}
+    source: {fileID: 0}
+  - name: T90_SecondaryWeapon_Fire
+    loop: 1
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 3e57fd4dda770654faa28a6572e5d8e1, type: 3}
+    source: {fileID: 0}
+  - name: T90_SecondaryWeapon_DoubleShot
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 6e0e52a770f0a9541a7edfb1a9e5fccb, type: 3}
+    source: {fileID: 0}
+  - name: T90_SecondaryWeapon_Overheat
+    loop: 1
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 0a975a4894028dc448161100cec96dbc, type: 3}
     source: {fileID: 0}

@@ -52,7 +52,6 @@ public class AudioManager : MonoBehaviour
 		}
 	}
 
-
 	/// <summary>
 	///		Gets an audio source reference by the sound name 
 	/// </summary>
@@ -71,7 +70,6 @@ public class AudioManager : MonoBehaviour
 
 		return s.source;
 	}	
-
 
 	/// <summary>
 	///		Get Audio Clip by the Audio Source name 

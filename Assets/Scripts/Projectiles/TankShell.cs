@@ -58,7 +58,7 @@ public class TankShell : MonoBehaviour
 
 			float inflictedDamage = CalculateDamageFromRange(targetRigidbody.position);
 
-			FireModeEvents.OnDamageReceivedEvent?.Invoke(targetRigidbody.transform, -inflictedDamage);
+			FireModeEvents.OnReceivedDamageEvent?.Invoke(targetRigidbody.transform, -inflictedDamage);
 		}
 
 

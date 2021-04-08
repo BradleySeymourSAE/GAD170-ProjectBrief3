@@ -3,7 +3,13 @@ guid: eef4ea781b74b824085af958ba4fc4cf
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tex_0006_1.dds
+    second: {fileID: -8427245108984008777, guid: d463a471a1035734b8bc3224b5d17268,
+      type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -31,12 +37,12 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 0.01
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
     importVisibility: 1

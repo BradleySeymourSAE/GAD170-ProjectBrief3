@@ -8,6 +8,8 @@ TagManager:
   - AI_EnemyCharacter
   - Health
   - Ammunition
+  - AI_Tank
+  - CameraHolder
   layers:
   - Default
   - TransparentFX

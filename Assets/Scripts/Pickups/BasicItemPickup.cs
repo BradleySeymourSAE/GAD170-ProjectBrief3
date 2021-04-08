@@ -9,32 +9,24 @@ public enum Item { Ammunition, Health };
 public class BasicItemPickup : MonoBehaviour
 {
 
-	public float rotationPerSecond = 60f; // rotation of coin per second 
-	public float amplitude = 0.15f; // aplitude (of y axis)
-	public float frequency = 1.50f; // amount of times 
-	public Item itemType = Item.Health; // set the current item to health as default 
+	public CollectableItemData CollectableItem;
 
-	[SerializeField] private Item currentItem; // Check what the current item is 
 
-	Vector3 m_positionOffset = new Vector3(); // offset start pos
-	Vector3 m_movePosition = new Vector3(); // default pos 
-
-	private bool itemEnabled = false;
 
 	private void OnEnable()
 	{
-		FireModeEvents.OnWaveStartedEvent += OnEnableItem;
+		FireModeEvents.OnWaveStartedEvent += EnableItem;
 	}
 
 	private void OnDisable()
 	{
-		FireModeEvents.OnWaveStartedEvent -= OnEnableItem;
+		FireModeEvents.OnWaveStartedEvent -= EnableItem;
 	}
 
 
 	private void Start()
 	{
-		m_positionOffset = transform.position;
+		CollectableItem.startingPosition = transform.position;
 	}
 
 
@@ -42,13 +34,13 @@ public class BasicItemPickup : MonoBehaviour
 	///		Enables / Disables pickup of the item
 	/// </summary>
 	/// <param name="Allow"></param>
-	private void AllowItemPickup(bool Allow)
-	{
-		itemEnabled = Allow;
-	}
+	private void AllowItemPickup(bool Allow) => CollectableItem.Enabled = Allow;
 
 
-	private void OnEnableItem()
+	/// <summary>
+	///		Enables the item 
+	/// </summary>
+	private void EnableItem()
 	{
 		AllowItemPickup(true);
 	}
@@ -56,6 +48,10 @@ public class BasicItemPickup : MonoBehaviour
 
 	private void Update()
 	{
+		if (!CollectableItem.Enabled)
+		{
+			return;
+		}
 		
 		SpinAndRotate();
 	}
@@ -67,16 +63,16 @@ public class BasicItemPickup : MonoBehaviour
 	/// </summary>
 	private void SpinAndRotate()
 	{
-		Vector3 _rotate = new Vector3(0f, Time.deltaTime * rotationPerSecond, 0f);
+		Vector3 _rotate = new Vector3(0f, Time.deltaTime * CollectableItem.RotationsPerSecond, 0f);
 		// Spin object on the y axis 
 		transform.Rotate(_rotate, Space.World);
 
 
 		// Float the object up and down using a sin curve 
-		m_movePosition = m_positionOffset;
-		m_movePosition.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * amplitude;
+		CollectableItem.Offset = CollectableItem.startingPosition;
+		CollectableItem.Offset.y += Mathf.Sin(Time.fixedTime * Mathf.PI * CollectableItem.Frequency) * CollectableItem.Amplitude;
 
-		transform.position = m_movePosition;
+		transform.position = CollectableItem.Offset;
 	}
 
 
@@ -87,7 +83,7 @@ public class BasicItemPickup : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		
-		if (other.gameObject.tag == "Player")
+		if (other.gameObject.CompareTag("Player"))
 		{
 			Debug.Log("Collided with player object - Doing the thing!");
 		}

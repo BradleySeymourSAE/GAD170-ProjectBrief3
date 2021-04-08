@@ -57,14 +57,14 @@ public class TankAI : MonoBehaviour
 	private void OnEnable()
 	{
 		FireModeEvents.OnObjectDestroyedEvent += OnDeath;
-		FireModeEvents.OnDamageReceivedEvent += OnDamageEvent;
+		FireModeEvents.OnReceivedDamageEvent += OnDamageEvent;
 		FireModeEvents.OnWaveStartedEvent += EnableAI;
 	}
 
 	private void OnDisable()
 	{
 		FireModeEvents.OnObjectDestroyedEvent -= OnDeath;
-		FireModeEvents.OnDamageReceivedEvent -= OnDamageEvent;
+		FireModeEvents.OnReceivedDamageEvent -= OnDamageEvent;
 		FireModeEvents.OnWaveStartedEvent -= EnableAI;
 	}
 
@@ -88,9 +88,9 @@ public class TankAI : MonoBehaviour
 		{
 			EnableAI();
 		}	
-		if (FindObjectOfType<Tank>())
+		if (FindObjectOfType<MainPlayerTank>())
 		{
-			Target = FindObjectOfType<Tank>().transform;
+			Target = FindObjectOfType<MainPlayerTank>().transform;
 		}
 	}
 

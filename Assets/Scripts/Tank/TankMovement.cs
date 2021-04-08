@@ -9,65 +9,68 @@ using UnityEngine;
 [System.Serializable]
 public class TankMovement 
 {
-    [Header("General Movement Settings")]
+
+	#region Public Variables 
+	[Header("General Movement")]
+    public Transform MainTurret; // reference to the tanks turret
     public float speed = 16f; // the speed our tank moves
     public float turnSpeed = 50f; // the speed that we can turn in degrees in seconds.
 
-
-    [Header("Camera Settings")]
-    public Transform m_cameraReference; // reference to the tanks camera  
-    public float cameraClampMin = 85f;
-    public float cameraClampMax = 90f;
-
     [Header("Special Effects")]
-    private TankParticleEffects tankParticleEffects = new TankParticleEffects(); // creating a new instance of our tank particle effects class
+    public TankParticleEffects tankParticleEffects = new TankParticleEffects(); // creating a new instance of our tank particle effects class
     public TankSoundEffects tankSoundEffects = new TankSoundEffects(); // creating a new instance of our tank sound effects class
+	#endregion
 
-    /// <summary>
-    ///     Params for Tank Sound Effects  
-    /// </summary>
-    float durationSecond = 1f;
-    float aimVolumeMin = 0;
-    float aimVolumeMax = 100;
 
-    private Rigidbody m_rigidbody;// a reference to the rigidbody on our tank
-    private Transform m_tankReference; // a reference to the tank transform 
+	#region Private Variables  
+	[SerializeField] private Transform m_cameraReference; // reference to the tanks camera  
     private bool enableMovement = true; // if this is true we are allowed to accept input from the player
     private bool enabledAiming = true; // Allowed to accept input for weapon aim down sight 
-    
+    private Rigidbody m_rigidbody;// a reference to the rigidbody on our tank
+    private Transform m_MainPlayerTank; // a reference to the tank transform 
+	#endregion
 
-    public Transform MainTurret; // reference to the tanks turret
+	/// <summary>
+	///     The camera's x rotation  
+	/// </summary>
+	float xRotation;
 
-    float xRotation;
+    /// <summary>
+    ///    The amount of seconds to fading the aim audio 
+    /// </summary>
+    float durationSecond = 1f;
 
-
+    /// <summary>
+    ///     The minimum & maximum aiming volume 
+    /// </summary>
+    float aimVolumeMin = 0, aimVolumeMax = 100;
 
     #region Public Methods 
     /// <summary>
     /// Handles the set up of our tank movement script
     /// </summary>
-    /// <param name="Tank"></param>
-    public void Setup(Transform Tank)
+    /// <param name="PlayerTankRef"></param>
+    public void Setup(Transform PlayerTankRef)
     {
-        m_tankReference = Tank; // Reference to the tank transform
+        m_MainPlayerTank = PlayerTankRef; // Reference to the tank transform
+      
 
-        if (m_tankReference.GetComponent<Rigidbody>())
+        if (m_MainPlayerTank.GetComponent<Rigidbody>())
         {
             // Get the rigidbody component attached to the gameobject
-            m_rigidbody = m_tankReference.GetComponent<Rigidbody>(); // grab a reference to our tanks rigidbody
+            m_rigidbody = m_MainPlayerTank.GetComponent<Rigidbody>(); // grab a reference to our tanks rigidbody
         }
         else
         {
-            Debug.LogError("No Rigidbody attached to the tank");
+            Debug.LogError("No Rigidbody attached to the players tank!");
         }
 
 
         // Check to see whether the tank reference has a camera component transform attached
         // to it 
-        if (m_tankReference.GetComponentInChildren<Camera>().transform)
+        if (m_MainPlayerTank.GetComponentInChildren<Camera>())
 		{
-            // Set the tanks camera reference 
-            m_cameraReference = m_tankReference.GetComponentInChildren<Camera>().transform;
+            m_cameraReference = m_MainPlayerTank.GetComponentInChildren<Camera>().transform;
 		}
         else
 		{
@@ -75,8 +78,8 @@ public class TankMovement
 		}
 
 
-        tankParticleEffects.SetUpEffects(m_tankReference); // set up our tank particle effects
-        tankSoundEffects.Setup(m_tankReference); // Set up the sounds effects for the tank
+        tankParticleEffects.SetUpEffects(m_MainPlayerTank); // set up our tank particle effects
+        tankSoundEffects.Setup(m_MainPlayerTank); // Set up the sounds effects for the tank
         tankParticleEffects.PlayDustTrails(true);// start playing tank particle effects
         EnableTankMovement(false); // Initially set enable tank movement to false.
         EnableTankAiming(false); // Initially set enable tank aiming to false.
@@ -141,7 +144,7 @@ public class TankMovement
     private void Move(float ForwardMovement)
     {
         // create a vector based on the forward vector of our tank, move it forwad or backwards on nothing based on the key input, multiplied by the speed, multipled by the time between frames rendered to make it smooth
-        Vector3 movementVector = m_tankReference.forward * ForwardMovement * speed * Time.deltaTime;
+        Vector3 movementVector = m_MainPlayerTank.forward * ForwardMovement * speed * Time.deltaTime;
         //Debug.Log(movementVector);
         m_rigidbody.MovePosition(m_rigidbody.position + movementVector); // move our rigibody based on our current position + our movement vector
     }
@@ -159,7 +162,6 @@ public class TankMovement
     }
 
     private float desiredX;
-	
     /// <summary>
     ///     Aims the turret on the x & y axis 
     /// </summary>
@@ -195,13 +197,17 @@ public class TankMovement
 
     
 
-           m_cameraReference.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);
-           MainTurret.Rotate(Vector3.up, AimPosition.x);
-        }
-         else
-		{
-            AudioManager.Instance.FadeSoundEffect(GameAudio.T90_PrimaryWeapon_Aiming, aimVolumeMin, durationSecond);
-		}            
+            m_cameraReference.transform.localRotation = Quaternion.Euler(xRotation, desiredX, 0);
+          
+            MainTurret.Rotate(Vector3.up, AimPosition.x);
+         }
+          else
+		 {
+            if (AimPosition.magnitude <= 0.1f)
+            { 
+                AudioManager.Instance.FadeSoundEffect(GameAudio.T90_PrimaryWeapon_Aiming, aimVolumeMin, (durationSecond - 0.4f));
+            }
+        }            
 	}
     #endregion
 }

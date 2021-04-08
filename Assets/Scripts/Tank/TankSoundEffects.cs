@@ -5,14 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class TankSoundEffects
 {
-    [Header("Movement Audio")]
-    [SerializeField] private AudioClip EngineIdle; // the tank idling clip
-    [SerializeField] private AudioClip EngineDriving; // the tank moving clip
+     [Header("Movement Audio Settings")]
+     public bool ShouldLoop = true;
 
-    [Range(1, 3)]
-    public float pitchRangeMax = 1f; // the maximum amount our pitch can be changed by
-    private float originalPitchLevel; // the starting pitch level before we modify it 
-    private AudioSource EngineAudioSource; // a reference to our audio source component
+
+     private AudioClip EngineIdle; // the tank idling clip
+     private AudioClip EngineDriving; // the tank moving clip
+     private AudioSource EngineAudioSource; // a reference to our audio source component
 
     /// <summary>
     /// Sets up the audio source by getting the reference from the tank
@@ -20,14 +19,18 @@ public class TankSoundEffects
     /// <param name="Tank"></param>
     public void Setup(Transform Tank)
     {
-        if (Tank.GetComponent<AudioSource>() != null)
+        if (Tank.GetComponent<AudioSource>())
 		{
             EngineAudioSource = Tank.GetComponent<AudioSource>();
+            EngineAudioSource.loop = ShouldLoop;
             Debug.Log("[TankSoundEffects.Setup]: " + "Audio Source Instance found!");
             EngineIdle = AudioManager.Instance.GetAudioClip(GameAudio.T90_EngineIdle);
             EngineDriving = AudioManager.Instance.GetAudioClip(GameAudio.T90_EngineDriving);
-		}
-   
+        }
+        else
+        {
+            Debug.LogWarning("[TankSoundEffects.Setup]: " + "Audio Source Instance could not be found!");
+        }
     }
 
     /// <summary>

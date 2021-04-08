@@ -72,14 +72,14 @@ public class InfantryAI : MonoBehaviour
 	private void OnEnable()
 	{
 		FireModeEvents.OnObjectDestroyedEvent += OnDeath;
-		FireModeEvents.OnDamageReceivedEvent += OnHit;
+		FireModeEvents.OnReceivedDamageEvent += OnHit;
 		FireModeEvents.OnWaveStartedEvent += EnableMovement;
 	}
 
 	private void OnDisable()
 	{
 		FireModeEvents.OnObjectDestroyedEvent -= OnDeath;
-		FireModeEvents.OnDamageReceivedEvent -= OnHit;
+		FireModeEvents.OnReceivedDamageEvent -= OnHit;
 		FireModeEvents.OnWaveStartedEvent -= EnableMovement;
 	}
 
@@ -94,7 +94,7 @@ public class InfantryAI : MonoBehaviour
 
 		if (GetComponent<NavMeshAgent>())
 		{
-			Agent = GetComponent<NavMeshAgent>();
+			Agent = m_InfantryAIBody.GetComponent<NavMeshAgent>();
 			Agent.autoBraking = false;
 		}
 
@@ -103,9 +103,9 @@ public class InfantryAI : MonoBehaviour
 			m_animator = GetComponent<Animator>();
 		}
 
-		if (FindObjectOfType<Tank>())
+		if (FindObjectOfType<MainPlayerTank>())
 		{
-			Target = FindObjectOfType<Tank>().transform;
+			Target = FindObjectOfType<MainPlayerTank>().transform;
 		}
 
 		movementDirectionSet = false;
@@ -146,7 +146,12 @@ public class InfantryAI : MonoBehaviour
 		
 		CheckViewDistance(transform.position);
 
-		Debug.DrawRay(transform.forward, Target.position, Color.red, 15f);
+		
+		if (Target)
+		{
+			Agent.SetDestination(Target.position);
+		}
+
 
 		// If the AI is not alerted or aggressive, They should be looking for a player (Setting a movement point) 
 		if (!aiAlerted && !aiAggressive)
@@ -198,20 +203,13 @@ public class InfantryAI : MonoBehaviour
 			movementDirectionSet = false;
 		}
 	
-		
-		
-		
+	
 		if (movementDirectionSet == true)
-			{
+		{
 
-				Debug.DrawLine(transform.forward, movementDirection, Color.blue, 15f);
-				
-				// Infantry Debug from BODY 
-				Debug.DrawRay(m_InfantryAIBody.forward, movementDirection, Color.cyan, 50f);
-
-				// Debug.Log("[InfantryAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
-				Agent.SetDestination(movementDirection);
-			}	
+			// Debug.Log("[InfantryAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
+			Agent.SetDestination(movementDirection);
+		}	
 	}
 
 	private IEnumerator SetMovementWaypoint()
@@ -222,9 +220,8 @@ public class InfantryAI : MonoBehaviour
 		float randomXPosition = Random.Range(-maximumMovementRange, maximumMovementRange);
 		float randomZPosition = Random.Range(-maximumMovementRange, maximumMovementRange);
 
-		
 
-		movementDirection = new Vector3(transform.position.x + randomXPosition, 0, transform.position.z + randomZPosition);
+		movementDirection = new Vector3(transform.position.x + randomXPosition, transform.position.y, transform.position.z + randomZPosition);
 
 
 		if (Physics.Raycast(movementDirection, -transform.up, 2f, GroundMask))
@@ -240,6 +237,7 @@ public class InfantryAI : MonoBehaviour
 
 	private void Alerted()
 	{
+		transform.LookAt(Target);
 		Agent.SetDestination(Target.position);
 	}
 
@@ -251,7 +249,7 @@ public class InfantryAI : MonoBehaviour
 
 		Agent.SetDestination(transform.position);
 
-		m_InfantryAIBody.transform.LookAt(Target);
+		transform.LookAt(Target);
 
 		// If the bot isnt already attacking the player 
 		if (!isAttackingPlayer)
@@ -264,15 +262,16 @@ public class InfantryAI : MonoBehaviour
 			{
 				Rigidbody rb = bulletClone.GetComponent<Rigidbody>();
 
-				rb.AddForce(weaponFirePoint.forward * bulletVelocity, ForceMode.Impulse);
-				
+				rb.AddForce(weaponFirePoint.forward * bulletVelocity, ForceMode.Force);
 			}
-	
 
-			Destroy(bulletClone, bulletResetTimer);
-			
 
+
+
+			Destroy(bulletClone, 1f);
 			isAttackingPlayer = true;
+
+
 			Invoke(nameof(ResetAttack), attackWaitTimer);
 		}
 	}

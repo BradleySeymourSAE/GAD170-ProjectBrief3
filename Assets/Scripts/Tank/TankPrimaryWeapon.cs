@@ -129,7 +129,7 @@ public class TankPrimaryWeapon
 			{
                 // Otherwise we can fire the primary weapon
                 Debug.Log("[TankPrimaryWeapon.UpdateMainGun]: " + "Weapon has fired! Reloading primary weapon...");
-                m_tankReference.GetComponent<Tank>().StartCoroutine(ReloadWeapon());
+                m_tankReference.GetComponent<MainPlayerTank>().StartCoroutine(ReloadWeapon());
 			}
 		}
         else if (MainGunShootValue <= 0 && weaponHasFired)

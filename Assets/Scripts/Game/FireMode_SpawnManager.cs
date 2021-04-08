@@ -16,20 +16,19 @@ public class FireMode_SpawnManager : MonoBehaviour
 	public Transform playerSpawnPosition;
 	public Transform waveSpawnPosition;
 
+	[Range(0, 10)]
+	public float Magnitude = 1f;
 	public float maximumXSpawnPosition = 50;
 	public float maximumZSpawnPosition = 50;
 	
 	
-	[SerializeField] private List<GameObject> aliveEnemiesSpawned = new List<GameObject>();
-
-
-	private Vector3 spawnPosition;
-	private Tank m_playerReference;
-
-	[SerializeField] private int currentWave = 1;
-	[SerializeField] private float waveScalingFactor = 3f;
-	[SerializeField] private int nextRoundInfantry;
-	[SerializeField] private int nextRoundTanks;
+	private List<GameObject> aliveEnemyAISpawned = new List<GameObject>();
+	Vector3 spawnPosition;
+	private Transform m_playerReference;
+	int currentWave = 1;
+	private float waveScalingFactor = 3f;
+	int nextRoundInfantry;
+	int nextRoundTanks;
 	
 	
 	/// <summary>
@@ -41,7 +40,7 @@ public class FireMode_SpawnManager : MonoBehaviour
 		FireModeEvents.SpawnEnemyWaveEvent += SpawnEnemyWave; // spawns in the enemies 
 		
 		
-		FireModeEvents.OnResetWaveEvent += ResetWave; // resets the current wave 
+		FireModeEvents.OnResetWaveEvent += ResetCurrentEnemyWave; // resets the current wave 
 		FireModeEvents.OnRestartGameEvent += Restart; // restarts the game, sets wave to 1 
 	}
 
@@ -53,7 +52,7 @@ public class FireMode_SpawnManager : MonoBehaviour
 		FireModeEvents.SpawnPlayerEvent -= SpawnPlayer; // spawns player in the game 
 		FireModeEvents.SpawnEnemyWaveEvent -= SpawnEnemyWave; // removes enemy listener  
 		
-		FireModeEvents.OnResetWaveEvent -= ResetWave; // Restarts the current wave 
+		FireModeEvents.OnResetWaveEvent -= ResetCurrentEnemyWave; // Restarts the current wave 
 		FireModeEvents.OnRestartGameEvent -= Restart; // Restarts the game, sets wave to 1 
 	}
 
@@ -68,21 +67,18 @@ public class FireMode_SpawnManager : MonoBehaviour
 		}
 	}
 
+
+	/// <summary>
+	///		Spawns a player into the game 
+	/// </summary>
 	private void SpawnPlayer()
 	{
+		GameObject currentPlayer = Instantiate(PlayerPrefab, playerSpawnPosition.position, PlayerPrefab.transform.rotation);
 
-		if (FindObjectOfType<Tank>())
+		if (currentPlayer.GetComponent<Transform>())
 		{
-			m_playerReference = FindObjectOfType<Tank>();
-			GameObject playerRef = m_playerReference.gameObject;
-			
-			Destroy(playerRef);
+			m_playerReference = currentPlayer.GetComponent<Transform>();
 		}
-		 
-
-
-		Instantiate(PlayerPrefab, playerSpawnPosition.position, PlayerPrefab.transform.rotation);
-
 	}
 
 	/// <summary>
@@ -90,61 +86,65 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// </summary>
 	private void Restart()
 	{
-		for (int i = 0; i < aliveEnemiesSpawned.Count; i++)
+		for (int i = 0; i < aliveEnemyAISpawned.Count; i++)
 		{
-			Destroy(aliveEnemiesSpawned[i]);
+			Destroy(aliveEnemyAISpawned[i]);
 		}
 
-		aliveEnemiesSpawned.Clear(); // clear enemies list 
+		aliveEnemyAISpawned.Clear(); // clear enemies list 
+
+		
 
 		// Reset the wave to 1 
+		currentWave = 1;
 		FireModeEvents.OnUpdateWaveCountEvent?.Invoke(1);
 	}
 
 	/// <summary>
-	///		Restarts the wave 
+	///		Resets the enemy wave 
 	/// </summary>
-	private void ResetWave()
+	private void ResetCurrentEnemyWave()
 	{
 
 		if (FireMode_GameManager.Instance)
 		{
-			int currentWaveIndex = FireMode_GameManager.Instance.GetCurrentWave;
+			currentWave = FireMode_GameManager.Instance.GetCurrentWave;
 
-			currentWave = currentWaveIndex;
 
-			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Resetting the current wave " + currentWaveIndex);
+			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Resetting the current wave " + currentWave);
 		
 		
-			for (int i = 0; i < aliveEnemiesSpawned.Count; i++)
+			for (int i = 0; i < aliveEnemyAISpawned.Count; i++)
 			{
-				Destroy(aliveEnemiesSpawned[i]);
+				Destroy(aliveEnemyAISpawned[i]);
 			}
 
-			aliveEnemiesSpawned.Clear();
+			aliveEnemyAISpawned.Clear();
 
 			nextRoundTanks = Mathf.RoundToInt(currentWave * waveScalingFactor);
 			nextRoundInfantry = Mathf.RoundToInt(currentWave * waveScalingFactor);
 
 
+			// Update the wave counter ui 
 			FireModeEvents.OnUpdateWaveCountEvent?.Invoke(currentWave);
-			// Invoke the Wave 
+			
+
+			// Respawn an enemy wave 
 			FireModeEvents.SpawnEnemyWaveEvent?.Invoke(nextRoundInfantry, nextRoundTanks);
 		}
 	}
 
-
 	/// <summary>
 	///		Spawns in an enemy wave
 	/// </summary>
-	/// <param name="AmountOfInfantry"></param>
-	/// <param name="AmountOfTanks"></param>
-	private void SpawnEnemyWave(int AmountOfInfantry, int AmountOfTanks)
+	/// <param name="InfantryAmount"></param>
+	/// <param name="TanksAmount"></param>
+	private void SpawnEnemyWave(int InfantryAmount, int TanksAmount)
 	{
-		Debug.Log("[FieldOfFire_SpawnManager.SpawnEnemyWave]: " + "Spawning Enemy Wave. Enemy AI Characters: " + AmountOfInfantry + " Enemy AI Tanks: " + AmountOfTanks);
+		Debug.Log("[FieldOfFire_SpawnManager.SpawnEnemyWave]: " + "Spawning Enemy Wave. Enemy AI Characters: " + InfantryAmount + " Enemy AI Tanks: " + TanksAmount);
 		
 		// Loop through the amount of characters we need to spawn 
-		for (int i = 0; i < AmountOfInfantry; i++)
+		for (int i = 0; i < InfantryAmount; i++)
 		{
 			float xPosition = Random.Range(-maximumXSpawnPosition, maximumXSpawnPosition);
 			float zPosition = Random.Range(-maximumZSpawnPosition, maximumZSpawnPosition);
@@ -155,11 +155,11 @@ public class FireMode_SpawnManager : MonoBehaviour
 			GameObject cloneCharacter = Instantiate(InfantryPrefab, tempSpawnPosition, InfantryPrefab.transform.rotation);
 
 			// Add the cloned character to the alive enemies list 
-			aliveEnemiesSpawned.Add(cloneCharacter);
+			aliveEnemyAISpawned.Add(cloneCharacter);
 		}
 
 		// Repeat the process for the amount of tanks we want in the round 
-		for (int i = 0; i < AmountOfTanks; i++)
+		for (int i = 0; i < TanksAmount; i++)
 		{
 			float xPosition = Random.Range(-maximumXSpawnPosition, maximumXSpawnPosition);
 			float zPosition = Random.Range(-maximumZSpawnPosition, maximumZSpawnPosition);
@@ -168,11 +168,11 @@ public class FireMode_SpawnManager : MonoBehaviour
 
 			GameObject clonedTank = Instantiate(TankPrefab, tempSpawnPosition, TankPrefab.transform.rotation);
 
-			aliveEnemiesSpawned.Add(clonedTank);
+			aliveEnemyAISpawned.Add(clonedTank);
 		}
 
 
 		// Tell the game our tanks have been spawned in, what do we do with them? 
-		FireModeEvents.OnEnemyWaveSpawnedEvent?.Invoke(aliveEnemiesSpawned);
+		FireModeEvents.OnEnemyAIWaveSpawnedEvent?.Invoke(aliveEnemyAISpawned);
 	}
 }
