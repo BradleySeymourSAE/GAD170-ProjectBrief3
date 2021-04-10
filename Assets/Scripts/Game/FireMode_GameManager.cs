@@ -4,21 +4,25 @@ using System.Collections.Generic;
 using UnityEngine;
 #endregion
 
-
-
 /// <summary>
-///		Fire Mode Game Manager
-///		Static top level instance that controls the events that occur with in the game mode 
+///		Fire Mode Game Manager Instance
+///		Handles Game Settings like Timers and starting spawn counts 
 /// </summary>
 [System.Serializable]
 public class FireMode_GameManager : MonoBehaviour
-{ 
-  
+{
+	#region Static
+	
 	/// <summary>
 	///		Instance of the fire mode game manager 
 	/// </summary>
 	public static FireMode_GameManager Instance;
 
+	#endregion
+
+	#region Public Variables 
+
+	#region Game Timers 
 	/// <summary>
 	///		The amount of seconds to wait during the pre game setup  
 	/// </summary>
@@ -28,73 +32,117 @@ public class FireMode_GameManager : MonoBehaviour
 	/// <summary>
 	///		The amount of seconds to wait before the next wave begins 
 	/// </summary>
-	public float nextWaveTimer = 30f;
+	public float startTimer = 30f;
 
-	/// <summary>
-	///	  The amount of seconds before the wave is reset 
-	/// </summary>
-	public float resetRoundTimer = 5f; // seconds before the round is restarted    
+	#endregion
 
+	#region Game Mode Startup Settings 
 	/// <summary>
 	///		The amount of enemy tanks to spawn in to start with 
 	/// </summary>
 	[Header("Game Mode Settings")]
-	public int startingEnemyTanks = 2;
+	public int startingTanks = 2;
 	
 	/// <summary>
 	///		The amount of enemy infantry ai to spawn in to begin with 
 	/// </summary>
-	public int startingEnemyInfantry = 5;
+	public int startingInfantry = 3;
 
 	/// <summary>
 	///		The starting amount of health packs to spawn into the game 
 	/// </summary>
 	[Header("Item Pickup Settings")]
-	public int startingHealthPacksSpawned = 4;
+	public int startingHealthPacks = 3;
 	
 	/// <summary>
 	///		The starting amount of ammunition packs to spawn into the game 
 	/// </summary>
-	public int startingAmmunitionPacksSpawned = 5;
+	public int startingAmmunitionPacks = 5;
+
+	#endregion
+
+	#endregion
+
+	#region Private Variables 
 	
-	
+	#region Collectable Items
+
 	/// <summary>
 	///		The index at which more items will be spawned during a round 
 	/// </summary>
-	int spawnMoreItemsIndex = 4;
+	/// 
+	[SerializeField] private int triggerItemRespawnCount = 2;
+	
+	/// <summary>
+	///		The total amount of collectable items remaining 
+	/// </summary>
+	[SerializeField] private int totalCollectableItemsRemaining;
+	#endregion
 
-	int totalCollectableItemsRemaining; 
-	int totalEnemiesRemaining; // total amount enemies remaining 
-	int m_currentWaveCount = 1; // the current wave the player is on 						 
+	#region Wave & Player References  
 
-	// Testing adding both tank lists to this one 
-	List<GameObject> aliveEnemiesRemaining = new List<GameObject>(); // list of currently alive enemies 
-	List<GameObject> spawnedCollectableItemsRemaining = new List<GameObject>(); // list of remaining collectable items 
+	/// <summary>
+	///		The total amount of enemies remaining 
+	/// </summary>
+	[SerializeField] private int totalEnemiesRemaining;
+	
+	/// <summary>
+	///		The current wave the player is on 
+	/// </summary>
+	[SerializeField] private int currentWaveIndex;
 
+	/// <summary>
+	///		List of currently spawned in enemies 
+	/// </summary>
+	[SerializeField] private List<GameObject> m_AliveEnemies = new List<GameObject>(); 
+	
+	/// <summary>
+	///		List of currently spawned in collectable items 
+	/// </summary>
+	[SerializeField] private List<GameObject> spawnedCollectableItemsRemaining = new List<GameObject>();
+	
 	/// <summary>
 	///		A reference to the current player in the scene 
 	/// </summary>
-	Transform m_currentPlayerReference; // the player 
+	[SerializeField] private Transform m_currentPlayerReference;
+	
+	#endregion
 
-	int totalKillCount; // the total amount of player kills
-
-	/// <summary>
-	///		Current amont of spawned in enemy AI tanks 
-	/// </summary>
-	int m_spawnTankCount;
+	#region Spawner / UI Private Variables 
 	
 	/// <summary>
-	///		Current total amount of spawned in AI infantry amount 
+	///		The total player kills 
 	/// </summary>
-	int m_spawnInfantryCount;
+	[SerializeField] private int totalKillCount;
 
 	/// <summary>
-	///		The currently spawned in weapon pickups amount 
+	///		The total amount of kills the player has achieved this round 
 	/// </summary>
-	int spawnedHealthPickupsCount;
-	int spawnedAmmunitionPickupsCount;
+	[SerializeField] private int currentRoundKillCount;
 
+	/// <summary>
+	///		The total amount of spawned in tanks 
+	/// </summary>
+	[SerializeField] private int enemyAITanksRemaining;
+	
+	/// <summary>
+	///		The total amount of spawned in infantry 
+	/// </summary>
+	[SerializeField] private int enemyInfantryRemaining;
 
+	/// <summary>
+	///		The total spawned in health pickups
+	/// </summary>
+	[SerializeField] private int healthPacksRemaining;
+
+	/// <summary>
+	///		The total spawned in ammunition pickups
+	/// </summary>
+	[SerializeField] private int ammunitionPacksRemaining;
+
+	#endregion
+
+	#endregion
 
 	#region Unity References 
 
@@ -103,13 +151,14 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	private void OnEnable()
 	{
-		FireModeEvents.OnPreWaveEvent += PreWaveEvent;
-		FireModeEvents.OnRestartGameEvent += RestartGameEvent;
-		FireModeEvents.OnGameOverEvent += GameOver;
-		FireModeEvents.OnPlayerSpawnedEvent += SpawnedPlayerEntity;
-		FireModeEvents.OnEnemyAIWaveSpawnedEvent += SpawnedEntitys;
-		FireModeEvents.OnPickupSpawnedEvent += SpawnedPickups;
-		FireModeEvents.OnObjectDestroyedEvent += DespawnEntity;
+		FireModeEvents.OnPlayerSpawnedEvent += SpawnedPlayerEntity; // spawn player 
+		FireModeEvents.OnEnemyAIWaveSpawnedEvent += SpawnedEntitys; // spawned enemy entities 
+		FireModeEvents.OnPickupSpawnedEvent += SpawnedPickups; // spawned item pickups 
+
+		FireModeEvents.OnNextWaveEvent += NextWave;
+		FireModeEvents.OnResetWaveEvent += ResetWave;
+		FireModeEvents.OnObjectDestroyedEvent += DespawnEntity; // despawn's an enemy 
+		FireModeEvents.OnObjectPickedUpEvent += CollectedItem;  // collects an item pickup  
 	}
 
 	/// <summary>
@@ -117,15 +166,15 @@ public class FireMode_GameManager : MonoBehaviour
 	/// </summary>
 	private void OnDisable()
 	{
-		FireModeEvents.OnPreWaveEvent -= PreWaveEvent;
-		FireModeEvents.OnRestartGameEvent -= RestartGameEvent;
-		FireModeEvents.OnGameOverEvent -= GameOver;
 		FireModeEvents.OnPlayerSpawnedEvent -= SpawnedPlayerEntity;
 		FireModeEvents.OnEnemyAIWaveSpawnedEvent -= SpawnedEntitys;
 		FireModeEvents.OnPickupSpawnedEvent -= SpawnedPickups;
-		FireModeEvents.OnObjectDestroyedEvent -= DespawnEntity;
-	}
 
+		FireModeEvents.OnNextWaveEvent -= NextWave;
+		FireModeEvents.OnResetWaveEvent -= ResetWave;
+		FireModeEvents.OnObjectDestroyedEvent -= DespawnEntity;
+		FireModeEvents.OnObjectPickedUpEvent -= CollectedItem;
+	}
 
 	/// <summary>
 	///		Destroys the game manager object and creates a new instance 
@@ -142,40 +191,14 @@ public class FireMode_GameManager : MonoBehaviour
 			Instance = this;
 			DontDestroyOnLoad(gameObject);
 		}
-
-		// Reset the wave count to 1 
-		m_currentWaveCount = 1;
-
-	}
-
-
-	/// <summary>
-	///		Starts Field Of Fire Game Mode!
-	/// </summary>
-	private void Start()
-	{
-		StartCoroutine(StartFieldOfFire());
 	}
 
 	#endregion
 
-	#region Helper Methods
-
-	/// <summary>
-	///		Gets the current wave index 
-	/// </summary>
-	public int GetCurrentWave
-	{
-		get
-		{
-			return m_currentWaveCount;
-		}
-	}
-
-	#endregion
-
-	#region Spawning / Despawning Methods 
+	#region Private Methods 
 	
+	#region Spawning / Despawning Methods 
+
 	/// <summary>
 	///		Spawns in the player entity!
 	/// </summary>
@@ -186,41 +209,55 @@ public class FireMode_GameManager : MonoBehaviour
 		{
 			m_currentPlayerReference = PlayerEntity.GetComponent<MainPlayerTank>().transform;
 		}
+
+		
 	}
 
 	/// <summary>
-	///		Handles spawning of the enemy tanks & enemy infantry AI characters  
+	///		Handles updating the currently spawned in entities 
 	/// </summary>
 	/// <param name="EnemyTanksSpawned"></param>
 	/// <param name="EnemyCharactersSpawned"></param>
 	private void SpawnedEntitys(List<GameObject> enemiesSpawned)
 	{
 
-		aliveEnemiesRemaining.Clear();
-		int tankIndex = 0;
-		int infantryIndex = 0;
+		m_AliveEnemies.Clear();
 
 		for (int i = 0; i < enemiesSpawned.Count; i++)
 		{
 
 			if (enemiesSpawned[i].GetComponent<InfantryAI>())
 			{
-				infantryIndex++;
+				enemyInfantryRemaining++;
 			}
 			else if (enemiesSpawned[i].GetComponent<TankAI>())
 			{
-				tankIndex++;
+				enemyAITanksRemaining++;
 			}
-		
-			GameObject _enemy = enemiesSpawned[i];
 
-			aliveEnemiesRemaining.Add(_enemy);
+			// Add the newly spawned enemy to the alive enemies list 
+			m_AliveEnemies.Add(enemiesSpawned[i]);
 		}
 
-		totalEnemiesRemaining = enemiesSpawned.Count;
+		totalEnemiesRemaining = m_AliveEnemies.Count;
 
-		m_spawnInfantryCount = infantryIndex;
-		m_spawnTankCount = tankIndex;
+
+		// Update the In game UI
+		UpdateInGameUI();
+		UpdatePlayerKillCount();
+	}
+
+	/// <summary>
+	///		Handles updating the players kill count 
+	/// </summary>
+	private void UpdatePlayerKillCount()
+	{
+		FireModeEvents.UpdatePlayerKillsEvent?.Invoke(totalKillCount);
+	}
+
+	private void UpdateInGameUI()
+	{
+		FireModeEvents.UpdateWaveUIEvent?.Invoke(currentWaveIndex, totalEnemiesRemaining, currentRoundKillCount);
 	}
 
 	/// <summary>
@@ -231,41 +268,54 @@ public class FireMode_GameManager : MonoBehaviour
 	{
 		Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Attempting to despawn Entity " + EnemyEntity.name);
 
+		// If the enemy entity is a player we probably want to return. 
 		if (EnemyEntity.GetComponent<MainPlayerTank>())
 		{
-			MainPlayerTank player = EnemyEntity.GetComponent<MainPlayerTank>();
-			
-		
-			if (player.tankHealth.Health <= 0)
-			{
-				FireModeEvents.OnGameOverEvent?.Invoke(player.transform);
-				return;
-			}
+			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Somehow found a player reference here! I should probably return..." + EnemyEntity.name);
+			return;
 		}
 		
-		if (
-			!EnemyEntity.GetComponent<TankAI>() && 
-			!EnemyEntity.GetComponent<InfantryAI>()
-			)
+		// If the enemy tank doesn't have either the tank ai or infantry ai script 
+		if (EnemyEntity.GetComponent<TankAI>() == null && EnemyEntity.GetComponent<InfantryAI>() == null)
 		{
+			// Then we want to return. 
 			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Entity not found " + EnemyEntity.name);
 			return;
 		}
 
+		// If enemy is a tank 
+		if (EnemyEntity.GetComponent<TankAI>())
+		{
+			// Remove 1 from the spawned in tanks remaining 
+			enemyAITanksRemaining--;
+		}
+		// Otherwise if the enemy is an infantry character 
+		else if (EnemyEntity.GetComponent<InfantryAI>())
+		{
+			// Remove 1 from the spawned in infantry remaining 
+				enemyInfantryRemaining--;
+		}
+		
 
-
-			aliveEnemiesRemaining.Remove(EnemyEntity.gameObject);
-			totalEnemiesRemaining = aliveEnemiesRemaining.Count;
-			totalKillCount += 1;
+		
+		m_AliveEnemies.Remove(EnemyEntity.gameObject);
 			
-			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Enemies Remaining:  " + totalEnemiesRemaining);
+			// Set the enemies remaining to the new alive enemies count 
+		totalEnemiesRemaining = m_AliveEnemies.Count;
+		Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Enemies Remaining:  " + totalEnemiesRemaining);
+			
+		currentRoundKillCount += 1;
+		totalKillCount += 1; // increase the players kill count by 1 
+		
+		UpdatePlayerKillCount(); // Update the player's kills
 
-			FireModeEvents.OnUpdatePlayerKillsEvent?.Invoke(totalKillCount);
-
+		// Updates the players in game wave ui stats such as enemies remaining, wave current wave count 
+		UpdateInGameUI(); 
 
 		if (totalEnemiesRemaining <= 0)
 		{
-			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Total Enemies Remaining: " + totalEnemiesRemaining + " Running next wave event!");
+			// Invoke the next wave event 
+			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Starting Next Wave Event! - There are no enemies remaining - " + totalEnemiesRemaining);
 			
 			// Then we want to run the next round 
 			FireModeEvents.OnNextWaveEvent?.Invoke();
@@ -279,19 +329,17 @@ public class FireMode_GameManager : MonoBehaviour
 	{
 
 		spawnedCollectableItemsRemaining.Clear();
-		int healthIndex = 0;
-		int ammoIndex = 0;
 
 		for (int i = 0; i < SpawnedPickups.Count; i++)
 		{
 
 			if (SpawnedPickups[i].GetComponent<BasicItemPickup>().CollectableItem.ItemType == SpecialItemPickup.Health)
 			{
-				healthIndex++;
+				healthPacksRemaining += 1;
 			}
 			else if (SpawnedPickups[i].GetComponent<BasicItemPickup>().CollectableItem.ItemType == SpecialItemPickup.Ammunition)
 			{
-				ammoIndex++;
+				ammunitionPacksRemaining += 1;
 			}
 
 			GameObject item = SpawnedPickups[i];
@@ -299,16 +347,16 @@ public class FireMode_GameManager : MonoBehaviour
 			spawnedCollectableItemsRemaining.Add(item);
 		}
 
-		totalCollectableItemsRemaining = SpawnedPickups.Count;
-		spawnedHealthPickupsCount = healthIndex;
-		spawnedAmmunitionPickupsCount = ammoIndex;
+		totalCollectableItemsRemaining = spawnedCollectableItemsRemaining.Count;
+
+		UpdateInGameUI();
 	}
 
 	/// <summary>
 	///		Handles despawning of the pickup items 
 	/// </summary>
 	/// <param name="Pickup"></param>
-	private void DespawnPickups(Transform Pickup)
+	private void CollectedItem(Transform Pickup)
 	{
 		if (!Pickup.GetComponent<BasicItemPickup>())
 		{
@@ -317,117 +365,120 @@ public class FireMode_GameManager : MonoBehaviour
 
 		if (Pickup.GetComponent<BasicItemPickup>().CollectableItem.ItemType == SpecialItemPickup.Health)
 		{
-			spawnedHealthPickupsCount--;
+			healthPacksRemaining--;
 		}
 		else if (Pickup.GetComponent<BasicItemPickup>().CollectableItem.ItemType == SpecialItemPickup.Ammunition)
 		{
-			spawnedAmmunitionPickupsCount--;
+			ammunitionPacksRemaining--;
 		}
 	
 
-		totalCollectableItemsRemaining--;
-
+		// Remove the collectable item from the scene 
 		spawnedCollectableItemsRemaining.Remove(Pickup.gameObject);
 
-		if (totalCollectableItemsRemaining <= spawnMoreItemsIndex)
+		// Reset the total remaining collectable items count 
+		totalCollectableItemsRemaining = spawnedCollectableItemsRemaining.Count;
+
+		// If the total remaining collectable items count is less than or equal to the trigger item respawn count 
+		if (totalCollectableItemsRemaining <= triggerItemRespawnCount)
 		{
-			FireModeEvents.SpawnPickupEvent?.Invoke(startingHealthPacksSpawned, startingAmmunitionPacksSpawned);
+			// Add random amount of health packs 
+			// Add random amount of ammo packs 
+
+			startingHealthPacks = (int)Random.Range(1f, startingHealthPacks - healthPacksRemaining);
+			startingAmmunitionPacks = (int)Random.Range(1f, startingAmmunitionPacks - ammunitionPacksRemaining);
+
+			// Spawn the weapon pickups
+
+			Debug.Log("[FireMode_GameManager.CollectedItem]: " + "Total items remaining " + totalCollectableItemsRemaining + " less than or equal to trigger respawn " + triggerItemRespawnCount + ". Spawning " + startingHealthPacks + " Health, " + startingAmmunitionPacks + " Ammunition!");
+			FireModeEvents.SpawnPickupsEvent?.Invoke(startingHealthPacks, startingAmmunitionPacks);
 		}
 	}
 
 	#endregion
 
 	#region Game Methods 
-	
-	private void GameOver(Transform PlayerEntity)
-	{
-		if (PlayerEntity.GetComponent<MainPlayerTank>())
-		{
-			Destroy(PlayerEntity.gameObject);
-		}
-
-
-		Debug.Log("[FireMode_GameManager.GameOver]: " + " Restarting the game!");
-		Invoke(nameof(RestartGameEvent), resetRoundTimer);
-	}
 
 	/// <summary>
-	///		Calls and updates the UI related to the pre wave 
+	///		Starts Field Of Fire Game Mode!
 	/// </summary>
-	private void PreWaveEvent()
+	private void Start()
 	{
-		Debug.Log("[FireMode_GameManager.PreWaveEvent]: " + "Pre wave game event has been called!");
-	}
-	
-	/// <summary>
-	///		Resets the game 
-	/// </summary>
-	private void RestartGameEvent()
-	{
-		Debug.Log("[FireMode_GameManager.RestartGameEvent]: " + "Restart Game Event called");
-
-		// Respawns the player in 
-		Debug.Log("[FireMode_GameManager.RestartGameEvent]: " + "Spawning player in...");
-		FireModeEvents.SpawnPlayerEvent?.Invoke();
-
-		Debug.Log("[FireMode_GameManager.RestartGameEvent]: " + "Attempting to spawn first enemy wave!");
-		// Calls the first enemy wave! 
-		Invoke(nameof(StartFirstEnemyWave), preWaveSetupTimer);
-
-		Debug.Log("[FireMode_GameManager.RestartGameEvent]: " + "Calling on wave started event!");
-		FireModeEvents.OnWaveStartedEvent?.Invoke();
-	}
-
-	/// <summary>
-	///		Starts the first wave of the attack ( On game start event ) 
-	/// </summary>
-	private void StartFirstEnemyWave()
-	{
-		Debug.Log("[FireMode_GameManager.StartFirstEnemyWave]: " + "Starting first enemy wave!");
-		m_currentWaveCount = 1;
-		m_spawnTankCount = startingEnemyTanks;
-		m_spawnInfantryCount = startingEnemyInfantry;
-
-
-
-		Debug.Log("[FireMode_GameManager.StartFirstEnemyWave]: " + "Calling Enemy Wave Spawn Event...");
-		FireModeEvents.SpawnEnemyWaveEvent?.Invoke(m_spawnInfantryCount, m_spawnTankCount);
+		currentWaveIndex = 1;
+		totalKillCount = 0;
+		// Once the scene loads, Field of fire game is started!
+		StartCoroutine(RunGameModeLogic());
 	}
 
 	/// <summary>
 	///		Starts Field of Fire in a custom updated function. Allows you to control when / where to update the game events and what game events to run? 
 	/// </summary>
 	/// <returns></returns>
-	private IEnumerator StartFieldOfFire()
+	private IEnumerator RunGameModeLogic()
 	{
-		// Invoke Game Reset Event 
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Calling on restart game event..");
-		FireModeEvents.OnRestartGameEvent?.Invoke(); // invoke restart game 
+		Debug.Log("[FireMode_GameManager.RunGameModeLogic]: " + "Running game mode logic!");
+		FireModeEvents.OnGameRestartEvent?.Invoke(); 
 
-		// Spawn the player in 
-		// Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Calling player spawn event..");
-		// FireModeEvents.SpawnPlayerEvent?.Invoke();
+		FireModeEvents.SpawnPlayerEvent?.Invoke(); // spawn the player in
 
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Calling pre wave event!");
-		FireModeEvents.OnPreWaveEvent?.Invoke(); // call pre wave event which will display wave count down timer
+		FireModeEvents.OnPreWaveEvent?.Invoke(preWaveSetupTimer); 
 
-		// We use a pre game wait timer so we have time to setup the game events before
+		// Wait X amount of seconds before spawning enemies and weapon pickups 
 		yield return new WaitForSeconds(preWaveSetupTimer);
 
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Calling Spawn Pickup event!");
-		FireModeEvents.SpawnPickupEvent?.Invoke(startingHealthPacksSpawned, startingAmmunitionPacksSpawned);
+		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Spawn Pickups Event Called! Starting Health Packs: " + startingHealthPacks + " Starting Ammunition Packs: " + startingAmmunitionPacks);
+		FireModeEvents.SpawnPickupsEvent(startingHealthPacks, startingAmmunitionPacks);
 
-
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Spawning enemy wave!");
-		FireModeEvents.SpawnEnemyWaveEvent(startingEnemyInfantry, startingEnemyTanks); // spawns the enemies...
+		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Spawn Event Wave Event called! Starting Infantry: " + startingInfantry + " Starting Tanks: " + startingTanks);
+		FireModeEvents.SpawnEnemyWaveEvent(startingInfantry, startingTanks); // spawns the enemies...
 
 		// Starts the first round! 
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Calling on wave started event!");
-		FireModeEvents.OnWaveStartedEvent?.Invoke(); // makes the enemies aggressive! 
-		
+		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "On Wave Started Event has been called!");
+		FireModeEvents.OnWaveStartedEvent?.Invoke(); // Starts the game! 
+
 
 		yield return null; // Tells coroutine when the next update is 
 	}
+
+	/// <summary>
+	///		Runs the next wave in the sequence 
+	/// </summary>
+	private void NextWave()
+	{
+		Debug.Log("[FireMode_GameManager.NextWave]: " + "Starting next wave!! (TODO) WIP ");
+		currentWaveIndex += 1; // increase the wave index 
+		currentRoundKillCount = 0; // reset current round kills to 0 
+
+
+		UpdateInGameUI(); // updates the in game ui. 
+	
+
+		Debug.Log("Current Wave Index: " + currentWaveIndex);
+		
+	}
+
+	/// <summary>
+	///		Resets the game 
+	/// </summary>
+	private void ResetWave()
+	{
+		FireModeEvents.OnResetWaveEvent?.Invoke(); 
+
+
+		Debug.Log("[FireMode_GameManager.ResetWave]: " + "Invoking start wave event!");
+		Invoke(nameof(StartWave), startTimer);
+	}
+
+	/// <summary>
+	///		Starts the first wave (Game Started Event) 
+	/// </summary>
+	private void StartWave()
+	{
+		FireModeEvents.OnWaveStartedEvent?.Invoke();
+	}
+
+
+	#endregion
 
 	#endregion
 }

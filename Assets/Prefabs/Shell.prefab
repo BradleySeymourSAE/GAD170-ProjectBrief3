@@ -128,7 +128,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.9398438, b: 0, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.5
   m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -193,10 +193,10 @@ MonoBehaviour:
   Tank:
     serializedVersion: 2
     m_Bits: 384
-  maximumDamage: 35
-  force: 650
-  maximumShellLifetime: 15
-  explosionRadius: 25
+  maximumDamage: 70
+  force: 800
+  maximumShellLifetime: 5
+  explosionRadius: 15
   ExplosionPrefab: {fileID: 8901574840371452635}
 --- !u!82 &2260574393947628213
 AudioSource:

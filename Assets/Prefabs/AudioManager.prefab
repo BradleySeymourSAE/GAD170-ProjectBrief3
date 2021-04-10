@@ -47,9 +47,9 @@ MonoBehaviour:
   GameSoundEffects:
   - name: BackgroundThemeTrack
     loop: 1
-    volume: 0.6
+    volume: 1
     pitch: 1
-    clip: {fileID: 8300000, guid: 7b3ce4dd1e65cdd40b3c295ae2569805, type: 3}
+    clip: {fileID: 8300000, guid: bd635684d6edc9d4db33185fd3dcc4e4, type: 3}
     source: {fileID: 0}
   - name: T90_EngineIdle
     loop: 1

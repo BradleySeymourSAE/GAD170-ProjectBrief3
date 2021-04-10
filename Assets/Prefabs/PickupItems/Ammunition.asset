@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09d01743ffc58194598fcf6e6c0b8982, type: 3}
   m_Name: Ammunition
   m_EditorClassIdentifier: 
-  RotationsPerSecond: 150
+  RotationsPerSecond: 190
   Amplitude: 0.3
   Frequency: 2
-  ItemPickup: 1
-  startingPosition: {x: 0, y: 0, z: 0}
-  Offset: {x: 0, y: 0, z: 0}
+  ItemType: 1
+  startingPosition: {x: 97.02803, y: 0.35, z: 145.73714}
+  Offset: {x: 97.02803, y: 0.52632886, z: 145.73714}

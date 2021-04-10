@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿#region Namespaces
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-
+#endregion
 
 /// <summary>
 /// Handles everything in regards to our tanks health system
@@ -11,32 +11,60 @@ using UnityEngine.UI;
 [System.Serializable]
 public class TankHealth 
 {
-    public float minHealth = 0; // our min health
+	#region Public Variables 
+
+	/// <summary>
+	///     The minimum amount of health for our tank
+	/// </summary>
+	public float minHealth = 0; // our min health
+
+    /// <summary>
+    ///     The maximum amount of health for our tank 
+    /// </summary>
     public float maxHealth = 100; // our max health
-    [SerializeField] private float CurrentHealth; // our current health
+
+    /// <summary>
+    ///     Is our tank character currently alive ? 
+    /// </summary>
     public bool isDead = true; // is our character alive?
-    public Color fullHealthColour = Color.green; // our full health colour
-    public Color warningHealthColor = Color.yellow; // warning health colour (50%)
-    public Color zeroHealthColour = Color.red; // colour of no health
-    private Transform m_tankReference; // reference to the tank that this script is attached to
 
+    #endregion
 
+    #region Private Variables 
 
+    /// <summary>
+    ///     The current health for the tank 
+    /// </summary>
 
-    public float Health
+    [SerializeField] private float m_CurrentHealth; // our current health
+
+    /// <summary>
+    ///     Reference to the current players tank transform 
+    /// </summary>
+    [SerializeField] private Transform m_tankReference; // reference to the tank that this script is attached to
+
+	#endregion
+
+	#region Public Methods 
+	/// <summary>
+	///     Returns the current health for the player character 
+	/// </summary>
+	public float Health
     {
         get
         {
-            return CurrentHealth; // return our current health
+            return m_CurrentHealth; // return our current health
         }
         set
         {
-            CurrentHealth = value; // set our currenthealth to the value coming in.
+            m_CurrentHealth = value; // set our currenthealth to the value coming in.
 
-            CurrentHealth = Mathf.Clamp(CurrentHealth, minHealth, maxHealth); // making sure that what our damage is, it clamps it between 0 and 100
+          
+            m_CurrentHealth = Mathf.Clamp(m_CurrentHealth, minHealth, maxHealth); // making sure that what our damage is, it clamps it between 0 and 100
+            Debug.Log("[TankHealth]: " + "Health remaining " + m_CurrentHealth);
 
             // so if we have less than 0 health we must be dead. 
-            if (CurrentHealth <= 0)
+            if (m_CurrentHealth <= 0)
             {
                 isDead = true;
                 // if we are dead we'd want some explosions
@@ -47,6 +75,15 @@ public class TankHealth
             {
                 isDead = false;
             }
+
+
+            if (m_tankReference.GetComponent<MainPlayerTank>())
+			{
+                // Then we know its a player and not the AI 
+
+                FireModeEvents.UpdatePlayerHealthEvent?.Invoke(m_CurrentHealth);
+			}
+
         }
     }
 
@@ -60,6 +97,7 @@ public class TankHealth
        
         Health = maxHealth; // set our current health to max health
 
+        FireModeEvents.UpdatePlayerHealthEvent?.Invoke(Health);
     }
 
     /// <summary>
@@ -69,7 +107,9 @@ public class TankHealth
     /// <param name="Amount"></param>
     public void ApplyHealthChange(float Amount)
     {
-        Debug.Log(Amount);
+        Debug.Log("Applying health change " + Amount);
         Health += Amount; // increase our health by the amount
     }
+
+	#endregion
 }

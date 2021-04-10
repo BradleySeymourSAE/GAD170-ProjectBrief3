@@ -9,8 +9,8 @@ public class TankShell : MonoBehaviour
         public LayerMask Tank;
         public float maximumDamage = 40f;
         public float force = 1000f;
-        public float maximumShellLifetime = 10f;
-        public float explosionRadius = 50f;
+        public float maximumShellLifetime = 4f;
+        public float explosionRadius = 25f;
 		public GameObject ExplosionPrefab;
 
 
@@ -63,7 +63,8 @@ public class TankShell : MonoBehaviour
 
 
 
-		GameObject clonedExplosion = Instantiate(ExplosionPrefab, transform.position, Quaternion.identity);
+		GameObject clonedExplosion = Instantiate(ExplosionPrefab, transform.position, ExplosionPrefab.transform.rotation);
+
 		Destroy(clonedExplosion, maximumShellLifetime);
 	}
 

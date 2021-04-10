@@ -13,26 +13,13 @@ public static class FireModeEvents
 {
 
 	#region DELEGATES 
-	#region Game Delegates 
-
-	/// <summary>
-	///		Restarts the game 
-	/// </summary>
-	public delegate void RestartGame(); // restart the game to first round  
-	
-	/// <summary>
-	///		Called when the player has died - Similar to restart 
-	/// </summary>
-	public delegate void GameOver(Transform PlayerDead);
-
-	#endregion
 
 	#region Wave & Round Delegates 
 
 	/// <summary>
 	///  What happens before the wave has started  
 	/// </summary>
-	public delegate void PreWave();
+	public delegate void PreWave(float displayForSeconds);
 	
 	/// <summary>
 	///		Called to start the game 
@@ -45,9 +32,15 @@ public static class FireModeEvents
 	public delegate void NextWave(); 
 	
 	/// <summary>
-	///		Called to reset the current wave - handled from the ui?
+	///		Called when the game should reset.
 	/// </summary>
 	public delegate void ResetWave(); 
+
+	/// <summary>
+	///		Called to restart the game
+	/// </summary>
+	public delegate void RestartGame(); 
+
 
 	#endregion
 
@@ -74,27 +67,15 @@ public static class FireModeEvents
 
 	#region UI Delegates 
 
-	public delegate void UpdateWaveCount(int Wave); // update the current wave 
+	public delegate void UpdateWaveUI(int CurrentWave, int WaveEnemiesRemaining, int WaveEnemiesKilled); // update the current wave 
 	public delegate void UpdatePlayerKills(int PlayerKills);
 	public delegate void UpdatePlayerAmmunition(int AmmunitionLoaded, int TotalAmmunition);
+	public delegate void UpdatePlayersHealthUI(float CurrentHealth);
 
 	#endregion
 	#endregion
 
 	#region EVENTS 
-	#region Game Mode Events 
-
-	/// <summary>
-	///		Handles the games on restart event 
-	/// </summary>
-	public static RestartGame OnRestartGameEvent;
-
-	/// <summary>
-	///		Called once a player dies. Restarts the game.
-	/// </summary>
-	public static GameOver OnGameOverEvent;
-
-	#endregion
 
 	#region Wave Events 
 
@@ -118,6 +99,11 @@ public static class FireModeEvents
 	/// </summary>
 	public static ResetWave OnResetWaveEvent;
 
+	/// <summary>
+	///		Called when the game is restarted
+	/// </summary>
+	public static RestartGame OnGameRestartEvent;
+
 	#endregion
 
 	#region UI Events 
@@ -126,17 +112,22 @@ public static class FireModeEvents
 	/// </summary>
 	/// <param name="PlayerReference">The current player enum</param>
 	/// <param name="Amount">The kill count of the player</param>
-	public static UpdateWaveCount OnUpdateWaveCountEvent;
+	public static UpdateWaveUI UpdateWaveUIEvent;
 
 	/// <summary>
 	///		Once called - Updates the current players kill counter ui 
 	/// </summary>
-	public static UpdatePlayerKills OnUpdatePlayerKillsEvent;
+	public static UpdatePlayerKills UpdatePlayerKillsEvent;
 
 	/// <summary>
 	///		Updates the player ammunition UI
 	/// </summary>
-	public static UpdatePlayerAmmunition OnUpdatePlayerAmmunitionEvent;
+	public static UpdatePlayerAmmunition UpdatePlayerAmmunitionEvent;
+
+	/// <summary>
+	///		Updates the player's Health UI 
+	/// </summary>
+	public static UpdatePlayersHealthUI UpdatePlayerHealthEvent;
 
 	#endregion
 
@@ -145,36 +136,36 @@ public static class FireModeEvents
 	/// <summary>
 	///		Handles the spawning of the player 
 	/// </summary>
-	public static SpawnPlayer SpawnPlayerEvent;
+	public static SpawnPlayer SpawnPlayerEvent; // spawns the player 
 
 	/// <summary>
 	///		Called after a player has spawned 
 	/// </summary>
-	public static OnPlayerSpawned OnPlayerSpawnedEvent;
+	public static OnPlayerSpawned OnPlayerSpawnedEvent; // called after the player has spawned 
 
 	/// <summary>
 	///		Called to spawn in a weapon pickup 
 	/// </summary>
-	public static SpawnPickup SpawnPickupEvent;
+	public static SpawnPickup SpawnPickupsEvent; // spawns the pickup item 
 	
 	/// <summary>
 	///		Called when the weapon pickups have been spawned in 
 	/// </summary>
-	public static OnPickupSpawned OnPickupSpawnedEvent;
+	public static OnPickupSpawned OnPickupSpawnedEvent; // called after the pickups are spawned in 
 
 	/// <summary>
 	///		Spawns in a wave of enemies
 	/// </summary>
 	/// <param name="NumberOfInfantry">The amount of infantry AI to spawn in</param>
 	/// <param name="NumberOfTanks">The amount of tank AI to spawn in</param>
-	public static SpawnEnemyWave SpawnEnemyWaveEvent;
+	public static SpawnEnemyWave SpawnEnemyWaveEvent; // spawns the enemies 
 
 	/// <summary>
 	///		Handles what happens after the enemy wave has spawned in 
 	/// </summary>
 	/// <param name="EnemyAIInfantry">List of spawned Enemy AI Infantry</param>
 	/// <param name="EnemyAITanks">List of spawned in Enemy AI Tanks</param>
-	public static OnEnemyAIWaveSpawned OnEnemyAIWaveSpawnedEvent;
+	public static OnEnemyAIWaveSpawned OnEnemyAIWaveSpawnedEvent; // called after the enemies are spawned 
 
 	#endregion
 
@@ -184,14 +175,14 @@ public static class FireModeEvents
 	///		Event called once an object has been eliminated
 	/// </summary>
 	/// <param name="Tank">The enemy tank to destroy</param>
-	public static OnObjectDestroyed OnObjectDestroyedEvent;
+	public static OnObjectDestroyed OnObjectDestroyedEvent; // called when a tank object is destroyed 
 
 	/// <summary>
 	///		Called when the tanks receives damage from an enemy 
 	/// </summary>
 	/// <param name="TankObject">The tank to apply the damage amount to</param>
 	/// <param name="Amount">The amount of damage to apply to the tank</param>
-	public static ReceivedDamage OnReceivedDamageEvent;
+	public static ReceivedDamage OnReceivedDamageEvent; // called when an object takes damage 
 
 	/// <summary>
 	///		Called when an object has been picked up 

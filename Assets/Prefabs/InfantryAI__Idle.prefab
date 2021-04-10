@@ -1001,7 +1001,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4169110363907650889}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4242464891302059691}
@@ -1026,7 +1026,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4169110363907650889}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: b6b8b4ef3ce9cbf418ec2d4a327daad5, type: 3}
   m_Controller: {fileID: 9100000, guid: da4158b9e824ba346ae9fe78f318f7cf, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -1048,7 +1048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d9ff825a3a099341bb9fe0db846d4c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponFirePoint: {fileID: 3618415767868271749}
+  WeaponFiringPoint: {fileID: 3618415767868271749}
   PrimaryHand: {fileID: 1749347663320090403}
   PrimaryHide: {fileID: 2421048404252347020}
   SecondaryHand: {fileID: 1749347663320090403}
@@ -1069,14 +1069,14 @@ MonoBehaviour:
   movementDirection: {x: 0, y: 0, z: 0}
   movementRange: 10
   movementWaypointTimer: 10
-  maximumMovementRange: 15
-  movementDirectionSet: 0
   attackWaitTimer: 0
   isAttackingPlayer: 0
-  viewDistanceAlertedRange: 50
   viewDistanceAttackRange: 75
-  aiAlerted: 0
-  aiAggressive: 0
+  infantryHealth:
+    minimumHealth: 0
+    maximumHealth: 100
+    isDead: 1
+    m_CurrentHealth: 0
   m_animator: {fileID: 0}
 --- !u!195 &6141218877401271326
 NavMeshAgent:
@@ -1129,7 +1129,7 @@ CapsuleCollider:
   m_Radius: 0.35
   m_Height: 1.65
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1 &4188293245387445778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1867,6 +1867,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1749347663320090412}
     m_Modifications:
+    - target: {fileID: 3432077730673706053, guid: 34ca551abcd7b4048a3c3aeaf03d31e8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3432077730673706053, guid: 34ca551abcd7b4048a3c3aeaf03d31e8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.55
+      objectReference: {fileID: 0}
     - target: {fileID: 7316785762012962564, guid: 34ca551abcd7b4048a3c3aeaf03d31e8,
         type: 3}
       propertyPath: m_Name

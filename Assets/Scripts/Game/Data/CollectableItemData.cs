@@ -29,10 +29,11 @@ public class CollectableItemData : ScriptableObject
 	///		The frequency / Amount of times the object moves upwards and downwards 
 	/// </summary>
 	public float Frequency = 2f;
+	
 	/// <summary>
 	///		Whether the item is enabled or not 
 	/// </summary>
-	public bool Enabled {get; set; }
+	public bool Enabled { get; set; }
 
 	/// <summary>
 	///		The type of item the collectable is 

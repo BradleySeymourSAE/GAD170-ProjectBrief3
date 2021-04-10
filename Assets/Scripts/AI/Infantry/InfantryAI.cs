@@ -10,7 +10,7 @@ public class InfantryAI : MonoBehaviour
 	private Transform Target;
 	private Transform m_InfantryAIBody;
 
-	public Transform weaponFirePoint;
+	public Transform WeaponFiringPoint;
 	public GameObject PrimaryHand;
 	public GameObject PrimaryHide;
 	public GameObject SecondaryHand;
@@ -35,9 +35,6 @@ public class InfantryAI : MonoBehaviour
 	public float movementRange;
 	public float movementWaypointTimer = 3f;
 
-	[SerializeField] private float maximumMovementRange = 10f;
-	[SerializeField] private bool movementDirectionSet;
-
 	/// <summary>
 	///		Attacking 
 	/// </summary>
@@ -47,13 +44,11 @@ public class InfantryAI : MonoBehaviour
 	/// <summary>
 	///		States
 	/// </summary>
-	public float viewDistanceAlertedRange = 50f;
 	public float viewDistanceAttackRange = 75f;
-	[SerializeField] private bool aiAlerted;
-	[SerializeField] private bool aiAggressive;
+	private bool aiAlerted;
+	private bool aiAggressive;
 
 	private bool enableAIMovement = false;
-
 
 	public InfantryHealth infantryHealth = new InfantryHealth();
 	public InfantryWeapons infantryWeapons = new InfantryWeapons();
@@ -92,23 +87,18 @@ public class InfantryAI : MonoBehaviour
 			m_InfantryAIBody = GetComponent<Transform>();
 		}
 
-		if (GetComponent<NavMeshAgent>())
+
+		if (m_InfantryAIBody.GetComponent<NavMeshAgent>())
 		{
 			Agent = m_InfantryAIBody.GetComponent<NavMeshAgent>();
 			Agent.autoBraking = false;
 		}
 
-		if (GetComponent<Animator>())
+		if (m_InfantryAIBody.GetComponent<Animator>())
 		{
-			m_animator = GetComponent<Animator>();
-		}
+			m_animator = m_InfantryAIBody.GetComponent<Animator>();
 
-		if (FindObjectOfType<MainPlayerTank>())
-		{
-			Target = FindObjectOfType<MainPlayerTank>().transform;
 		}
-
-		movementDirectionSet = false;
 	}
 
 	private void Start()
@@ -143,33 +133,25 @@ public class InfantryAI : MonoBehaviour
 		Agent.updatePosition = true;
 		Agent.updateRotation = false;
 		Agent.updateUpAxis = false;
-		
-		CheckViewDistance(transform.position);
 
+		CheckAttackDistance(transform.position);
+
+		if (Target == null)
+		{
+			Target = FindObjectOfType<MainPlayerTank>().transform;
+		}
 		
+
+
+		// If there is a target player, we just want to move towards the player 
 		if (Target)
 		{
-			Agent.SetDestination(Target.position);
+			Alerted();
 		}
-
-
-		// If the AI is not alerted or aggressive, They should be looking for a player (Setting a movement point) 
-		if (!aiAlerted && !aiAggressive)
+		else if (Target && aiAggressive == true)
 		{
-			SearchForPlayer();
+			AttackPlayer();
 		}
-		else
-		{
-			if (aiAlerted && !aiAggressive)
-			{
-				Alerted();
-			}
-			else if (aiAggressive && aiAlerted)
-			{
-				AttackPlayer();
-			}
-		}
-
 	}
 
 
@@ -177,98 +159,52 @@ public class InfantryAI : MonoBehaviour
 	///		Checks for the player within the view distance that is set 
 	/// </summary>
 	/// <param name="pos"></param>
-	private void CheckViewDistance(Vector3 pos)
+	private void CheckAttackDistance(Vector3 pos)
 	{
-		aiAlerted = Physics.CheckSphere(pos, viewDistanceAlertedRange, PlayerMask);
 		aiAggressive = Physics.CheckSphere(pos, viewDistanceAttackRange, PlayerMask);
 	}
 
 
 	#region AI States 
 
-	private void SearchForPlayer()
-	{
-
-		// If there isnt a movement direction point set 
-		if (!movementDirectionSet)
-		{
-			// Then we should set one 
-			StartCoroutine(SetMovementWaypoint());
-			return;
-		}
-	
-
-		if (movementDirectionSet && movementDirection.magnitude < 1f)
-		{ 
-			movementDirectionSet = false;
-		}
-	
-	
-		if (movementDirectionSet == true)
-		{
-
-			// Debug.Log("[InfantryAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
-			Agent.SetDestination(movementDirection);
-		}	
-	}
-
-	private IEnumerator SetMovementWaypoint()
-	{
-
-		yield return new WaitForSeconds(movementWaypointTimer);
-
-		float randomXPosition = Random.Range(-maximumMovementRange, maximumMovementRange);
-		float randomZPosition = Random.Range(-maximumMovementRange, maximumMovementRange);
-
-
-		movementDirection = new Vector3(transform.position.x + randomXPosition, transform.position.y, transform.position.z + randomZPosition);
-
-
-		if (Physics.Raycast(movementDirection, -transform.up, 2f, GroundMask))
-		{
-			movementDirectionSet = true;
-		}
-
-
-
-		yield return null;
-	}
-
-
 	private void Alerted()
 	{
+		aiAlerted = true;
 		transform.LookAt(Target);
 		Agent.SetDestination(Target.position);
 	}
 
 
+	/// <summary>
+	///		Attacks the player 
+	/// </summary>
 	private void AttackPlayer()
 	{
-			// If we are within attack range we either want to stop the enemy completely or 
-			// slow them down? 
-
+		// Set the destination to stop moving towards the player 
 		Agent.SetDestination(transform.position);
-
 		transform.LookAt(Target);
+
 
 		// If the bot isnt already attacking the player 
 		if (!isAttackingPlayer)
 		{
+			// attack the player 
 			isAttackingPlayer = true;
 
-			GameObject bulletClone = Instantiate(bulletPrefab, weaponFirePoint.position, bulletPrefab.transform.rotation);
+			GameObject bulletClone = Instantiate(bulletPrefab, WeaponFiringPoint.position, bulletPrefab.transform.rotation);
 
 			if (bulletClone.GetComponent<Rigidbody>())
 			{
 				Rigidbody rb = bulletClone.GetComponent<Rigidbody>();
 
-				rb.AddForce(weaponFirePoint.forward * bulletVelocity, ForceMode.Force);
+				rb.AddForce(WeaponFiringPoint.forward * bulletVelocity, ForceMode.Force);
 			}
 
 
+			Debug.DrawLine(WeaponFiringPoint.forward, Vector3.forward, Color.blue);
 
 
-			Destroy(bulletClone, 1f);
+			Destroy(bulletClone, bulletResetTimer);
 			isAttackingPlayer = true;
 
 
@@ -299,12 +235,13 @@ public class InfantryAI : MonoBehaviour
 		else
 		{
 			// do the health change 
+			Debug.Log("[InfantryAI.OnHit]: " + "Applying damage to infantry character " + Damage);
 			infantryHealth.ApplyHealthChange(Damage);
 		}
 	}
 
 		/// <summary>
-		/// Death event 
+		///		Destroys the AI character 
 		/// </summary>
 		/// <param name="AI"></param>
 	private void OnDeath(Transform AI)
@@ -314,13 +251,16 @@ public class InfantryAI : MonoBehaviour
 			return;
 		}
 
-
-
 		GameObject death = Instantiate(deathPrefab, transform.position, deathPrefab.transform.rotation);
+		Destroy(death, 2f);
 
-		Destroy(death, 3);
-
+		// set the current game object to be inactive 
 		gameObject.SetActive(false);
+		
+		// Call the on object destroyed event 
+		Debug.Log("[InfantryAI.OnDeath]: " + "Invoking on object destroyed event!");
+		FireModeEvents.OnObjectDestroyedEvent?.Invoke(AI);
+		
 	}
 	#endregion
 
@@ -331,9 +271,6 @@ public class InfantryAI : MonoBehaviour
 	{
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, viewDistanceAttackRange);
-
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawWireSphere(transform.position, viewDistanceAlertedRange);
 	}
 
 	#endregion

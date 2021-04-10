@@ -10,6 +10,7 @@ TagManager:
   - Ammunition
   - AI_Tank
   - CameraHolder
+  - Minimap Camera
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Item Pickup
   - 
   - 
-  - 
+  - Minimap
   - 
   - 
   - 

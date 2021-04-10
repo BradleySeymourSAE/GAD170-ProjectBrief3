@@ -12,16 +12,16 @@ public class TankPrimaryWeapon
     public Transform barrelEnd; // reference to the main gun of the tank
     public GameObject tankShellPrefab; // reference to the tank prefab we want to fire
 
-    public float minimumBulletSpeed = 50f; // the minimum amount of force for our weapon
-    public float maximumBulletSpeed = 100f; // the maximum amount of force for our weapon
-    public float maximumReloadTime = 5f; // the maximum amount of time we will allow to charge up and fire
-    public float maximumAmmunition = 20; // the maximum amount of ammunition in a tank 
-    public float maximumAmmunitionPerClip = 1; // the maximum amount of ammunition per shot 
+    public float minimumBulletSpeed = 350; // the minimum amount of force for our weapon
+    public float maximumBulletSpeed = 500; // the maximum amount of force for our weapon
+    public float maximumReloadTime = 3f; // the maximum amount of time we will allow to charge up and fire
+    public int maximumAmmunition = 20; // the maximum amount of ammunition in a tank 
+    public int maximumAmmunitionPerClip = 1; // the maximum amount of ammunition per shot 
 
    [SerializeField] private float currentBulletVelocity; // the force we should use to fire our shell
    [SerializeField] private float currentReloadSpeed; // how fast we should charge up our weapon
-   [SerializeField] private float currentAmmunitionLoaded; // current ammunition remaining in primary weapon 
-   [SerializeField] private float totalAmmunitionRemaining; // total ammunition remaining 
+   [SerializeField] private int currentAmmunitionLoaded; // current ammunition remaining in primary weapon 
+   [SerializeField] private int totalAmmunitionRemaining; // total ammunition remaining 
 
    [SerializeField] private bool weaponReloading; // are we currently reloading?
    [SerializeField] private bool weaponHasFired; // have we just fired our weapon?
@@ -31,19 +31,6 @@ public class TankPrimaryWeapon
 
     private Transform m_tankReference;
 
-
-
-
-    /// <summary>
-    ///  Returns the current reload speed for the tank 
-    /// </summary>
-    public float returnReloadSpeed
-	{
-        get
-		{
-            return currentReloadSpeed;
-		}
-	}
 
     /// <summary>
     ///     Gets the currently loaded ammunition for the tank
@@ -69,6 +56,10 @@ public class TankPrimaryWeapon
         currentReloadSpeed =  maximumReloadTime; // get the range between the max and min, and divide it by how quickly we charge
         totalAmmunitionRemaining = maximumAmmunition - maximumAmmunitionPerClip; // max ammo is 19 (20 - 1)
         currentAmmunitionLoaded = maximumAmmunitionPerClip;  // set the current chamber ammo to 1
+
+        
+
+        FireModeEvents.UpdatePlayerAmmunitionEvent?.Invoke(currentAmmunitionLoaded, totalAmmunitionRemaining);
 
         // Set the weapon to not currently reloading 
         weaponReloading = false;
@@ -106,23 +97,27 @@ public class TankPrimaryWeapon
         if (MainGunShootValue > 0 && !weaponHasFired)
 		{
 
-            // If the total ammo we have is less than or equal to 0 and there isnt any ammo in the chamber
-            if (totalAmmunitionRemaining <= 0 && currentAmmunitionLoaded <= 0)
-            {
+            // If current ammo loaded is less than or equal to zero and there is more than 1 ammunition remaining 
+            if (currentAmmunitionLoaded <= 0 && totalAmmunitionRemaining > 0)
+			{
+                // Reload the weapon 
+                m_tankReference.GetComponent<MainPlayerTank>().StartCoroutine(ReloadWeapon());
+			}
+            // Otherwise if current ammo is less than or equal to zero and there is no ammo left 
+            else if (totalAmmunitionRemaining <= 0 && totalAmmunitionRemaining <= 0)
+			{
                 totalAmmunitionRemaining = 0;
                 currentAmmunitionLoaded = 0;
+
+                FireModeEvents.UpdatePlayerAmmunitionEvent?.Invoke(0, 0);
                 Debug.Log("[TankPrimaryWeapon.UpdateMainGun]: " + "You have run out of ammunition! Ammo in Primary: " + currentAmmunitionLoaded + "Total Ammunition Left: " + totalAmmunitionRemaining);
                 // Then we want to return.
                 return;
             }
 
-            // If there is no ammunition left in the chamber we want to try and reload 
-            // EDIT: This is actually just useless code, as we are reloading straight after firing the primary weapon. 
-            // However, this could be moreso useful for the turret weapon? 
 
             Debug.Log("[TankPrimaryWeapon.UpdateMainGun]: " + "Firing primary weapon!");
             FireWeapon();
-
 
             // If the weapon has fired we want to reload. 
             if (weaponHasFired)
@@ -171,7 +166,7 @@ public class TankPrimaryWeapon
         // Decrease the amount of ammunition remaining 
         currentAmmunitionLoaded--;
 
-        
+        FireModeEvents.UpdatePlayerAmmunitionEvent?.Invoke(currentAmmunitionLoaded, totalAmmunitionRemaining);
 
         // Reset weapon after button release only 
         if (ButtonReleased)
@@ -206,7 +201,7 @@ public class TankPrimaryWeapon
         totalAmmunitionRemaining -= currentAmmunitionLoaded;
       
 
-    
+        FireModeEvents.UpdatePlayerAmmunitionEvent?.Invoke(currentAmmunitionLoaded, totalAmmunitionRemaining);
         weaponReloading = false;
      }
 

@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1322128473910779733}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: WaveCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1322128473910779733
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35,9 +35,9 @@ RectTransform:
   m_Father: {fileID: 1322128474734108585}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -95.960754, y: 74.99997}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -95.960754, y: -75.00003}
   m_SizeDelta: {x: 191.9215, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1322128473933585033
@@ -51,7 +51,7 @@ GameObject:
   - component: {fileID: 1322128473933585034}
   - component: {fileID: 1322128473933585035}
   - component: {fileID: 1322128473933583732}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CurrentWaveLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +186,7 @@ GameObject:
   - component: {fileID: 1322128474026746487}
   - component: {fileID: 1322128474026746480}
   - component: {fileID: 1322128474026746481}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: WaveKills
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 1322128474124765091}
   - component: {fileID: 1322128474124765090}
   - component: {fileID: 1322128474124765089}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EnemiesAlive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -458,7 +458,7 @@ GameObject:
   - component: {fileID: 1322128474483019546}
   - component: {fileID: 1322128474483019547}
   - component: {fileID: 1322128474483019524}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TotalKillsLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -593,7 +593,7 @@ GameObject:
   - component: {fileID: 1322128474636177193}
   - component: {fileID: 1322128474636177194}
   - component: {fileID: 1322128474636177195}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CurrentWave
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -728,7 +728,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1322128474734108585}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: InGameWaveUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -767,7 +767,7 @@ GameObject:
   - component: {fileID: 1322128474888765105}
   - component: {fileID: 1322128474888765106}
   - component: {fileID: 1322128474888765107}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BackgroundImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -842,7 +842,7 @@ GameObject:
   - component: {fileID: 1322128474978253607}
   - component: {fileID: 1322128474978253600}
   - component: {fileID: 1322128474978253601}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EnemiesAliveLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -977,13 +977,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1322128475026712672}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PlayerKills
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1322128475026712672
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1004,9 +1004,9 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -277.68, y: -75.00003}
-  m_SizeDelta: {x: -555.37, y: 150}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 153.315, y: -75.00003}
+  m_SizeDelta: {x: 306.63, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1322128475109063762
 GameObject:
@@ -1019,7 +1019,7 @@ GameObject:
   - component: {fileID: 1322128475109063763}
   - component: {fileID: 1322128475109063772}
   - component: {fileID: 1322128475109063773}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: WaveKillsLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1154,7 +1154,7 @@ GameObject:
   - component: {fileID: 1322128475546987203}
   - component: {fileID: 1322128475546987212}
   - component: {fileID: 1322128475546987213}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TotalAllTimeKills
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1289,7 +1289,7 @@ GameObject:
   - component: {fileID: 1322128475715058558}
   - component: {fileID: 1322128475715058559}
   - component: {fileID: 1322128475715058552}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BackgroundImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}

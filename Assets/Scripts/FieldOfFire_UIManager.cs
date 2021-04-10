@@ -11,7 +11,7 @@ public class FieldOfFire_UIManager : MonoBehaviour
 
 	private void Start()
 	{
-		if (AudioManager.Instance != null)
+		if (AudioManager.Instance)
 		{
 			AudioManager.Instance.PlaySound(GameAudio.BackgroundThemeTrack);
 		}

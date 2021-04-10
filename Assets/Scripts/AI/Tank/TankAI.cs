@@ -24,9 +24,7 @@ public class TankAI : MonoBehaviour
 	public Vector3 movementDirection = new Vector3(0,0,0);
 	[SerializeField] private bool movementDirectionSet;
 	public float movementRange = 5;
-
-	private float maximumMovementRange = 10f;
-	private float movementWaypointTimer = 3f;
+	public float bulletSpeed = 500f;
 	private float shellResetTimer = 2f;
 	
 	
@@ -36,18 +34,18 @@ public class TankAI : MonoBehaviour
 	[SerializeField] public float attackWaitTime;
 	[SerializeField] bool alreadyAttacking;
 
+	
 	/// <summary>
-	///		States 
+	///		The distance the AI will attack you from 
 	/// </summary>
-	/// 
-	public float viewDistanceAlertedRange;
-	public float viewDistanceAttackRange;
-	[SerializeField] private bool aiAlerted;
+	public float viewDistanceAttackRange = 65f;
 	[SerializeField] private bool aiAggressive;
+	[SerializeField] private bool isAlerted;
 
-	[SerializeField] private float checkForPlayerTimer = 5f;
-	[SerializeField] private bool enableAIMovement = false;
-
+	/// <summary>
+	///		Whether the enemy AI should be able to move yet 
+	/// </summary>
+	private bool enableAIMovement = false;
 
 	public TankHealth tankHealth = new TankHealth();
 	public TankParticleEffects tankParticleEffects = new TankParticleEffects();
@@ -74,6 +72,9 @@ public class TankAI : MonoBehaviour
 		{ 
 			Agent = transform.GetComponent<NavMeshAgent>();
 			Agent.autoBraking = false;
+			Agent.updatePosition = true;
+			Agent.updateRotation = false;
+			Agent.updateUpAxis = false;
 		}
 	}
 
@@ -88,6 +89,7 @@ public class TankAI : MonoBehaviour
 		{
 			EnableAI();
 		}	
+		
 		if (FindObjectOfType<MainPlayerTank>())
 		{
 			Target = FindObjectOfType<MainPlayerTank>().transform;
@@ -115,29 +117,25 @@ public class TankAI : MonoBehaviour
 			return;
 		}
 
-		Agent.updatePosition = true;
-		Agent.updateRotation = false;
-		Agent.updateUpAxis = false;
+		if (Target == null && FindObjectOfType<MainPlayerTank>())
+		{
+			Target = FindObjectOfType<MainPlayerTank>().transform;
+		}
 
 		// Check the view distance 
-		CheckViewDistance(transform.position);
+		CheckViewDistanceAttackRange(transform.position);
 	
-		// Debugging: Agent.SetDestination(Target.transform.position);
-
-		if (!aiAlerted && !aiAggressive)
+		// If there is a target, move towards the target 
+		if (Target)
 		{
-			StartCoroutine(SearchForPlayer());
+			// GO the to the target
+			Alerted();
 		}
-		else
+		// Otherwise if there is a target but the player is in range of attack
+		else if (Target && aiAggressive)
 		{
-			if (aiAlerted && !aiAggressive)
-			{
-				Alerted();
-			}
-			else if (aiAggressive && aiAlerted)
-			{
-				Aggressive();
-			}
+			// Attack the player 
+			Aggressive();
 		}
 	}
 
@@ -145,60 +143,20 @@ public class TankAI : MonoBehaviour
 	///		Checks for the player within the view distance that is set 
 	/// </summary>
 	/// <param name="_position"></param>
-	private void CheckViewDistance(Vector3 _position)
+	private void CheckViewDistanceAttackRange(Vector3 _position)
 	{
-		aiAlerted = Physics.CheckSphere(_position, viewDistanceAlertedRange, PlayerMask);
 		aiAggressive = Physics.CheckSphere(_position, viewDistanceAttackRange, PlayerMask);
 	}
 
-
-	#region AI States 
-	IEnumerator SearchForPlayer()
-	{
-		if (!movementDirectionSet)
-		{
-			StartCoroutine(SetMovementWaypoint());
-			yield return null;
-		}
-
-		if (movementDirectionSet && movementDirection.magnitude < 1f)
-		{
-			movementDirectionSet = false;
-		}
-		
-
-
-		if (movementDirectionSet == true)
-		{
-			yield return new WaitForSeconds(checkForPlayerTimer);
-			Debug.Log("[TankAI.SearchForPlayer]: " + "Searching for player on direction " + movementDirection);
-			Agent.SetDestination(movementDirection);
-		}
-	}
-
-	private IEnumerator SetMovementWaypoint()
-	{
-		yield return new WaitForSeconds(movementWaypointTimer);
-
-		float randomXPosition = Random.Range(1, maximumMovementRange);
-		float randomZPosition = Random.Range(1, maximumMovementRange);
-
-
-		movementDirection = new Vector3(transform.position.x + randomXPosition, 0f, transform.position.z + randomZPosition);
-
-
-		if (Physics.Raycast(movementDirection, -transform.up, 2f, GroundMask))
-		{
-			movementDirectionSet = true;
-		}
-
-
-		yield return null;
-	}
-
+	/// <summary>
+	///		Alerts the tank 
+	/// </summary>
 	private void Alerted()
 	{
 		transform.LookAt(Target);
+		TurretTransform.LookAt(Target);
+		
+		// Go to the players position 
 		Agent.SetDestination(Target.position);
 	}
 
@@ -208,9 +166,11 @@ public class TankAI : MonoBehaviour
 	private void Aggressive()
 	{
 		// Stop the enemy 
+		transform.LookAt(Target);
+		TurretTransform.transform.LookAt(Target);
 		Agent.SetDestination(transform.position);
 
-		TurretTransform.transform.LookAt(Target);
+
 
 		if (!alreadyAttacking)
 		{
@@ -222,7 +182,7 @@ public class TankAI : MonoBehaviour
 			{
 				Rigidbody rb = shellClone.GetComponent<Rigidbody>();
 
-				rb.AddForce(TurretFirePoint.forward * 200f, ForceMode.Impulse);
+				rb.AddForce(TurretFirePoint.forward * bulletSpeed, ForceMode.Impulse);
 			}
 
 			
@@ -234,15 +194,23 @@ public class TankAI : MonoBehaviour
 			Invoke(nameof(ResetAttack), attackWaitTime);
 		}
 	}
-	#endregion
 
-
-	#region Events 
+	/// <summary>
+	///		Resets the tanks attack!
+	/// </summary>
 	private void ResetAttack()
 	{
 		alreadyAttacking = false;
 	}
 
+
+	#region Events 
+
+	/// <summary>
+	///		Handles when the tank is hit! 
+	/// </summary>
+	/// <param name="TankReference"></param>
+	/// <param name="DamageAmount"></param>
 	private void OnDamageEvent(Transform TankReference, float DamageAmount)
 	{
 		if (TankReference != transform)
@@ -252,12 +220,13 @@ public class TankAI : MonoBehaviour
 		else
 		{
 			// Apply Damage
+			Debug.Log("[TankAI.OnDamageEvent]: " + "Enemy tank has been hit..." + DamageAmount);
 			tankHealth.ApplyHealthChange(DamageAmount);
 		}
 	}
 
 	/// <summary>
-	///		Called when the tank is eliminated 
+	///		Handles then the AI tank is dead 
 	/// </summary>
 	/// <param name="CurrentTank"></param>
 	private void OnDeath(Transform CurrentTank)
@@ -273,6 +242,10 @@ public class TankAI : MonoBehaviour
 		Destroy(clone, 3);
 	
 		gameObject.SetActive(false);
+
+
+		// Invoke on death.. 
+		FireModeEvents.OnObjectDestroyedEvent?.Invoke(CurrentTank);
 	}
 
 	#endregion
@@ -283,8 +256,6 @@ public class TankAI : MonoBehaviour
 	{
 		Gizmos.color = Color.red;
 		Gizmos.DrawWireSphere(transform.position, viewDistanceAttackRange);
-		Gizmos.color = Color.yellow;
-		Gizmos.DrawWireSphere(transform.position, viewDistanceAlertedRange);
 	}
 
 	#endregion
