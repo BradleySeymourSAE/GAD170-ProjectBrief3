@@ -12,184 +12,201 @@ using UnityEngine;
 public static class FireModeEvents
 {
 
-	#region DELEGATES 
-
-	#region Wave & Round Delegates 
+	/// <summary>
+	///		Handles No Params Delegates 
+	/// </summary>
+	public delegate void VoidDelegate();
 
 	/// <summary>
-	///  What happens before the wave has started  
+	///		Integer Paramater Delegate 
 	/// </summary>
-	public delegate void PreWave(float displayForSeconds);
-	
-	/// <summary>
-	///		Called to start the game 
-	/// </summary>
-	public delegate void WaveStarted(); 
-	
-	/// <summary>
-	///		Called once a successfully wave has been completed 
-	/// </summary>
-	public delegate void NextWave(); 
-	
-	/// <summary>
-	///		Called when the game should reset.
-	/// </summary>
-	public delegate void ResetWave(); 
+	/// <param name="Amount"></param>
+	public delegate void IntParameterDelegate(int Amount);
 
 	/// <summary>
-	///		Called to restart the game
+	///		Delegate for Float parameter events 
 	/// </summary>
-	public delegate void RestartGame(); 
+	/// <param name="Amount"></param>
+	public delegate void FloatParameterDelegate(float Amount);
 
-
-	#endregion
-
-	#region Spawn Delegates 
-
-	public delegate void SpawnPlayer();
-	public delegate void OnPlayerSpawned(Transform PlayerReference);
-
-	public delegate void SpawnPickup(int HealthPackCount, int AmmunitionPackCount);
-	public delegate void OnPickupSpawned(List<GameObject> SpawnedInPickups);
-
-	public delegate void SpawnEnemyWave(int InfantryCount, int TankCount);
-	public delegate void OnEnemyAIWaveSpawned(List<GameObject> TotalSpawnedAI);
-
-	#endregion
-
-	#region Collision Delegates 
+	/// <summary>
+	///		Spawn a set amount of health packs and ammunition packs into the game 
+	/// </summary>
+	/// <param name="HealthPackCount"></param>
+	/// <param name="AmmunitionPackCount"></param>
+	public delegate void SpawnGameItems(int HealthPackCount, int AmmunitionPackCount);
 	
-	public delegate void OnObjectDestroyed(Transform DestroyedObject);
-	public delegate void ReceivedDamage(Transform DamagedObject, float DamageAmount);
-	public delegate void OnObjectPickedUp(Transform Collected); // called once an item is picked up 
-	
-	#endregion
+	/// <summary>
+	///		Handles the list of items we have spawned 
+	/// </summary>
+	/// <param name="SpawnedInPickups"></param>
+	public delegate void HandleOnGameItemsSpawned(List<GameObject> SpawnedInPickups);
 
-	#region UI Delegates 
+	/// <summary>
+	///		Handle the AI that we have spawned in 
+	/// </summary>
+	/// <param name="TotalSpawnedAI"></param>
+	public delegate void HandleOnAISpawned(List<GameObject> TotalSpawnedAI);
 
-	public delegate void UpdateWaveUI(int CurrentWave, int WaveEnemiesRemaining, int WaveEnemiesKilled); // update the current wave 
-	public delegate void UpdatePlayerKills(int PlayerKills);
-	public delegate void UpdatePlayerAmmunition(int AmmunitionLoaded, int TotalAmmunition);
-	public delegate void UpdatePlayersHealthUI(float CurrentHealth);
+	/// <summary>
+	///		Handles when a player has been spawned in 
+	/// </summary>
+	/// <param name="Player"></param>
+	public delegate void HandleOnPlayerSpawned(Transform Player);
 
-	#endregion
-	#endregion
+	/// <summary>
+	///		Called to handle when an AI character has been destroyed 
+	/// </summary>
+	/// <param name="AI"></param>
+	public delegate void HandleAIDestroyed(GameObject AI);
 
-	#region EVENTS 
 
-	#region Wave Events 
+
+
+
 
 	/// <summary>
 	///		Handles the pre game event 
 	/// </summary>
-	public static PreWave OnPreWaveEvent;
+	public static VoidDelegate PreGameStartedEvent;
 
 	/// <summary>
 	///		Handles what happens after the game has started 
 	/// </summary>
-	public static WaveStarted OnWaveStartedEvent;
+	public static VoidDelegate GameStartedEvent;
 
 	/// <summary>
 	///		Handles that happens after the wave is over and the player is still alive  
 	/// </summary>
-	public static NextWave OnNextWaveEvent;
+	public static VoidDelegate HandleOnNextWaveEvent;
 
 	/// <summary>
 	///		Calls wave reset event 
 	/// </summary>
-	public static ResetWave OnResetWaveEvent;
+	public static VoidDelegate ResetGameEvent;
 
 	/// <summary>
 	///		Called when the game is restarted
 	/// </summary>
-	public static RestartGame OnGameRestartEvent;
+	public static VoidDelegate HardResetFireMode;
 
-	#endregion
+	/// <summary>
+	///		Handles when the player wins 
+	/// </summary>
+	public static VoidDelegate PlayerWinsEvent;
 
-	#region UI Events 
+	/// <summary>
+	///		Handles when the AI wins 
+	/// </summary>
+	public static VoidDelegate AIWinsEvent;
+
+
+
 	/// <summary>
 	///		Updates the wave ui counter 
 	/// </summary>
 	/// <param name="PlayerReference">The current player enum</param>
 	/// <param name="Amount">The kill count of the player</param>
-	public static UpdateWaveUI UpdateWaveUIEvent;
+	public static IntParameterDelegate IncreaseWaveEvent;
+
+	/// <summary>
+	///		Increase the current wave index UI 
+	/// </summary>
+	public static IntParameterDelegate IncreaseWaveEventUI;
+
+
 
 	/// <summary>
 	///		Once called - Updates the current players kill counter ui 
 	/// </summary>
-	public static UpdatePlayerKills UpdatePlayerKillsEvent;
+	public static IntParameterDelegate IncreasePlayerScoreEvent;
 
 	/// <summary>
-	///		Updates the player ammunition UI
+	///		Updates the players current kill count and sets the UI 
 	/// </summary>
-	public static UpdatePlayerAmmunition UpdatePlayerAmmunitionEvent;
+	public static IntParameterDelegate IncreasePlayerScoreEventUI;
 
 	/// <summary>
-	///		Updates the player's Health UI 
+	///		Increases or decreases the players health 
 	/// </summary>
-	public static UpdatePlayersHealthUI UpdatePlayerHealthEvent;
+	public static FloatParameterDelegate IncreasePlayerHealthEvent;
 
-	#endregion
+	/// <summary>
+	///		Sets the players health ui 
+	/// </summary>
+	public static FloatParameterDelegate IncreasePlayerHealthEventUI;
 
-	#region Spawn Events 
+
+	/// <summary>
+	///		Increases / decreases the players ammunition 
+	/// </summary>
+	public static IntParameterDelegate IncreaseAmmunitionEvent;
+
+	/// <summary>
+	///		Updates the players ammunition UI 
+	/// </summary>
+	public static IntParameterDelegate IncreaseAmmunitionEventUI;
+
+
+
+	/// <summary>
+	///		Handles when our character has been granted or had a life removed 
+	/// </summary>
+	public static IntParameterDelegate IncreaseLivesEvent;
+
+	/// <summary>
+	///		Increases or decreases the current players lives remaining UI 
+	/// </summary>
+	public static IntParameterDelegate IncreaseLivesEventUI;
+
 
 	/// <summary>
 	///		Handles the spawning of the player 
 	/// </summary>
-	public static SpawnPlayer SpawnPlayerEvent; // spawns the player 
+	public static VoidDelegate SpawnPlayerEvent; 
 
 	/// <summary>
 	///		Called after a player has spawned 
 	/// </summary>
-	public static OnPlayerSpawned OnPlayerSpawnedEvent; // called after the player has spawned 
+	public static HandleOnPlayerSpawned HandleOnPlayerSpawnedEvent; 
+
 
 	/// <summary>
 	///		Called to spawn in a weapon pickup 
 	/// </summary>
-	public static SpawnPickup SpawnPickupsEvent; // spawns the pickup item 
+	public static SpawnGameItems SpawnGameItemsEvent; 
 	
 	/// <summary>
 	///		Called when the weapon pickups have been spawned in 
 	/// </summary>
-	public static OnPickupSpawned OnPickupSpawnedEvent; // called after the pickups are spawned in 
+	public static HandleOnGameItemsSpawned HandleGameItemsSpawnedEvent; 
+
 
 	/// <summary>
 	///		Spawns in a wave of enemies
 	/// </summary>
 	/// <param name="NumberOfInfantry">The amount of infantry AI to spawn in</param>
 	/// <param name="NumberOfTanks">The amount of tank AI to spawn in</param>
-	public static SpawnEnemyWave SpawnEnemyWaveEvent; // spawns the enemies 
+	public static IntParameterDelegate SpawnAIEvent;
 
 	/// <summary>
 	///		Handles what happens after the enemy wave has spawned in 
 	/// </summary>
 	/// <param name="EnemyAIInfantry">List of spawned Enemy AI Infantry</param>
 	/// <param name="EnemyAITanks">List of spawned in Enemy AI Tanks</param>
-	public static OnEnemyAIWaveSpawned OnEnemyAIWaveSpawnedEvent; // called after the enemies are spawned 
+	public static HandleOnAISpawned HandleOnAISpawnedEvent;
 
-	#endregion
 
-	#region Collision Events 
 
 	/// <summary>
-	///		Event called once an object has been eliminated
+	///		Handles what happens when an AI character has been damaged 
 	/// </summary>
-	/// <param name="Tank">The enemy tank to destroy</param>
-	public static OnObjectDestroyed OnObjectDestroyedEvent; // called when a tank object is destroyed 
+	public static FloatParameterDelegate HandleAIDamageEvent;
 
 	/// <summary>
-	///		Called when the tanks receives damage from an enemy 
+	///		Handles when an AI character has been destroyed 
 	/// </summary>
-	/// <param name="TankObject">The tank to apply the damage amount to</param>
-	/// <param name="Amount">The amount of damage to apply to the tank</param>
-	public static ReceivedDamage OnReceivedDamageEvent; // called when an object takes damage 
+	public static HandleAIDestroyed HandleAIDestroyedEvent;
 
-	/// <summary>
-	///		Called when an object has been picked up 
-	/// </summary>
-	public static OnObjectPickedUp OnObjectPickedUpEvent; // called when an item is picked up 
 
-	#endregion
-
-	#endregion
 }

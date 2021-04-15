@@ -16,5 +16,5 @@ MonoBehaviour:
   Amplitude: 0.3
   Frequency: 2
   ItemType: 1
-  startingPosition: {x: 97.02803, y: 0.35, z: 145.73714}
-  Offset: {x: 97.02803, y: 0.52632886, z: 145.73714}
+  startingPosition: {x: 0, y: 0, z: 0}
+  Offset: {x: 0, y: 0.35, z: 0}

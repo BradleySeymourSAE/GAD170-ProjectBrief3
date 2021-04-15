@@ -64,7 +64,7 @@ public class MinimapCamera : MonoBehaviour
 /// </summary>
 	private void OnEnable()
 	{
-		FireModeEvents.OnPlayerSpawnedEvent += InitializeCamera;
+		FireModeEvents.HandleOnPlayerSpawnedEvent += InitializeCamera;
 	}
 
 	/// <summary>
@@ -72,7 +72,7 @@ public class MinimapCamera : MonoBehaviour
 	/// </summary>
 	private void OnDisable()
 	{
-		FireModeEvents.OnPlayerSpawnedEvent -= InitializeCamera;
+		FireModeEvents.HandleOnPlayerSpawnedEvent -= InitializeCamera;
 	}
 
 	#endregion

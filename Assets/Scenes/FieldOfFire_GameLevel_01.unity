@@ -106,15 +106,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 0.35
-    agentHeight: 1.65
-    agentSlope: 40
-    agentClimb: 0.2
+    agentRadius: 0.65
+    agentHeight: 2
+    agentSlope: 40.8
+    agentClimb: 0.38
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.11666667
+    cellSize: 0.21666665
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -261,24 +261,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preWaveSetupTimer: 15
-  startTimer: 30
+  nextWaveStartTimer: 3
   startingTanks: 2
-  startingInfantry: 3
   startingHealthPacks: 3
   startingAmmunitionPacks: 5
-  triggerItemRespawnCount: 2
+  triggerItemRespawnAmount: 2
+  startingLives: 3
   totalCollectableItemsRemaining: 0
   totalEnemiesRemaining: 0
   currentWaveIndex: 1
   m_AliveEnemies: []
   spawnedCollectableItemsRemaining: []
   m_currentPlayerReference: {fileID: 0}
-  totalKillCount: 0
-  currentRoundKillCount: 0
-  enemyAITanksRemaining: 0
-  enemyInfantryRemaining: 0
-  healthPacksRemaining: 0
-  ammunitionPacksRemaining: 0
+  totalPlayerScore: 0
+  currentLives: 0
 --- !u!1 &1153832657
 GameObject:
   m_ObjectHideFlags: 0
@@ -321,7 +317,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1321749086}
   m_Layer: 0
-  m_Name: --- Enemy Spawn Point ---
+  m_Name: --- AI Wave Spawn Point ---
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -374,17 +370,15 @@ MonoBehaviour:
     type: 3}
   TankPrefab: {fileID: 3853994946362038195, guid: 1ce58fce8b55fd1469e8f5cb9ea5a86c,
     type: 3}
-  InfantryPrefab: {fileID: 4169110363907650889, guid: 880746260aea54b41a49259d648ea852,
-    type: 3}
   HealthPackPrefab: {fileID: 1436435221243773122, guid: 13307f9489db2b9449e2987b07df6583,
     type: 3}
   AmmunitionPackPrefab: {fileID: 8566082739271975305, guid: d43a2adf532504c4e831593e193b3db5,
     type: 3}
-  playerSpawn: {fileID: 546290472}
-  enemyAISpawn: {fileID: 1321749086}
-  itemPickupSpawn: {fileID: 936082015}
+  PlayerSpawnPoint: {fileID: 546290472}
+  AISpawnPoint: {fileID: 1321749086}
+  GameItemSpawnPoint: {fileID: 936082015}
   waveSpawnRange: 150
-  waveSpawnYPositionOffset: 0
+  waveSpawnYPositionOffset: 0.05
   magnitude: 1
   itemSpawnRange: 200
   itemSpawnYPositionOffset: 0.35
@@ -774,7 +768,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.11666667
+  m_VoxelSize: 0.20666666
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: cd524968673776b44ba1c68dd9b14668, type: 2}
 --- !u!1001 &1657938515

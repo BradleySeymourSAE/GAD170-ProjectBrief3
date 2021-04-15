@@ -167,7 +167,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -187,17 +187,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 6863767184128917887}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5fa71436849c6a4e80ba5c3c47183da, type: 3}
+  m_Script: {fileID: 11500000, guid: e2aba1f23cc7b8a4ea8c7f9147998baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tank:
+  explosionPrefab: {fileID: 195792, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
+  tanksLayer:
     serializedVersion: 2
     m_Bits: 384
-  maximumDamage: 70
-  force: 800
-  maximumShellLifetime: 5
-  explosionRadius: 15
-  ExplosionPrefab: {fileID: 8901574840371452635}
+  maxDamage: 100
+  explosionForce: 1000
+  maxShellLifeTime: 2
+  explosionRadius: 5
 --- !u!82 &2260574393947628213
 AudioSource:
   m_ObjectHideFlags: 0

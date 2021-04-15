@@ -12,22 +12,14 @@ using Ventiii.DevelopmentTools;
 ///		Events called from FireModeEvents
 /// </summary>
 [System.Serializable]
-public class FireMode_SpawnManager : MonoBehaviour
+public class FireModeSpawnManager : MonoBehaviour
 {
-
-	#region Static 
-	/// <summary>
-	///		The Spawn Manager instance 
-	/// </summary>
-	public static FireMode_SpawnManager FireModeSpawnManager;
-	#endregion
 
 	#region Public Variables 
 
 	/// <summary>
 	///		The Main Player Prefab 
 	/// </summary>
-	[Header("Player & Enemy AI Prefabs")]
 	public GameObject PlayerPrefab; 
 
 	/// <summary>
@@ -35,12 +27,6 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// </summary>
 	public GameObject TankPrefab;
 
-	/// <summary>
-	///		The Enemy AI Infantry Prefab 
-	/// </summary>
-	public GameObject InfantryPrefab; // Enemy Infantry AI Prefab 
-	
-	[Header("Collectable Items")]
 	/// <summary>
 	///		The Health Pack Prefab 
 	/// </summary>
@@ -54,24 +40,23 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// <summary>
 	///		The player's Spawn Point 
 	/// </summary>
-	[Header("Spawn Point Locations")]
-	public Transform playerSpawn;
+	public Transform PlayerSpawnPoint;
 
 	/// <summary>
 	///		 The Enemy AI's Spawn Point 
 	/// </summary>
-	public Transform enemyAISpawn;
+	public Transform AISpawnPoint;
 
 	/// <summary>
 	///		The Collectable Item Spawn 
 	/// </summary>
-	public Transform itemPickupSpawn;
+	public Transform GameItemSpawnPoint;
 
 	/// <summary>
 	///		The wave spawn maximum range 
 	/// </summary>
-	[Header("AI Wave Spawn Settings")]
 	public float waveSpawnRange = 250f;
+	
 	/// <summary>
 	///		Offset Y Spawn Position 
 	/// </summary>
@@ -86,14 +71,14 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// <summary>
 	///		Maximum Item Spawn Range 
 	/// </summary>
-	[Header("Collectable Item Settings")]
 	public float itemSpawnRange = 100f;
 	
 	/// <summary>
 	///		Maximum Item's Y Positional Offset 
 	/// </summary>
-	[Range(0, 1)]
+	[Min(0.3f)]
 	public float itemSpawnYPositionOffset = 0.35f;
+	
 	#endregion
 
 	#region Private Variables 
@@ -104,10 +89,14 @@ public class FireMode_SpawnManager : MonoBehaviour
 	private float minimumWaveSpawnRange = 50f;
 
 	/// <summary>
+	///		The minimum range for spawning items 
+	/// </summary>
+	private float minimumItemSpawnRange = 15f;
+
+	/// <summary>
 	///		The position of the wave spawn point 
 	/// </summary>
 	private Vector3 m_WaveSpawnPoint;
-
 
 	/// <summary>
 	///		The position of the item's spawn point 
@@ -115,9 +104,9 @@ public class FireMode_SpawnManager : MonoBehaviour
 	private Vector3 m_ItemSpawnPoint;
 
 	/// <summary>
-	///		The minimum range for spawning items 
+	///		The position to spawn the player 
 	/// </summary>
-	private float minimumItemSpawnRange = 15;
+	private Vector3 m_PlayerSpawnPoint;
 	
 	/// <summary>
 	///		List of spawned enemies 
@@ -136,19 +125,19 @@ public class FireMode_SpawnManager : MonoBehaviour
 
 	#endregion
 
-	#region Unity Methods  
+	#region Unity References   
+	
 	/// <summary>
 	///		Enemy Spawn Manager Event Listeners 
 	/// </summary>
 	private void OnEnable()
 	{
 		FireModeEvents.SpawnPlayerEvent += SpawnPlayer; // spawns the player into the game 
-		FireModeEvents.SpawnEnemyWaveEvent += SpawnEnemyWave; // spawns in the enemies 
-		FireModeEvents.SpawnPickupsEvent += SpawnCollectableItems; // spawns in the collectable items
-
-
-		FireModeEvents.OnGameRestartEvent += HandleOnReset; // on game restart 
-		FireModeEvents.OnResetWaveEvent += HandleOnReset; // Resets the current wave 
+		FireModeEvents.SpawnAIEvent += SpawnEnemyWave; // spawns in the enemies 
+		FireModeEvents.SpawnGameItemsEvent += SpawnGameItems; // spawns in the collectable items
+	
+		FireModeEvents.HardResetFireMode += HandleOnReset; // on game restart 
+		FireModeEvents.ResetGameEvent += HandleOnReset; // Resets the current wave 
 	}
 
 	/// <summary>
@@ -157,60 +146,30 @@ public class FireMode_SpawnManager : MonoBehaviour
 	private void OnDisable()
 	{
 		FireModeEvents.SpawnPlayerEvent -= SpawnPlayer; // spawns player in the game 
-		FireModeEvents.SpawnEnemyWaveEvent -= SpawnEnemyWave; // removes enemy listener  
-		FireModeEvents.SpawnPickupsEvent -= SpawnCollectableItems; // removes event listener 
-
-
-		FireModeEvents.OnGameRestartEvent -= HandleOnReset; // restarts the game 
-		FireModeEvents.OnResetWaveEvent -= HandleOnReset; // Restarts the current wave 
+		FireModeEvents.SpawnAIEvent -= SpawnEnemyWave; // removes enemy listener  
+		FireModeEvents.SpawnGameItemsEvent -= SpawnGameItems; // removes event listener 
+		
+		FireModeEvents.HardResetFireMode -= HandleOnReset; // restarts the game 
+		FireModeEvents.ResetGameEvent -= HandleOnReset; // Restarts the current wave 
 	}
 
-	/// <summary>
-	///		Gets references for the spawn manager instance and spawn points
-	/// </summary>
-	private void Awake()
+	private void Start()
 	{
-		if (FireModeSpawnManager != null)
-		{
-			Destroy(gameObject);
-		}
-		else
-		{
-			FireModeSpawnManager = this;
-			DontDestroyOnLoad(gameObject);
-		}
-
-		//	Check for Item Pickup spawn transform 
-		if (itemPickupSpawn.GetComponent<Transform>())
-		{
-			// Set the default spawn position here 
-			m_ItemSpawnPoint = itemPickupSpawn.position;
-		}
-		else
-		{
-			Debug.LogError("[FireMode_SpawnManager.Awake]: " + "Could not find Item Pickup Spawn Point!");
-		}
-
-		//	Check for AI spawn transform 
-		if (enemyAISpawn.GetComponent<Transform>())
-		{
-			m_ItemSpawnPoint = enemyAISpawn.position;
-		}
-		else
-		{
-			Debug.LogError("[FireMode_SpawnManager.Awake]: " + "Could not find Enemy Wave Spawn Point!");
-		}
+		m_ItemSpawnPoint = GameItemSpawnPoint.position;
+		m_WaveSpawnPoint = AISpawnPoint.position;
+		m_PlayerSpawnPoint = PlayerSpawnPoint.position;
 	}
 
 	#endregion
 
-	#region Spawn Manager Methods 
+	#region Private Methods 
+
 	/// <summary>
 	///		Spawns a player into the game 
 	/// </summary>
 	private void SpawnPlayer()
 	{
-		GameObject SpawnedPlayer = Instantiate(PlayerPrefab, playerSpawn.position, PlayerPrefab.transform.rotation);
+		GameObject SpawnedPlayer = Instantiate(PlayerPrefab, PlayerSpawnPoint.position, PlayerPrefab.transform.rotation);
 
 		if (SpawnedPlayer.GetComponent<MainPlayerTank>())
 		{
@@ -221,14 +180,14 @@ public class FireMode_SpawnManager : MonoBehaviour
 			if (!m_PlayerReference.GetComponent<AudioListener>())
 			{
 				// Add one if it doesnt exist.
-				Debug.Log("Adding audio listener!");
+				Debug.Log("[FireModeSpawnManager.SpawnPlayer]: " + "Player does not have an audio listener - Adding one to the player!");
 				SpawnedPlayer.AddComponent<AudioListener>();
 			}
 		
 		}
 
 		// Invoke the spawning of the player ref 
-		FireModeEvents.OnPlayerSpawnedEvent?.Invoke(m_PlayerReference);
+		FireModeEvents.HandleOnPlayerSpawnedEvent?.Invoke(m_PlayerReference);
 	}
 
 	/// <summary>
@@ -236,7 +195,7 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// </summary>
 	private void HandleOnReset()
 	{
-		Debug.LogWarning("[FireMode_SpawnManager.HandleOnReset]: " + "Handling Reset! Removing spawned in game objects from the scene");
+		Debug.LogWarning("[FireModeSpawnManager.HandleOnReset]: " + "Handling Reset! Removing spawned in game objects from the scene");
 
 
 		// Destroy all the currently spawned in Enemy AI game objects 
@@ -251,37 +210,22 @@ public class FireMode_SpawnManager : MonoBehaviour
 				Destroy(m_SpawnedCollectableItems[i]);
 		}
 
-			// Clear the spawned in enemy AI & item pickup lists. 
-			m_SpawnedAIEnemies.Clear();
-			m_SpawnedCollectableItems.Clear();
+		// Clear the spawned in enemy AI & item pickup lists. 
+		m_SpawnedAIEnemies.Clear();
+		m_SpawnedCollectableItems.Clear();
 	}
 
 	/// <summary>
 	///		Spawns in an enemy wave
 	/// </summary>
 	/// <param name="InfantryAmount"></param>
-	/// <param name="TanksAmount"></param>
-	private void SpawnEnemyWave(int InfantryAmount, int TanksAmount)
+	/// <param name="AmountOfEnemies"></param>
+	private void SpawnEnemyWave(int AmountOfEnemies)
 	{
-		Debug.Log("[FieldOfFire_SpawnManager.SpawnEnemyWave]: " + "Spawning Enemy Wave. Enemy AI Characters: " + InfantryAmount + " Enemy AI Tanks: " + TanksAmount);
+		Debug.Log("[FieldOfFireSpawnManager.SpawnEnemyWave]: " + "Spawning Enemy AI " + AmountOfEnemies);
 		
-		// Loop through the amount of characters we need to spawn 
-		for (int i = 0; i < InfantryAmount; i++)
-		{
-			float xPosition = Mathf.Round(Random.Range(-minimumWaveSpawnRange, waveSpawnRange) * magnitude);
-			float zPosition = Mathf.Round(Random.Range(-minimumWaveSpawnRange, waveSpawnRange) * magnitude);
-
-			Vector3 tempInfantrySpawn = new Vector3(m_WaveSpawnPoint.x + xPosition, waveSpawnYPositionOffset, m_WaveSpawnPoint.z + zPosition);
-
-			// Clone the game object in preparation to spawn in 
-			GameObject infantryClone = Instantiate(InfantryPrefab, tempInfantrySpawn, InfantryPrefab.transform.rotation);
-
-			// Add the cloned character to the alive enemies list 
-			m_SpawnedAIEnemies.Add(infantryClone);
-		}
-
 		// Repeat the process for the amount of tanks we want in the round 
-		for (int i = 0; i < TanksAmount; i++)
+		for (int i = 0; i < AmountOfEnemies; i++)
 		{
 			float xPosition = Mathf.Round(Random.Range(-minimumWaveSpawnRange, waveSpawnRange) * magnitude);
 			float zPosition = Mathf.Round(Random.Range(-minimumWaveSpawnRange, waveSpawnRange) * magnitude);
@@ -295,7 +239,8 @@ public class FireMode_SpawnManager : MonoBehaviour
 
 
 		// Now we have all the enemy ai spawned in we then handle what to do with the new enemies that have been spawned 
-		FireModeEvents.OnEnemyAIWaveSpawnedEvent?.Invoke(m_SpawnedAIEnemies);
+		Debug.Log("[FieldOfFireSpawnManager.SpawnEnemyWave]: " + "Invoking Handle On AI Spawned Event!");
+		FireModeEvents.HandleOnAISpawnedEvent?.Invoke(m_SpawnedAIEnemies);
 	}
 
 	/// <summary>
@@ -303,7 +248,7 @@ public class FireMode_SpawnManager : MonoBehaviour
 	/// </summary>
 	/// <param name="HealthPacks">Amount of health packs to spawn in</param>
 	/// <param name="AmmunitionPacks">Amount of ammunition packs to spawn in</param>
-	private void SpawnCollectableItems(int HealthPacks, int AmmunitionPacks)
+	private void SpawnGameItems(int HealthPacks, int AmmunitionPacks)
 	{
 		// Create health packs and set their spawn points randomly 
 		for (int i = 0; i < HealthPacks; i++)
@@ -311,7 +256,7 @@ public class FireMode_SpawnManager : MonoBehaviour
 			float xPosition = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
 			float zPosition = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
 			
-			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + xPosition, itemSpawnYPositionOffset, m_ItemSpawnPoint.z + zPosition);
+			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + xPosition, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + zPosition);
 
 			GameObject _health = Instantiate(HealthPackPrefab, newSpawnPoint, HealthPackPrefab.transform.rotation);
 			
@@ -324,7 +269,7 @@ public class FireMode_SpawnManager : MonoBehaviour
 			float x = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
 			float z = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
 
-			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + x, itemSpawnYPositionOffset, m_ItemSpawnPoint.z + z);
+			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + x, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + z);
 
 			GameObject _ammo = Instantiate(AmmunitionPackPrefab, newSpawnPoint, AmmunitionPackPrefab.transform.rotation);
 
@@ -332,8 +277,8 @@ public class FireMode_SpawnManager : MonoBehaviour
 		}
 
 		
-		Debug.LogWarning("[FireMode_SpawnManager.SpawnCollectableItems]: " + "Created collectable items! Initializing On Pickup Spawned Event!");
-		FireModeEvents.OnPickupSpawnedEvent?.Invoke(m_SpawnedCollectableItems);
+		Debug.LogWarning("[FireModeSpawnManager.SpawnGameItems]: " + "Spawned items - Calling Handle Game Items Spawned Event!");
+		FireModeEvents.HandleGameItemsSpawnedEvent?.Invoke(m_SpawnedCollectableItems);
 	}
 
 	#endregion

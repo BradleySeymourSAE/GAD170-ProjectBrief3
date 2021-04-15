@@ -3166,11 +3166,11 @@ GameObject:
   - component: {fileID: 3853994946362038192}
   - component: {fileID: 4116226722818541589}
   - component: {fileID: 3853994946362038194}
-  - component: {fileID: 3276055628906013725}
-  - component: {fileID: 258258609448567355}
+  - component: {fileID: 3343423449669392952}
+  - component: {fileID: 5704824413399352012}
   m_Layer: 8
   m_Name: T90__AITank
-  m_TagString: AI_Tank
+  m_TagString: AI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3223,8 +3223,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.85, y: 1.65, z: 6.6}
-  m_Center: {x: 0, y: 1.05, z: -0.4}
+  m_Size: {x: 2.85, y: 2, z: 6.6}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!65 &4116226722818541589
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3236,8 +3236,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.85, y: 1.65, z: 6.6}
-  m_Center: {x: 0, y: 1.05, z: -0.4}
+  m_Size: {x: 2.85, y: 2, z: 6.6}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!82 &3853994946362038194
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3334,7 +3334,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3276055628906013725
+--- !u!114 &3343423449669392952
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3343,39 +3343,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 3853994946362038195}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91361c4303c8c654e9b5c24e6784ab1c, type: 3}
+  m_Script: {fileID: 11500000, guid: af240c15097ca3045affe29443a92ddb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TurretTransform: {fileID: 4160563191188373434}
-  TurretFirePoint: {fileID: 4160563192177948118}
-  shellPrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
-    type: 3}
-  shellExplosionPrefab: {fileID: 195792, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
-  GroundMask:
+  Movement:
+    timeBeforeNextAttack: 1
+    PrimaryWeaponTransform: {fileID: 4160563191188373434}
+  Weapons:
+    WeaponFirePoint: {fileID: 4160563192177948118}
+    shellProjectilePrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
+      type: 3}
+    maximumBulletVelocity: 500
+  explosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 3}
+  GroundLayer:
     serializedVersion: 2
     m_Bits: 64
-  PlayerMask:
+  PlayerLayer:
     serializedVersion: 2
     m_Bits: 128
-  movementDirection: {x: 0, y: 0, z: 0}
-  movementDirectionSet: 0
-  movementRange: 10
-  bulletSpeed: 500
-  attackWaitTime: 3
-  alreadyAttacking: 0
-  viewDistanceAttackRange: 0
-  aiAggressive: 0
-  isAlerted: 0
-  tankHealth:
-    minHealth: 0
-    maxHealth: 100
-    isDead: 1
-    m_CurrentHealth: 0
-    m_tankReference: {fileID: 0}
-  tankSoundEffects:
-    ShouldLoop: 1
-  tankDeathPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 3}
---- !u!195 &258258609448567355
+  attackRange: 100
+  playerInAttackRange: 0
+--- !u!195 &5704824413399352012
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3388,14 +3376,14 @@ NavMeshAgent:
   m_Speed: 5
   m_Acceleration: 5
   avoidancePriority: 50
-  m_AngularSpeed: 300
-  m_StoppingDistance: 0.2
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0.1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
-  m_WalkableMask: 5
+  m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!1 &3931817215351182288
 GameObject:

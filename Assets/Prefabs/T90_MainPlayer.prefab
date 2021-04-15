@@ -1977,7 +1977,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 3000
-  field of view: 67.88488
+  field of view: 70.42319
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -15652,8 +15652,8 @@ GameObject:
   - component: {fileID: 7033742528294893396}
   - component: {fileID: 7698638841374273002}
   - component: {fileID: 7698638841374273005}
-  - component: {fileID: 7698638841374273004}
   - component: {fileID: 7698638841374273007}
+  - component: {fileID: 4572924345148622397}
   m_Layer: 7
   m_Name: T90_MainPlayer
   m_TagString: Player
@@ -15711,61 +15711,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.1, y: 1, z: 6.8}
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &7698638841374273004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7698638841374273006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88428cce422f0ac48bc65ca5b6dabaa2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableTankMovement: 1
-  tankControls:
-    forward: 119
-    backwards: 115
-    left: 97
-    right: 100
-    fireButton: 323
-    reloadButton: 114
-    weaponSlot1: 49
-    weaponSlot2: 50
-    sensitivity: 50
-    sensMultiplier: 1
-  tankHealth:
-    minHealth: 0
-    maxHealth: 100
-    isDead: 1
-    m_CurrentHealth: 0
-    m_tankReference: {fileID: 0}
-  tankMovement:
-    MainTurret: {fileID: 7356180211436946919}
-    speed: 16
-    turnSpeed: 50
-    tankSoundEffects:
-      ShouldLoop: 1
-    m_cameraReference: {fileID: 8012918667551173462}
-  tankPrimary:
-    barrelEnd: {fileID: 7356180210749329291}
-    tankShellPrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
-      type: 3}
-    minimumBulletSpeed: 500
-    maximumBulletSpeed: 600
-    maximumReloadTime: 5
-    maximumAmmunition: 15
-    maximumAmmunitionPerClip: 2
-    currentBulletVelocity: 0
-    currentReloadSpeed: 0
-    currentAmmunitionLoaded: 0
-    totalAmmunitionRemaining: 0
-    weaponReloading: 0
-    weaponHasFired: 0
-    enableWeaponFiring: 0
-    nextTimeToFire: 0
-  deathExplosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 3}
 --- !u!82 &7698638841374273007
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15777,7 +15722,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 12d0ab36cc31e954baaef244477a70ce, type: 3}
-  m_PlayOnAwake: 0
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -15862,6 +15807,41 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4572924345148622397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698638841374273006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8032f76738bb46b4797896edc745d3fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Movement:
+    MainTurretParent: {fileID: 7356180211436946919}
+    MovementSpeed: 16
+    TurningSpeed: 50
+    minimumTurretRotationY: -0.5
+    maximumTurretRotationY: 7
+    sensitivity: 50
+    sensitivityMultiplier: 1
+    MouseX: 0
+    MouseY: 0
+  Weapons:
+    projectile: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
+      type: 3}
+    weaponFirePoint: {fileID: 7356180210749329291}
+    maximumAmmunition: 20
+    maximumReloadingTime: 1.5
+    bulletSpeed: 1000
+  Controls:
+    Forward: 119
+    Backwards: 115
+    Left: 97
+    Right: 100
+    MouseFire: 323
 --- !u!1 &8114460831339410276
 GameObject:
   m_ObjectHideFlags: 0

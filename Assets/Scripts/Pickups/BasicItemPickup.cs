@@ -14,19 +14,16 @@ public class BasicItemPickup : MonoBehaviour
 	/// </summary>
 	public CollectableItemData CollectableItem;
 
-
-
 	#region Unity References 
+	
 	private void OnEnable()
 	{
-		FireModeEvents.OnWaveStartedEvent += EnableItem;
-		FireModeEvents.OnObjectPickedUpEvent += OnCollected;
+		FireModeEvents.GameStartedEvent += EnableItem;
 	}
 
 	private void OnDisable()
 	{
-		FireModeEvents.OnWaveStartedEvent -= EnableItem;
-		FireModeEvents.OnObjectPickedUpEvent -= OnCollected;
+		FireModeEvents.GameStartedEvent -= EnableItem;
 	}
 
 	/// <summary>
@@ -53,6 +50,7 @@ public class BasicItemPickup : MonoBehaviour
 	#endregion
 
 	#region Private Methods 
+	
 	/// <summary>
 	///		Enables / Disables pickup of the item
 	/// </summary>
@@ -84,18 +82,6 @@ public class BasicItemPickup : MonoBehaviour
 		transform.position = CollectableItem.Offset;
 	}
 
-	/// <summary>
-	///		Handles when an item has been collected by a player 
-	/// </summary>
-	/// <param name="PlayerReference"></param>
-	private void OnCollected(Transform PlayerReference)
-	{
-		Debug.Log("On collected event has been called!");
-	}
-	#endregion
-
-
-
 
 	#region Triggers 
 	/// <summary>
@@ -105,15 +91,22 @@ public class BasicItemPickup : MonoBehaviour
 	private void OnTriggerEnter(Collider other)
 	{
 		
-		if (other.gameObject.GetComponent<MainPlayerTank>())
+		if (other.gameObject.tag == "Player" || other.gameObject.GetComponent<MainPlayerTank>())
 		{
 			Debug.Log("Collided with player object - Doing the thing!");
 			
 			MainPlayerTank _player = other.gameObject.GetComponent<MainPlayerTank>();
 
 			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "On Object picked up event called!!!");
-			FireModeEvents.OnObjectPickedUpEvent?.Invoke(_player.transform);
+			
+
+			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Players current Ammo " + _player);
+
+
 		}
 	}
+	#endregion
+
+
 	#endregion
 }

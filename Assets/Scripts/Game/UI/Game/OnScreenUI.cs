@@ -94,28 +94,16 @@ public class MinimapUI
 	/// </summary>
 	private FireModeUI m_FireModeUI;
 
-	/// <summary>
-	///		The minimaps border color 
-	/// </summary>
-	[SerializeField] private Color m_BorderColor;
-
-	/// <summary>
-	///		The minimaps background color 
-	/// </summary>
-	[SerializeField] private Color m_MapColor;
-
 	#endregion
 
 	#region Public Methods 
 	/// <summary>
-	///		Sets up the fire mode instance and colors 
+	///		Sets up the fire mode ui instance 
 	/// </summary>
 	/// <param name="FireModeUI"></param>
 	public void Setup(FireModeUI FireModeUI)
 	{
 		m_FireModeUI = FireModeUI;
-		m_BorderColor = minimapBorder.color;
-		m_MapColor = mapRender.color;
 	}
 
 	/// <summary>
@@ -162,11 +150,6 @@ public class AmmunitionUI
 	/// </summary>
 	private FireModeUI m_FireModeUI;
 
-	/// <summary>
-	///		Background Color of the Ammuniton UI 
-	/// </summary>
-	[SerializeField] private Color m_BackgroundColor;
-
 	#endregion
 
 	#region Public Methods 
@@ -177,8 +160,7 @@ public class AmmunitionUI
 	public void Setup(FireModeUI FireModeUI)
 	{
 		m_FireModeUI = FireModeUI;
-		m_BackgroundColor = backgroundImage.color;
-		ammunitionText.GetComponentInChildren<TMP_Text>().text = GameTextUI.OnScreen_Ammunition + "/" + GameTextUI.OnScreen_AmmunitionTotal;
+		ammunitionText.GetComponentInChildren<TMP_Text>().text =  GameTextUI.OnScreen_Ammunition;
 	}
 
 
@@ -195,11 +177,10 @@ public class AmmunitionUI
 	/// <summary>
 	///		Sets the Ammunition On Screen UI  
 	/// </summary>
-	/// <param name="AmmoLoaded"></param>
-	/// <param name="AmmoTotal"></param>
-	public void SetAmmunition(int AmmoLoaded, int AmmoTotal)
+	/// <param name="Ammunition"></param>
+	public void SetAmmunition(int Ammunition)
 	{
-		ammunitionText.GetComponentInChildren<TMP_Text>().text = AmmoLoaded.ToString() + " / " + AmmoTotal.ToString();
+		ammunitionText.GetComponentInChildren<TMP_Text>().text = Ammunition.ToString();
 	}
 	#endregion
 }
@@ -234,7 +215,7 @@ public class CrosshairUI
 	/// <summary>
 	///		Default Color for the reticle 
 	/// </summary>
-	[SerializeField] private Color m_ReticleColor = Color.white;
+	private Color m_ReticleColor = Color.white;
 
 	#endregion
 
@@ -293,29 +274,9 @@ public class HealthBarUI
 	#region Private Variables 
 
 	/// <summary>
-	///		Full Health Color Value 
-	/// </summary>
-	[SerializeField] private Color FullHealth;
-
-	/// <summary>
-	///		Half Health Color Value 
-	/// </summary>
-	[SerializeField] private Color HalfHealth;
-
-	/// <summary>
-	///		Low Health Color value 
-	/// </summary>
-	[SerializeField] private Color LowHealth;
-
-	/// <summary>
 	///		Reference to the Fire Mode UI Instance 
 	/// </summary>
 	private FireModeUI m_FireModeUI;
-
-	/// <summary>
-	///		Store local max health variable 
-	/// </summary>
-	private float maximumHealth = 100;
 
 	#endregion
 
@@ -329,15 +290,6 @@ public class HealthBarUI
 	{
 		m_FireModeUI = FireModeUI;
 
-
-		if (healthBarSlider && healthBarSlider.fillRect)
-		{
-				m_FillImage = healthBarSlider.fillRect.transform.GetComponent<Image>();
-		}
-		else
-		{
-				Debug.LogError("No health bar could be found!");
-		}
 	}
 
 	
@@ -355,23 +307,12 @@ public class HealthBarUI
 	///		Updates the Health Bar of the player 
 	/// </summary>
 	/// <param name="CurrentHealth"></param>
-	public void UpdateHealth(float CurrentHealth)
+	public void UpdateHealth(float HP)
 	{
-		healthBarSlider.value = CurrentHealth;
+		healthBarSlider.value = HP;
 
-		if (m_FillImage != null)
-		{
-			// If the current health is greater than 0 and current health is less than or equal to 50 
-			if (CurrentHealth > 50f && CurrentHealth <= 100f)
-			{ 
-				m_FillImage.color = Color.Lerp(HalfHealth, FullHealth, CurrentHealth / maximumHealth);
-			}
-			// otherwise if current health is greater than 50 but less than 100 
-			else if (CurrentHealth < 0f && CurrentHealth >= 50f)
-			{
-				m_FillImage.color = Color.Lerp(LowHealth, HalfHealth, CurrentHealth / maximumHealth);
-			}
-		}
+		Debug.Log("Updating Health UI: " + HP);
+		
 	}
 	#endregion
 

@@ -15,15 +15,10 @@ public class FireModeUI : MonoBehaviour
 {
 
 	#region Public Variables 
-	/// <summary>
-	///		UI Instance 
-	/// </summary>
-	public static FireModeUI Instance;
 
 	/// <summary>
 	///		Pre Gave Wave User Interface Data Class 
 	/// </summary>
-	[Header("User Interfaces")]
 	public PreWaveUI preGameWaveUI; 
 
 	/// <summary>
@@ -44,13 +39,30 @@ public class FireModeUI : MonoBehaviour
 	#endregion
 
 	#region Private Variables 
+	
+	/// <summary>
+	///		Should we start the pre wave countdown timer? 
+	/// </summary>
 	private bool shouldStartPreWaveCountdown = false;
-	private float m_PreWaveCountdownSeconds;
+	
+	/// <summary>
+	///		Float for storing the pre wave countdown 
+	/// </summary>
+	private float m_PreWaveCountdownTimer;
+
+	/// <summary>
+	///		Should we star the next wave countdown timer? 
+	/// </summary>
+	private bool shouldStartNextWaveCountdown = false;
+	
+	/// <summary>
+	///		Float for storing the next wave countdown timer 
+	/// </summary>
+	private float m_NextWaveCountdownTimer;
+	
 	#endregion
 
 	#region Unity References   
-
-	#region Event Listeners 
 
 	/// <summary>
 	///		Once Enabled, Listen to events 
@@ -58,17 +70,13 @@ public class FireModeUI : MonoBehaviour
 	private void OnEnable()
 	{
 		// Wave Events 
-		FireModeEvents.OnPreWaveEvent += DisplayPreWaveUI;
-		FireModeEvents.OnWaveStartedEvent += DisplayInGameUI;
-		FireModeEvents.OnNextWaveEvent += DisplayNextWaveUI;
+		FireModeEvents.PreGameStartedEvent += DisplayPreWaveUI;
+		FireModeEvents.GameStartedEvent += DisplayInGameUI;
+		FireModeEvents.HandleOnNextWaveEvent += DisplayNextWaveUI;
 
 
 		//	Updating Wave, Player & HUD Events 
 		FireModeEvents.SpawnPlayerEvent += DisplayOnScreenUI;
-		FireModeEvents.UpdateWaveUIEvent += UpdateWaveUI;
-		FireModeEvents.UpdatePlayerKillsEvent += UpdatePlayerKillsUI;
-		FireModeEvents.UpdatePlayerAmmunitionEvent += UpdateAmmunitionCounterUI;
-		FireModeEvents.UpdatePlayerHealthEvent += UpdateHealthUI;
 	}
 
 	/// <summary>
@@ -77,34 +85,11 @@ public class FireModeUI : MonoBehaviour
 	private void OnDisable()
 	{
 		// Wave Events 
-		FireModeEvents.OnPreWaveEvent -= DisplayPreWaveUI;
-		FireModeEvents.OnWaveStartedEvent -= DisplayInGameUI;
-		FireModeEvents.OnNextWaveEvent -= DisplayNextWaveUI;
+		FireModeEvents.PreGameStartedEvent -= DisplayPreWaveUI;
+		FireModeEvents.GameStartedEvent -= DisplayInGameUI;
+		FireModeEvents.HandleOnNextWaveEvent -= DisplayNextWaveUI;
 
 		FireModeEvents.SpawnPlayerEvent -= DisplayOnScreenUI;
-		FireModeEvents.UpdateWaveUIEvent -= UpdateWaveUI;
-		FireModeEvents.UpdatePlayerKillsEvent -= UpdatePlayerKillsUI;
-		FireModeEvents.UpdatePlayerAmmunitionEvent -= UpdateAmmunitionCounterUI;
-		FireModeEvents.UpdatePlayerHealthEvent -= UpdateHealthUI;
-	}
-
-	#endregion
-
-
-	/// <summary>
-	///		Creates the FireModeUI Instance 
-	/// </summary>
-	private void Awake()
-	{
-		if (Instance != null)
-		{
-			Destroy(gameObject);
-		}
-		else
-		{
-			Instance = this;
-			DontDestroyOnLoad(gameObject);
-		}
 	}
 
 	/// <summary>
@@ -112,11 +97,11 @@ public class FireModeUI : MonoBehaviour
 	/// </summary>
 	private void Start()
 	{
-		Debug.Log("[FireModeUI.Start]: " + "Setting up UI screens...");
-		preGameWaveUI.Setup(Instance);
-		inGameWaveUI.Setup(Instance);
-		postWaveUI.Setup(Instance);
-		onScreenUI.Setup(Instance);
+		Debug.Log("[FireModeUI.Start]: " + "Setting up UI using Fire Mode UI Reference");
+		preGameWaveUI.Setup(this);
+		inGameWaveUI.Setup(this);
+		postWaveUI.Setup(this);
+		onScreenUI.Setup(this);
 	}
 
 	private void Update()
@@ -125,37 +110,48 @@ public class FireModeUI : MonoBehaviour
 
 		if (shouldStartPreWaveCountdown == true)
 		{
-			m_PreWaveCountdownSeconds -= 1 * Time.deltaTime;
+			m_PreWaveCountdownTimer -= 1 * Time.deltaTime;
 
-			preGameWaveUI.SetPreGameWaveUI(m_PreWaveCountdownSeconds);
+			preGameWaveUI.SetPreGameWaveUI(m_PreWaveCountdownTimer);
+		}
+
+
+		if (shouldStartNextWaveCountdown)
+		{
+			m_NextWaveCountdownTimer -= 1 * Time.deltaTime;
+
+			postWaveUI.nextRoundStarting.GetComponentInChildren<TMP_Text>().text = m_NextWaveCountdownTimer.ToString("0");
 		}
 
 	}
 
 	#endregion
 
-	#region Showing / Hiding UI 
+	#region Private Methods 
 
-	#region Pre Wave UI 
 	/// <summary>
 	///		Displays the Pre Game Wave UI
 	/// </summary>
 	/// <param name="displaySeconds">The amount of seconds to display the ui for</param>
 	/// <returns></returns>
-	private void DisplayPreWaveUI(float displaySeconds)
+	private void DisplayPreWaveUI()
 	{
+		float displaySeconds = FindObjectOfType<FireModeGameManager>().preWaveSetupTimer;
+
+
 		Debug.Log("[FireModeUI.DisplayPreWaveUI]: " + "Displaying Pre Wave Game UI for " + displaySeconds);
-		StartCoroutine(ShowPreWaveUI(displaySeconds));
+		StartCoroutine(ShowPreWaveCountdownTimer(displaySeconds));
 	}
 
 	/// <summary>
-	///		Toggles the pre wave ui 
+	///		Starts IEnumerator for showing the pre wave ui coundown 
 	/// </summary>
-	/// <param name="SecondsToDisplayFor">The amount of seconds to display the ui for</param>
+	/// <param name="Seconds"></param>
 	/// <returns></returns>
-	private IEnumerator ShowPreWaveUI(float Seconds)
+	private IEnumerator ShowPreWaveCountdownTimer(float Seconds)
 	{
-		m_PreWaveCountdownSeconds = Seconds;
+		// Set the pre wave countdown seconds 
+		m_PreWaveCountdownTimer = Seconds;
 		//	 Start the pre wave countdown 	
 		shouldStartPreWaveCountdown = true;
 
@@ -163,26 +159,22 @@ public class FireModeUI : MonoBehaviour
 		// Display the pre game wave ui 
 		preGameWaveUI.ShowScreen(true);
 
-		
-
-		// Wait x amount of seconds 
+		// Wait pre wave countdown amount of seconds 
 		yield return new WaitForSeconds(Seconds);
 
-		// Set the screen to off 
+		// Set the pre game wave ui screen off 
 		preGameWaveUI.ShowScreen(false);
 
 		// Stop counting down 
 		shouldStartPreWaveCountdown = false;
 
-		m_PreWaveCountdownSeconds = Seconds; // Reset the seconds to default. (or zero) 
+		// reset the wave countdown seconds 
+		m_PreWaveCountdownTimer = Seconds; // Reset the seconds to default. (or zero) 
 
 		Debug.Log("[FireModeUI.ShowPreWaveUI]: " + "Stopped showing screen!");
 		yield return null;
 	}
 
-	#endregion
-
-	#region Next Wave UI 
 	/// <summary>
 	///		Event called once the wave has been completed - Displays the next wave! 
 	/// </summary>
@@ -191,17 +183,14 @@ public class FireModeUI : MonoBehaviour
 		Debug.Log("[FireModeUI.DisplayPostWaveUI]: " + "Displaying Post Wave UI!");
 		postWaveUI.ShowScreen(true);
 	}
-	#endregion
 
-	#region In Game UI 
-	
 	/// <summary>
 	///		Displays the In-Game UI with the wave! 
 	/// </summary>
 	private void DisplayInGameUI()
 	{
 		Debug.Log("[FireModeUI.DisplayInGameUI]: " + "Displaying in game UI!");
-		inGameWaveUI.ShowScreen(true);
+		inGameWaveUI.Show(true);
 	}
 
 	/// <summary>
@@ -211,51 +200,6 @@ public class FireModeUI : MonoBehaviour
 	{
 		Debug.Log("[FireModeUI.DisplayOnScreenUI]: " + "Displaying On Screen UI!");
 		onScreenUI.ShowScreen(true);
-	}
-
-	#endregion
-
-	#endregion
-
-	#region Update UI Private Methods  
-
-	/// <summary>
-	///		Updates the current player kills ui 
-	/// </summary>
-	/// <param name="KillCount"></param>
-	private void UpdatePlayerKillsUI(int Kills)
-	{
-		Debug.Log("[FireModeUI.UpdatePlayerKills]: " + "Updating the current players kills " + Kills);
-	
-		inGameWaveUI.SetTotalPlayerKills(Kills);
-	}
-
-	/// <summary>
-	///		Updates the player's current ammunition count! 
-	/// </summary>
-	/// <param name="AmmunitionLoaded"></param>
-	/// <param name="AmmunitionRemaining"></param>
-	private void UpdateAmmunitionCounterUI(int AmmunitionLoaded, int AmmunitionTotal)
-	{
-		Debug.Log("[FireModeUI.UpdatePlayerAmmunition]: " + "Updating current players ammunition Count!");
-		onScreenUI.Ammunition.SetAmmunition(AmmunitionLoaded, AmmunitionTotal);
-	}
-
-	/// <summary>
-	///		Updates the in game wave UI 
-	/// </summary>
-	private void UpdateWaveUI(int NextWave, int WaveEnemiesRemaining, int WaveEnemiesKilled)
-	{
-		Debug.Log("[FireModeUI.UpdateWaveUI]: " + "Updating Wave UI... Next Wave: " + NextWave + " Enemies Remaining: " + WaveEnemiesRemaining + "Wave Enemies Killed: " + WaveEnemiesKilled);
-		inGameWaveUI.SetWave(NextWave, WaveEnemiesRemaining, WaveEnemiesKilled);
-	}
-
-	/// <summary>
-	///		Updates the players Health UI 
-	/// </summary>
-	private void UpdateHealthUI(float CurrentHealth)
-	{
-		onScreenUI.Health.UpdateHealth(CurrentHealth);
 	}
 
 	#endregion

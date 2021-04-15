@@ -14,13 +14,11 @@ using TMPro;
 public class InGameWaveUI
 {
 	#region Public Variables 
+	/// <summary>
+	///		The In Game Wave UI Parent Game Object 
+	/// </summary>
 	public GameObject inGameWaveUI;
 
-	/// <summary>
-	///		Player Kills UI 
-	/// </summary>
-	public PlayerKillsUI playerKillsUI;
-	
 	/// <summary>
 	///		The Wave Counter UI 
 	/// </summary>
@@ -44,11 +42,7 @@ public class InGameWaveUI
 	{
 		m_FireModeUI = FireModeUI;
 
-		
-		playerKillsUI.Setup(m_FireModeUI);
 		waveCounterUI.Setup(m_FireModeUI);
-
-		playerKillsUI.Show(true);
 		waveCounterUI.Show(true);
 	}
 
@@ -56,18 +50,9 @@ public class InGameWaveUI
 	///		Toggles whether the In Game Wave UI should be display 
 	/// </summary>
 	/// <param name="ShouldDisplay"></param>
-	public void ShowScreen(bool ShouldDisplay)
+	public void Show(bool ShouldDisplay)
 	{
 		inGameWaveUI.SetActive(ShouldDisplay);
-	}
-
-	/// <summary>
-	///		Sets the players total kills 
-	/// </summary>
-	/// <param name="kills"></param>
-	public void SetTotalPlayerKills(int kills)
-	{
-		playerKillsUI.TotalAllTimeKills.GetComponentInChildren<TMP_Text>().text = kills.ToString();
 	}
 
 	/// <summary>
@@ -80,94 +65,11 @@ public class InGameWaveUI
 	{
 		waveCounterUI.currentWave.GetComponentInChildren<TMP_Text>().text = nextWave.ToString();
 		waveCounterUI.enemiesRemaining.GetComponentInChildren<TMP_Text>().text = EnemiesRemaining.ToString();
-		playerKillsUI.WaveKills.GetComponentInChildren<TMP_Text>().text = WaveEnemiesKilled.ToString();
 	}
 
 	#endregion
 }
 
-
-
-/// <summary>
-///		Displays UI relating to the players current kills 
-/// </summary>
-[System.Serializable]
-public class PlayerKillsUI
-{
-
-	#region Public Variables 
-	/// <summary>
-	///		The player kills ui game object container 
-	/// </summary>
-	public GameObject playerKillsUI;
-
-	/// <summary>
-	///		The player kills background image (color) 
-	/// </summary>
-	public Image BackgroundImage;
-
-	/// <summary>
-	///		The total amount of kills text label 
-	/// </summary>
-	public TMP_Text TotalKillsLabel;
-
-	/// <summary>
-	/// The total amount of kills for the player 
-	/// </summary>
-	public TMP_Text TotalAllTimeKills;
-
-	/// <summary>
-	///		Wave kills label text 
-	/// </summary>
-	public TMP_Text WaveKillsLabel;
-
-	/// <summary>
-	///		The current amount of kills this wave text
-	/// </summary>
-	public TMP_Text WaveKills;
-
-	#endregion
-
-	#region Private Variables 
-	/// <summary>
-	///		Fire Mode UI Instance Reference 
-	/// </summary>
-	private FireModeUI m_FireModeUI;
-
-	/// <summary>
-	///		The current background image color 
-	/// </summary>
-	[SerializeField] private Color m_CurrentBackgroundColor;
-	#endregion
-
-	#region Public Methods 
-	/// <summary>
-	///		Sets up the player kills ui 
-	/// </summary>
-	/// <param name="FireModeUI"></param>
-	public void Setup(FireModeUI FireModeUI)
-	{
-		m_FireModeUI = FireModeUI;
-
-		TotalKillsLabel.GetComponentInChildren<TMP_Text>().text = GameTextUI.PlayerKillsUI_TotallKillsLabel;
-		TotalAllTimeKills.GetComponentInChildren<TMP_Text>().text = GameTextUI.PlayerKillsUI_TotalAllTimeKills;
-		WaveKills.GetComponentInChildren<TMP_Text>().text = GameTextUI.PlayerKillsUI_WaveKills;
-		WaveKillsLabel.GetComponentInChildren<TMP_Text>().text = GameTextUI.PlayerKillsUI_WaveKillsLabel;
-
-		m_CurrentBackgroundColor = BackgroundImage.color;
-	}
-
-	/// <summary>
-	///		Sets whether the player kills ui should be seen 
-	/// </summary>
-	/// <param name="ShouldDisplay"></param>
-	public void Show(bool ShouldDisplay)
-	{
-		playerKillsUI.SetActive(ShouldDisplay);
-	}
-
-	#endregion
-}
 
 
 /// <summary>
