@@ -5,12 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
-  - AI_EnemyCharacter
-  - Health
-  - Ammunition
-  - AI_Tank
   - CameraHolder
   - Minimap Camera
+  - Pickup
+  - AI
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -20,9 +19,9 @@ TagManager:
   - UI
   - Ground
   - Player
-  - AI_EnemyCharacter
-  - Item Pickup
-  - 
+  - AI
+  - Pickup
+  - Bullet
   - 
   - Minimap
   - 
