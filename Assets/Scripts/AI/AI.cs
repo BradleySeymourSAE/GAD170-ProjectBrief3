@@ -28,6 +28,8 @@ public class AI : MonoBehaviour
 	/// </summary>
 	public AIWeapon Weapons;
 
+	public AIHealth Health;
+
 	public GameObject explosionPrefab;
 
 	public LayerMask GroundLayer, PlayerLayer;
@@ -57,7 +59,6 @@ public class AI : MonoBehaviour
 		FireModeEvents.HandleAIDestroyedEvent -= HandleDeath;
 	}
 
-
 	private void Awake()
 	{
 		m_MainPlayerReference = FindObjectOfType<MainPlayerTank>().transform;
@@ -67,6 +68,20 @@ public class AI : MonoBehaviour
 		m_Agent.updateRotation = false;
 		m_Agent.updateUpAxis = false;
 	}
+
+	private void Start()
+	{
+		Movement.Setup(this, m_Agent);
+		Weapons.Setup(this);
+		Health.Setup(this);
+
+
+		if (enableAI)
+		{
+			Initialize();
+		}
+	}
+
 
 	/// <summary>
 	///		Enables the AI character to move around 
@@ -83,15 +98,15 @@ public class AI : MonoBehaviour
 	private void Initialize()
 	{
 		
-		Movement.Setup(this, m_Agent);
-		Weapons.Setup(this);
-		
-		
-		
+		//Movement.Setup(this, m_Agent);
+	//	Weapons.Setup(this);
+		//Health.Setup(this);
+
+		Movement.EnableAIMovement(true);
+		Weapons.EnableWeaponFiring(true);
+				
 		EnableAI(true);
 	}
-
-
 
 	private void Update()
 	{
@@ -115,6 +130,10 @@ public class AI : MonoBehaviour
 	}
 
 
+	#endregion
+
+	#region Private Methods 
+
 	private void HandleDamage(Transform EnemyAI, float amount)
 	{
 		if (!EnemyAI.GetComponent<AI>())
@@ -126,7 +145,7 @@ public class AI : MonoBehaviour
 		{ 
 		Debug.Log("[AI.HandleDamage]: " + "AI has taken damage " + amount);
 
-		
+			EnemyAI.GetComponent<AI>().Health.SetHealth(amount);
 		}
 	}
 	
@@ -143,13 +162,12 @@ public class AI : MonoBehaviour
 		Destroy(deathClone, 2); 
 
 		DeadAI.SetActive(false);
-
 	}
 
 
 	#endregion
 
-
+	#region Public Data Classes 
 	[System.Serializable]
 	public class AIWeapon
 	{ 
@@ -157,30 +175,42 @@ public class AI : MonoBehaviour
 
 		public GameObject shellProjectilePrefab;
 
-		public float maximumBulletVelocity = 1000f;
+		[Min(850f)] public float maximumBulletVelocity = 1000f;
 
 		private float currentBulletVelocity; 
 
+		[SerializeField] private bool m_WeaponAllowedToFire;
 
 		private AI m_AIReference;
 
-
+		/// <summary>
+		///		Can our AI character fire its weapon? 
+		/// </summary>
+		/// <param name="ShouldEnableWeaponFiring"></param>
+		public void EnableWeaponFiring(bool ShouldEnableWeaponFiring) => m_WeaponAllowedToFire = ShouldEnableWeaponFiring;
 		
 		public void Setup(AI AI)
 		{
 			m_AIReference = AI;
 			currentBulletVelocity = maximumBulletVelocity;
+
+			EnableWeaponFiring(false);
 		}
 	
 	
 		public void StartFiringWeapon()
 		{
+			if (!m_WeaponAllowedToFire)
+			{
+				Debug.Log("Cant fire weapon!");
+				return;
+			}
+
 			Rigidbody rb = Instantiate(shellProjectilePrefab, WeaponFirePoint.transform.position, Quaternion.identity).GetComponent<Rigidbody>();
 
 			rb.AddForce(WeaponFirePoint.forward * currentBulletVelocity, ForceMode.Impulse);
 		}
 	}
-
 
 	[System.Serializable]
 	public class AIMovement
@@ -197,18 +227,60 @@ public class AI : MonoBehaviour
 
 		private NavMeshAgent m_Agent;
 
-		private bool alreadyAttackedPlayer;
+		private Rigidbody m_Rigidbody;
+
+		private AIAudio m_AudioEffects = new AIAudio();
+
+		private AIEffects m_Effects = new AIEffects();
+
+		[SerializeField] private bool alreadyAttackedPlayer;
+
+		[SerializeField] private bool m_EnableAIMovement;
 
 		public void Setup(AI AI, NavMeshAgent Agent)
 		{
 			m_AI = AI;
 			m_Agent = Agent;
 			PlayerTarget = m_AI.m_MainPlayerReference;
+
+			if (m_AI.GetComponent<Rigidbody>())
+			{
+				m_Rigidbody = m_AI.GetComponent<Rigidbody>();
+			}
+			else
+			{
+				Debug.LogWarning("[AI.AIMovement.Setup]: " + "No rigidbody could be found for the current AI character!");
+			}
+
+			m_AudioEffects.Setup(m_AI);
+			m_Effects.Setup(m_AI);
+			m_Effects.StartDustEffects(true);
+			EnableAIMovement(false);
 		}
+
+		public void EnableAIMovement(bool ShouldEnable) => m_EnableAIMovement = ShouldEnable;
 
 		public void Chase()
 		{
+
+			if (m_EnableAIMovement == false)
+			{
+				// If the AI is not enabled we want to return....
+				return;
+			}
+
+			// Set the agents destination to the players position 
 			m_Agent.SetDestination(PlayerTarget.position);
+
+			// Look at the player target 
+			m_AI.transform.LookAt(PlayerTarget);
+			
+			// Look at the player with the primary weapon 
+			PrimaryWeaponTransform.LookAt(PlayerTarget);
+		
+			// I dont know if this will work but YOLO
+			m_AudioEffects.StartEngine(m_Agent.velocity.x, m_Agent.velocity.z);
+
 		}
 
 		public void Attack()
@@ -232,7 +304,6 @@ public class AI : MonoBehaviour
 			}
 		}
 
-
 		/// <summary>
 		///		Resets weapon 
 		/// </summary>
@@ -244,4 +315,184 @@ public class AI : MonoBehaviour
 			yield return null;
 		}
 	}
+
+	[System.Serializable]
+	public class AIHealth
+	{
+
+		#region Public Variables 
+
+		/// <summary>
+		///		Minimum health value for an ai character 
+		/// </summary>
+		public float MinimumHealth = 0;
+		
+		/// <summary>
+		///		The maximum health allowed for an AI character
+		/// </summary>
+		public float MaximumHealth = 100;
+
+		/// <summary>
+		///		Is the AI character currently dead? 
+		/// </summary>
+		public bool isCurrentlyDead = true;
+
+
+		#endregion
+
+		#region Private Variables 
+
+		/// <summary>
+		///		The current health remaining for an AI character 
+		/// </summary>
+		[Header("Current Health Status")]
+		[SerializeField] private float m_CurrentHealth;
+		
+		/// <summary>
+		///		Reference to the AI character 
+		/// </summary>
+		private AI m_AI;
+
+		#endregion
+
+
+		#region Public Methods 
+
+		/// <summary>
+		///		Getter & Setter for the AI characters Health 
+		/// </summary>
+		public float CurrentAIHealth
+		{ 
+			get
+			{
+				return m_CurrentHealth;
+			}
+			set
+			{
+				m_CurrentHealth = value;
+
+
+				m_CurrentHealth = Mathf.Clamp(m_CurrentHealth, MinimumHealth, MaximumHealth);
+
+				if (m_CurrentHealth <= 0)
+				{
+					isCurrentlyDead = true;
+				}
+				else
+				{
+					isCurrentlyDead = false;
+				}
+
+
+
+				if (isCurrentlyDead == true)
+				{
+					FireModeEvents.HandleAIDestroyedEvent?.Invoke(m_AI.gameObject);
+				}
+			}
+		}
+
+		/// <summary>
+		///		Sets the AI characters health 
+		///		If a positive amount - Adds Health to the AI player 
+		///		If a negative amount - Removes health from the ai player 
+		/// </summary>
+		/// <param name="amount"></param>
+		public void SetHealth(float amount)
+		{
+			Debug.Log("[AI.AIHealth.SetHealth]: " + "Setting AI Player's Health: " + amount);
+
+			CurrentAIHealth += amount;
+		}
+	
+		/// <summary>
+		///		Sets up the AI Characters Health 
+		/// </summary>
+		/// <param name="AI"></param>
+		public void Setup(AI AI)
+		{
+			m_AI = AI;
+
+			CurrentAIHealth = MaximumHealth;
+		}
+
+		#endregion
+	
+	}
+
+
+	public class AIAudio
+	{ 
+		
+		public bool shouldLoop = true;
+
+		private AudioSource Engine;
+		private AudioClip EngineIdle;
+		private AudioClip EngineDriving;
+	
+		public void Setup(AI AI)
+		{
+			if (AI.GetComponent<AudioSource>() != null)
+			{
+				Engine = AI.GetComponent<AudioSource>();
+
+				Engine.loop = shouldLoop;
+				EngineIdle = AudioManager.Instance.GetAudioClip(GameAudio.T90_EngineIdle);
+				EngineDriving = AudioManager.Instance.GetAudioClip(GameAudio.T90_EngineDriving);
+			}
+			else
+			{
+				Debug.LogWarning("[AI.AIAudio.Setup]: " + "Audio Instance could not be found for AI character!");
+			}
+		}
+
+
+		public void StartEngine(float Moving, float Rotating)
+		{
+			if (Mathf.Abs(Moving) < 0.1f && Mathf.Abs(Rotating) < 0.1f)
+			{
+				if (Engine.clip != EngineIdle)
+				{
+					Engine.clip = EngineIdle;
+					Engine.Play();
+				}
+			}
+			else 
+			{
+				if (Engine.clip != EngineDriving) 
+				{ 
+					Engine.clip = EngineDriving;
+					Engine.Play();
+				}
+			}
+		}
+	}
+
+	public class AIEffects
+	{ 
+		
+		private ParticleSystem[] DustEffects = new ParticleSystem[] { };
+
+		public void Setup(AI AI)
+		{
+			DustEffects = AI.GetComponentsInChildren<ParticleSystem>();
+		}
+
+		public void StartDustEffects(bool EnableDustEffects)
+		{
+			for (int i = 0; i < DustEffects.Length; i++)
+			{
+				if (EnableDustEffects)
+				{
+					DustEffects[i].Play();
+				}
+				else
+				{
+					DustEffects[i].Stop();
+				}
+			}
+		}
+	}
+	#endregion
+
 }

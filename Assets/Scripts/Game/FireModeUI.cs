@@ -72,7 +72,7 @@ public class FireModeUI : MonoBehaviour
 		// Wave Events 
 		FireModeEvents.PreGameStartedEvent += DisplayPreWaveUI;
 		FireModeEvents.GameStartedEvent += DisplayInGameUI;
-		FireModeEvents.HandleOnNextWaveEvent += DisplayNextWaveUI;
+		FireModeEvents.HandleNextWaveStarted += DisplayNextWaveUI;
 
 
 		//	Updating Wave, Player & HUD Events 
@@ -87,7 +87,7 @@ public class FireModeUI : MonoBehaviour
 		// Wave Events 
 		FireModeEvents.PreGameStartedEvent -= DisplayPreWaveUI;
 		FireModeEvents.GameStartedEvent -= DisplayInGameUI;
-		FireModeEvents.HandleOnNextWaveEvent -= DisplayNextWaveUI;
+		FireModeEvents.HandleNextWaveStarted -= DisplayNextWaveUI;
 
 		FireModeEvents.SpawnPlayerEvent -= DisplayOnScreenUI;
 	}

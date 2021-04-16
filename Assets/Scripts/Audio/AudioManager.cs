@@ -3,7 +3,7 @@ using UnityEngine.Audio;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using Random = System.Random;
 
 public class AudioManager : MonoBehaviour
 {
@@ -21,6 +21,10 @@ public class AudioManager : MonoBehaviour
 	///		Game sound effects, Tanks, Infantry etc
 	/// </summary>
 	public SoundFX[] GameSoundEffects;
+
+	public SoundFX[] HealthSoundEffects;
+	
+	public SoundFX[] AmmoSoundEffects;
 
 	/// <summary>
 	///		Called before the start method 
@@ -50,6 +54,71 @@ public class AudioManager : MonoBehaviour
 				s.source.outputAudioMixerGroup = AudioMixer;
 		
 		}
+
+		foreach (SoundFX sound in HealthSoundEffects)
+		{
+			sound.source = gameObject.AddComponent<AudioSource>();
+			sound.source.clip = sound.clip;
+			sound.source.loop = sound.loop;
+
+
+			sound.source.outputAudioMixerGroup = AudioMixer;
+		}
+
+		foreach (SoundFX sound in AmmoSoundEffects)
+		{
+			sound.source = gameObject.AddComponent<AudioSource>();
+			sound.source.clip = sound.clip;
+			sound.source.loop = sound.loop;
+
+
+			sound.source.outputAudioMixerGroup = AudioMixer;
+		}
+	}
+
+	/// <summary>
+	///		Plays a random health pickup sound from the array of health sound effects 
+	/// </summary>
+	public void	PlayHealthPickupAudio()
+	{
+		Random rand = new Random(DateTime.Now.ToString().GetHashCode());
+
+		int selected = rand.Next(HealthSoundEffects.Length);
+
+		SoundFX s = HealthSoundEffects[selected];
+
+		if (s == null)
+		{
+			Debug.LogWarning("[AudioManager.PlayAmmunitionPickupAudio]: " + "Health sound " + name + " could not be found!");
+			return;
+		}
+
+		s.source.volume = s.volume;
+		s.source.pitch = s.pitch;
+
+		s.source.Play();
+	}
+
+	/// <summary>
+	///		Plays a random ammunition pickup sound from the list of ammo sound effects 
+	/// </summary>
+	public void PlayAmmunitionPickupAudio()
+	{
+		Random rand = new Random(DateTime.Now.ToString().GetHashCode());
+
+		int selectedIndex = rand.Next(AmmoSoundEffects.Length);
+
+		SoundFX s = AmmoSoundEffects[selectedIndex];
+
+		if (s == null)
+		{
+			Debug.LogWarning("[AudioManager.PlayAmmunitionPickupAudio]: " + "Ammunition sound " + name + " could not be found!");
+		}
+
+		s.source.volume = s.volume;
+		s.source.pitch = s.pitch;
+
+		s.source.Play();
 	}
 
 	/// <summary>
@@ -90,7 +159,6 @@ public class AudioManager : MonoBehaviour
 
 		return s.source.clip;
 	}
-
 
 	/// <summary>
 	///		Handles playing an audio clip by its name  
@@ -166,4 +234,7 @@ public class AudioManager : MonoBehaviour
 
 		yield return null;
 	}
+
+
+
 }

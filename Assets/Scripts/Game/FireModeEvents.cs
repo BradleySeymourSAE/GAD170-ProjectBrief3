@@ -37,6 +37,13 @@ public static class FireModeEvents
 	public delegate void TransformFloatParameterDelegate(Transform Transform, float Amount);
 
 	/// <summary>
+	///		Transform & Int Parameter Delegate 
+	/// </summary>
+	/// <param name="Transform"></param>
+	/// <param name="Amount"></param>
+	public delegate void TransformIntParameterDelegate(Transform Transform, int Amount);
+
+	/// <summary>
 	///		Spawn a set amount of health packs and ammunition packs into the game 
 	/// </summary>
 	/// <param name="HealthPackCount"></param>
@@ -67,6 +74,12 @@ public static class FireModeEvents
 	/// <param name="AI"></param>
 	public delegate void HandleAIDestroyed(GameObject AI);
 
+	/// <summary>
+	///		When a game object has been collected / destroyed 
+	/// </summary>
+	/// <param name="Item"></param>
+	public delegate void HandleGameObjectDestroyed(GameObject Item);
+
 
 	/// <summary>
 	///		Handles the pre game event 
@@ -81,7 +94,7 @@ public static class FireModeEvents
 	/// <summary>
 	///		Handles that happens after the wave is over and the player is still alive  
 	/// </summary>
-	public static VoidDelegate HandleOnNextWaveEvent;
+	public static VoidDelegate HandleNextWaveStarted;
 
 	/// <summary>
 	///		Calls wave reset event 
@@ -106,10 +119,8 @@ public static class FireModeEvents
 
 
 	/// <summary>
-	///		Updates the wave ui counter 
+	///		Increases the current wave! 
 	/// </summary>
-	/// <param name="PlayerReference">The current player enum</param>
-	/// <param name="Amount">The kill count of the player</param>
 	public static IntParameterDelegate IncreaseWaveEvent;
 
 	/// <summary>
@@ -120,7 +131,7 @@ public static class FireModeEvents
 
 
 	/// <summary>
-	///		Once called - Updates the current players kill counter ui 
+	///		Increases the players score! 
 	/// </summary>
 	public static IntParameterDelegate IncreasePlayerScoreEvent;
 
@@ -132,18 +143,18 @@ public static class FireModeEvents
 	/// <summary>
 	///		Increases or decreases the players health 
 	/// </summary>
-	public static FloatParameterDelegate IncreasePlayerHealthEvent;
+	public static TransformFloatParameterDelegate IncreasePlayerHealthEvent;
 
 	/// <summary>
 	///		Sets the players health ui 
 	/// </summary>
-	public static FloatParameterDelegate IncreasePlayerHealthEventUI;
+	public static IntParameterDelegate IncreasePlayerHealthEventUI;
 
 
 	/// <summary>
 	///		Increases / decreases the players ammunition 
 	/// </summary>
-	public static IntParameterDelegate IncreaseAmmunitionEvent;
+	public static TransformIntParameterDelegate IncreasePlayerAmmunitionEvent;
 
 	/// <summary>
 	///		Updates the players ammunition UI 
@@ -187,7 +198,12 @@ public static class FireModeEvents
 	/// <summary>
 	///		Called when the weapon pickups have been spawned in 
 	/// </summary>
-	public static HandleOnGameItemsSpawned HandleGameItemsSpawnedEvent; 
+	public static HandleOnGameItemsSpawned HandleGameItemsSpawnedEvent;
+
+	/// <summary>
+	///		Called when a game item has been destroyed 
+	/// </summary>
+	public static HandleGameObjectDestroyed HandleOnGameItemDestroyed;
 
 
 	/// <summary>
@@ -205,7 +221,6 @@ public static class FireModeEvents
 	public static HandleOnAISpawned HandleOnAISpawnedEvent;
 
 
-
 	/// <summary>
 	///		Handles what happens when an AI character has been damaged 
 	/// </summary>
@@ -215,6 +230,5 @@ public static class FireModeEvents
 	///		Handles when an AI character has been destroyed 
 	/// </summary>
 	public static HandleAIDestroyed HandleAIDestroyedEvent;
-
 
 }

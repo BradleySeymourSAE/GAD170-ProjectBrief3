@@ -24,8 +24,28 @@ public class MainPlayerTank : MonoBehaviour
 
 	public bool enablePlayerControl = false;
 
-	#endregion
+	/// <summary>
+	///		The amount of time to wait betwween flashes 
+	/// </summary>
+	[SerializeField] private float m_FlashTimer = 0.1f;
+	
+	/// <summary>
+	///		The maximum amount of times a tank should flash on start
+	/// </summary>
+	[SerializeField] private int maximumFlashCount = 10;
 
+	/// <summary>
+	///		The flash routine to turn the players renders on and off 
+	/// </summary>
+	private Coroutine m_FlashRoutine;
+
+	/// <summary>
+	///		The Tank's Mesh Renders
+	/// </summary>
+	private MeshRenderer[] m_Renders;
+
+	#endregion
+	
 	#region Private Variables 
 
 	private bool cursorLocked = false;
@@ -39,6 +59,9 @@ public class MainPlayerTank : MonoBehaviour
 
 		FireModeEvents.SpawnPlayerEvent += EnablePlayerInput;
 		FireModeEvents.HandlePlayerDamageEvent += ChangeHealth;
+		
+		FireModeEvents.IncreasePlayerHealthEvent += ChangeHealth;
+		FireModeEvents.IncreasePlayerAmmunitionEvent += ChangeAmmunition;
 	}
 
 	private void OnDisable()
@@ -46,6 +69,9 @@ public class MainPlayerTank : MonoBehaviour
 
 		FireModeEvents.SpawnPlayerEvent -= EnablePlayerInput;
 		FireModeEvents.HandlePlayerDamageEvent -= ChangeHealth;
+
+		FireModeEvents.IncreasePlayerHealthEvent -= ChangeHealth;
+		FireModeEvents.IncreasePlayerAmmunitionEvent -= ChangeAmmunition;
 	}
 
 	private void Start()
@@ -55,6 +81,15 @@ public class MainPlayerTank : MonoBehaviour
 		Movement.Setup(transform);
 		Weapons.Setup(transform);
 		Health.Setup(transform);
+
+
+		if (GetComponentsInChildren<MeshRenderer>() != null)
+		{ 
+			m_Renders = GetComponentsInChildren<MeshRenderer>();
+
+			BeginFlashing();
+		}
+
 
 
 
@@ -89,6 +124,8 @@ public class MainPlayerTank : MonoBehaviour
 		Movement.SetMovementInput(Controls.GetUserInput(PlayerInput.UserInput.Move), Controls.GetUserInput(PlayerInput.UserInput.Rotate));
 
 		Weapons.SetWeaponFiringInput(Controls.GetUserInput(PlayerInput.UserInput.Fire));
+
+		Weapons.SetWeaponADSInput(Controls.GetUserInput(PlayerInput.UserInput.ADS));
 	}
 
 	#endregion
@@ -118,7 +155,11 @@ public class MainPlayerTank : MonoBehaviour
 		}
 	}
 
-
+	/// <summary>
+	///		Changes the current players health 
+	/// </summary>
+	/// <param name="Player"></param>
+	/// <param name="Amount"></param>
 	private void ChangeHealth(Transform Player, float Amount)
 	{
 		if (!Player.GetComponent<MainPlayerTank>())
@@ -130,6 +171,55 @@ public class MainPlayerTank : MonoBehaviour
 		{
 			Debug.Log("Setting Health!");
 			Health.SetHealth(Amount);
+		}
+	}
+
+	/// <summary>
+	///		Increases the current players ammunition 
+	/// </summary>
+	/// <param name="Player"></param>
+	/// <param name="Amount"></param>
+	private void ChangeAmmunition(Transform Player, int Amount)
+	{
+		if (!Player.GetComponent<MainPlayerTank>())
+		{
+			Debug.Log("[MainPlayerTank.ChangeAmmunition]: " + "Not the correct player!");
+		}
+		else
+		{
+			Debug.Log("[MainPlayerTank.ChangeAmmunition]: " + "Setting Player Ammunition: " + (Player.GetComponent<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + Amount));
+			Weapons.SetAmmunition(Amount);
+		}
+	}
+
+	private void BeginFlashing()
+	{
+		if (m_FlashRoutine != null)
+		{
+			StopCoroutine(m_FlashRoutine);
+		}
+		m_FlashRoutine = StartCoroutine(Flash());
+	}
+
+	private IEnumerator Flash()
+	{
+		for (int i = 0; i < maximumFlashCount; i++)
+		{
+			EnableRenders(m_Renders, false);
+			yield return new WaitForSeconds(m_FlashTimer);
+			EnableRenders(m_Renders, true);
+			yield return new WaitForSeconds(m_FlashTimer);
+		}
+
+		yield return null;
+	}
+
+
+	private void EnableRenders(MeshRenderer[] renderers, bool ShouldEnable)
+	{
+		for (int i = 0; i < renderers.Length; i++)
+		{
+			renderers[i].enabled = ShouldEnable;
 		}
 	}
 	#endregion
@@ -145,7 +235,7 @@ public class MainPlayerTank : MonoBehaviour
 
 		#region Public Variables 
 
-		public enum UserInput { Move, Rotate, Fire };
+		public enum UserInput { Move, Rotate, Fire, ADS };
 
 		public KeyCode Forward = KeyCode.W;
 		public KeyCode Backwards = KeyCode.S;
@@ -196,7 +286,7 @@ public class MainPlayerTank : MonoBehaviour
 					}
 				case UserInput.Fire:
 					{ 
-						if (Input.GetKeyDown(MouseFire))
+						if (Input.GetKey(MouseFire))
 						{
 							value = 1;
 							leftMouseButtonPressed = true;
@@ -204,6 +294,18 @@ public class MainPlayerTank : MonoBehaviour
 						else if (Input.GetKeyUp(MouseFire) && leftMouseButtonPressed == true)
 						{
 							leftMouseButtonPressed = false;
+							value = -1;
+						}
+						break;
+					}
+				case UserInput.ADS:
+					{ 
+						if (Input.GetMouseButton(1))
+						{
+							value = 1;	
+						}
+						else
+						{
 							value = -1;
 						}
 						break;
@@ -341,11 +443,11 @@ public class MainPlayerTank : MonoBehaviour
 
 			MouseY = Mathf.Clamp(MouseY, minimumTurretRotationY, maximumTurretRotationY);
 
-			Vector3 s_AimPosition = new Vector3(MouseX, MouseY, 0);
+			Vector3 s_AimPosition = new Vector3(MouseX, MouseY, 0).normalized;
 
 			AudioSource s_TankAimingAudioSource = AudioManager.Instance.GetAudioSource(GameAudio.T90_PrimaryWeapon_Aiming);
 
-			if (s_AimPosition.magnitude >= 0.1f)
+			if (s_AimPosition.magnitude > 0.1f)
 			{
 				if (!s_TankAimingAudioSource.isPlaying)
 				{
@@ -387,15 +489,20 @@ public class MainPlayerTank : MonoBehaviour
 		#region Public Variables 
 
 		public GameObject projectile;
-
 		public Transform weaponFirePoint;
 
 		public int MinimumAmmunition = 0;
 		public int MaximumAmmunition = 20;
 
 		public float maximumReloadingTime = 1.5f;
+		public float bulletSpeed = 850f;
 
-		public float bulletSpeed = 1000f;
+		public float fov = 80;
+
+		[Min(50)] [HideInInspector] public float aimDownSightFieldOfView = 50;
+
+		private float m_CurrentFOV;
+
 
 		#endregion
 
@@ -407,11 +514,15 @@ public class MainPlayerTank : MonoBehaviour
 
 		[SerializeField] private float currentReloadSpeed;
 
-		[SerializeField] private bool isWeaponReloading, weaponHasBeenFired, weaponOutOfAmmo; 
+		[SerializeField] private bool isWeaponReloading, weaponHasBeenFired, weaponOutOfAmmo;
+		
+		[SerializeField] private bool aimingDownWeaponSight;
 
 		[SerializeField] private bool m_WeaponAllowedToFire;
 
 		private Transform m_PlayerRef;
+
+		private Camera m_CameraReference;
 
 		#endregion
 
@@ -420,13 +531,19 @@ public class MainPlayerTank : MonoBehaviour
 		public void Setup(Transform Player)
 		{
 			m_PlayerRef = Player;
-			
+			m_CurrentFOV = fov;
+
+			if (m_PlayerRef.GetComponentInChildren<Camera>())
+			{
+				m_CameraReference = m_PlayerRef.GetComponentInChildren<Camera>();
+				m_CameraReference.fieldOfView = m_CurrentFOV;
+			}
+
 			currentBulletVelocity = bulletSpeed;
 			currentReloadSpeed = maximumReloadingTime;
 			currentAmmunition = MaximumAmmunition;
 			
-			
-			
+
 			weaponOutOfAmmo = false;
 			isWeaponReloading = false;
 			EnableWeapons(false); // by default disable weapon firing 
@@ -507,6 +624,20 @@ public class MainPlayerTank : MonoBehaviour
 			CurrentAmmunitionRemaining += amount;
 		}
 
+		public void SetWeaponADSInput(float Aiming)
+		{
+			if (Aiming > 0f && !aimingDownWeaponSight)
+			{
+				m_CameraReference.fieldOfView = aimDownSightFieldOfView;
+				aimingDownWeaponSight = true;
+			}
+			else if (Aiming <= 0f && aimingDownWeaponSight)
+			{
+				m_CameraReference.fieldOfView = fov;
+				aimingDownWeaponSight = false;
+			}
+		}
+
 		#endregion
 
 		#region Private Methods 
@@ -541,7 +672,9 @@ public class MainPlayerTank : MonoBehaviour
 
 			currentBulletVelocity = bulletSpeed;
 
-		
+			currentAmmunition--;
+
+			FireModeEvents.IncreasePlayerAmmunitionEvent?.Invoke(m_PlayerRef, -1);
 
 			// I guess this is where we would invoke the ammunition event? 
 
@@ -564,6 +697,7 @@ public class MainPlayerTank : MonoBehaviour
 
 			isWeaponReloading = false;
 		}
+
 
 		#endregion
 	
@@ -588,7 +722,7 @@ public class MainPlayerTank : MonoBehaviour
 
 		#region Private Variables 
 
-		private float m_CurrentHealth;
+		[SerializeField] private float m_CurrentHealth;
 
 		private Transform m_playerReference;
 
@@ -602,7 +736,7 @@ public class MainPlayerTank : MonoBehaviour
 			if (Player.GetComponent<MainPlayerTank>())
 			{
 				// Set player tank ref 
-				m_playerReference = Player.GetComponent<MainPlayerTank>().transform;
+				m_playerReference = Player;
 			}
 
 			// Set the current players health to the maximum health value 
@@ -637,8 +771,13 @@ public class MainPlayerTank : MonoBehaviour
 				}
 
 
-
-				
+				if (playerIsDead)
+				{ 
+					
+					// Decrease the amount of lives the player has 
+					FireModeEvents.IncreaseLivesEvent?.Invoke(-1);
+					
+				}
 			}
 		}
 

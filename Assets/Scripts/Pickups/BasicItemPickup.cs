@@ -14,6 +14,16 @@ public class BasicItemPickup : MonoBehaviour
 	/// </summary>
 	public CollectableItemData CollectableItem;
 
+	/// <summary>
+	///		The minimum amount of health points to add to the player 
+	/// </summary>
+	public float minimumHealthPoints = 25f;
+
+	/// <summary>
+	///		The minimum amount of ammunition rounds to give to a player 
+	/// </summary>
+	public int minimumAmmunitionRounds = 10;
+
 	#region Unity References 
 	
 	private void OnEnable()
@@ -88,21 +98,65 @@ public class BasicItemPickup : MonoBehaviour
 	///		Handles what happens when a player is inside the trigger zone 
 	/// </summary>
 	/// <param name="other"></param>
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider col)
 	{
 		
-		if (other.gameObject.tag == "Player" || other.gameObject.GetComponent<MainPlayerTank>())
+		if (!col.gameObject.GetComponent<MainPlayerTank>())
 		{
-			Debug.Log("Collided with player object - Doing the thing!");
+			//	Unless its the player, we want to return.
+			return;
+		}
+
+		if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<MainPlayerTank>())
+		{
+			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with a player - Item Type: " + CollectableItem.ItemType);
 			
-			MainPlayerTank _player = other.gameObject.GetComponent<MainPlayerTank>();
-
-			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "On Object picked up event called!!!");
-			
-
-			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Players current Ammo " + _player);
+			//	Find the players transform component 
+			Transform s_PlayerFound = col.transform;
 
 
+			switch (CollectableItem.ItemType)
+			{
+				case SpecialItemPickup.Health:
+					{ 
+						float randomHealthAmount = Random.Range(minimumHealthPoints, CollectableItem.HP);
+						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Player Current Health: " + s_PlayerFound.GetComponent<MainPlayerTank>().Health.PlayersCurrentHealth + "! Increasing players health by " + randomHealthAmount);
+						
+						
+						// Try play the audio clip! 
+						if (AudioManager.Instance)
+						{
+							// Play Health Pickup up Audio Effect! HAHAHA
+							AudioManager.Instance.PlayHealthPickupAudio();
+						}
+						
+						// Invoke an event to increase the players health 
+						FireModeEvents.IncreasePlayerHealthEvent?.Invoke(s_PlayerFound, randomHealthAmount);
+					}
+					break;
+				case SpecialItemPickup.Ammunition:
+					{ 
+						int increaseAmmoAmount = Random.Range(minimumAmmunitionRounds, CollectableItem.Rounds);
+						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Current Ammunition: " + s_PlayerFound.GetComponentInChildren<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + "! Increasing by " + increaseAmmoAmount);
+
+						if (AudioManager.Instance)
+						{
+							// Play Ammunition Picked Up Audio Effect HAHAHA
+							AudioManager.Instance.PlayAmmunitionPickupAudio();
+						}
+
+						// Invoke an event to increase the players ammunition 
+						FireModeEvents.IncreasePlayerAmmunitionEvent?.Invoke(s_PlayerFound, increaseAmmoAmount);
+					}
+					break;
+			}
+
+
+			// Could instantiate a item pickup effect here?
+
+			FireModeEvents.HandleOnGameItemDestroyed?.Invoke(gameObject);
+
+			Destroy(gameObject);
 		}
 	}
 	#endregion

@@ -15,6 +15,9 @@ MonoBehaviour:
   RotationsPerSecond: 150
   Amplitude: 0.3
   Frequency: 2
-  ItemPickup: 0
-  startingPosition: {x: 0, y: 0, z: 0}
-  Offset: {x: 0, y: 0, z: 0}
+  Enabled: 1
+  ItemType: 0
+  startingPosition: {x: 133.94395, y: 0.35, z: 181.61406}
+  Offset: {x: 133.94395, y: 0.25729465, z: 181.61406}
+  Rounds: 0
+  HP: 35

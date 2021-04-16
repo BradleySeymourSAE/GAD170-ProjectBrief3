@@ -99,3 +99,53 @@ MonoBehaviour:
     pitch: 1
     clip: {fileID: 8300000, guid: 0a975a4894028dc448161100cec96dbc, type: 3}
     source: {fileID: 0}
+  HealthSoundEffects:
+  - name: HealthCollected
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 26d5cdc5eabdc064ead19899c0cce474, type: 3}
+    source: {fileID: 0}
+  - name: HealthCollected2
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 81c584cb944577a40b2e9992c778b86e, type: 3}
+    source: {fileID: 0}
+  - name: HealthCollected3
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 63eb2e46baf3fd041bff6cc1ca92096d, type: 3}
+    source: {fileID: 0}
+  AmmoSoundEffects:
+  - name: AmmoCollected
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: d3d3b0527b2c2bf4fb77060f5ca3d7c4, type: 3}
+    source: {fileID: 0}
+  - name: AmmoCollected2
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 8fbf89cf05f5126428afdee9b39befe9, type: 3}
+    source: {fileID: 0}
+  - name: AmmoCollected3
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 29e604bb92f9d9b4d9461450c6dae208, type: 3}
+    source: {fileID: 0}
+  - name: AmmoCollected4
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 518b1f6f4a3854b468cceb45cbf042cb, type: 3}
+    source: {fileID: 0}
+  - name: AmmoCollected5
+    loop: 0
+    volume: 1
+    pitch: 1
+    clip: {fileID: 8300000, guid: 0a6ce2a2ee965e3459218511d5b2b87c, type: 3}
+    source: {fileID: 0}

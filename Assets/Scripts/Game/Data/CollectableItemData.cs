@@ -43,21 +43,21 @@ public class CollectableItemData : ScriptableObject
 	/// <summary>
 	///		 Starting position offset for the item 
 	/// </summary>
-	public Vector3 startingPosition;
+	[HideInInspector] public Vector3 startingPosition;
 	
 	/// <summary>
 	///		The desired offset position to move to
 	/// </summary>
-	public Vector3 Offset;
+	[HideInInspector] public Vector3 Offset;
 
 	/// <summary>
 	///		The amount of ammunition rounds to give to a player
 	/// </summary>
-	public int Rounds;
+	[Min(5)] public int Rounds;
 
 	/// <summary>
 	///		The amount of hit points to give to a player
 	/// </summary>
-	public float HP;
+	[Min(35f)] public float HP;
 
 }

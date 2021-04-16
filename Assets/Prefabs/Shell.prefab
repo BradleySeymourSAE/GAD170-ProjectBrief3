@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 362285530076045776}
   - component: {fileID: 6800395305727810014}
   - component: {fileID: -2882141218779517550}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Shell
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -128,7 +128,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 0.9398438, b: 0, a: 1}
-  m_Intensity: 1.5
+  m_Intensity: 1
   m_Range: 5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -167,7 +167,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -191,13 +191,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionPrefab: {fileID: 195792, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
-  tanksLayer:
+  ObjectLayer:
     serializedVersion: 2
     m_Bits: 384
-  maxDamage: 100
+  maxDamage: 15
   explosionForce: 1000
-  maxShellLifeTime: 2
-  explosionRadius: 5
+  maxShellLifeTime: 5
+  explosionRadius: 10
 --- !u!82 &2260574393947628213
 AudioSource:
   m_ObjectHideFlags: 0
@@ -301,9 +301,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7573829973663429484}
     m_Modifications:
+    - target: {fileID: 113952, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 195792, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
       propertyPath: m_Name
       value: ShellExplosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 195792, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 199372, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 486730, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
       propertyPath: m_RootOrder

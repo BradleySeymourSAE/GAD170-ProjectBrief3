@@ -11,8 +11,7 @@ using UnityEngine;
 public class ShellExplosion : MonoBehaviour
 {
     public GameObject explosionPrefab; // the explosion we want to spawn in
-    public LayerMask AILayer; // the layer of the game object to effect
-    public LayerMask PlayerLayer;
+    public LayerMask ObjectLayer;
     public float maxDamage = 100f; // the maximum amount of damage that my shell can do.
     public float explosionForce = 1000f; // the amount of force this shell has
     public float maxShellLifeTime = 2f; // how long should the shell live for before it goes boom!
@@ -39,53 +38,47 @@ public class ShellExplosion : MonoBehaviour
     /// </summary>
     private void Boom()
     {
-        Collider[] aiColliders = Physics.OverlapSphere(transform.position, explosionRadius, AILayer); // draw a sphere, if any objects are on the tank layer, grab them and store them in this array
-        Collider[] playerColliders = Physics.OverlapSphere(transform.position, explosionRadius, PlayerLayer); // draw a sphere if any objects are on the player layer, grab them and store them in this array 
+       
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, ObjectLayer);
 
-        for (int i = 0; i < aiColliders.Length; i++)
+
+
+        for (int i = 0; i < colliders.Length; i++)
 		{
-            Rigidbody targetAI = aiColliders[i].GetComponent<Rigidbody>();
+
+            Rigidbody s_Target = colliders[i].GetComponent<Rigidbody>();
 
 
-            if (!targetAI)
+            if (!s_Target)
 			{
+                // We could log something here to debug test, however every time the shell hits the ground this will be called as it doesnt have a rb 
                 continue;
 			}
 
-            targetAI.AddExplosionForce(explosionForce, transform.position, explosionRadius);
 
-            float damage = CalculateDamage(targetAI.position);
+            s_Target.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+            float s_DamageToApply = CalculateDamage(s_Target.position);
 
-              
-            FireModeEvents.HandleAIDamageEvent?.Invoke(targetAI.transform, -damage);
-		}
-
-        for (int i = 0; i < playerColliders.Length; i++) // loop through all the colliders in the explosion
-        {
-            if (playerColliders[i].GetComponent<MainPlayerTank>())
-            { 
-                Rigidbody playerTargetRigidbody = aiColliders[i].GetComponent<Rigidbody>(); // grab a reference to the rigidbody
-           
-            if (!playerTargetRigidbody)
-            {
-                Debug.Log("Player Target Has No Rigidbody Ignoring");
-                continue; // if there is no rigidbody continue on to the next element, so skip the rest of this code below.
-            }
-
-                 playerTargetRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius); // add a force at the point of impact
-
-
-                 float damage = CalculateDamage(playerTargetRigidbody.position); // calculate the damage based on the distanc
-             
-                // Assign the damage value to the player 
-                FireModeEvents.HandlePlayerDamageEvent?.Invoke(playerTargetRigidbody.transform, -damage);
-            }
+            if (colliders[i].GetComponent<AI>())
+			{
+                Debug.LogWarning("[ShellExplosion.Boom]: " + "Applying " + s_DamageToApply + " to AI CHARACTER!");
+                FireModeEvents.HandleAIDamageEvent?.Invoke(colliders[i].transform, -s_DamageToApply);
+			}
+            else if (colliders[i].GetComponent<MainPlayerTank>())
+			{
+                Debug.LogWarning("[ShellExplosion.Boom]: " + "Applying " + s_DamageToApply + " to Main Player!");
+                FireModeEvents.HandlePlayerDamageEvent?.Invoke(colliders[i].transform, -s_DamageToApply);
+			}
         }
 
-        // spawn in our explosion effect
-        GameObject clone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
-        Destroy(clone, maxShellLifeTime);
 
+
+
+        // spawn in our explosion! 
+        GameObject clone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
+        
+        //  Destroy the game object!
+        Destroy(clone, maxShellLifeTime);
     }
 
     /// <summary>

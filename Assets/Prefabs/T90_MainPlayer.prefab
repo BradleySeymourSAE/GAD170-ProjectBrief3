@@ -1977,13 +1977,13 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 3000
-  field of view: 45.04217
+  field of view: 41.587864
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 2039
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -15652,6 +15652,7 @@ GameObject:
   - component: {fileID: 7033742528294893396}
   - component: {fileID: 7698638841374273002}
   - component: {fileID: 7698638841374273005}
+  - component: {fileID: -3943916307538345398}
   - component: {fileID: 7698638841374273007}
   - component: {fileID: 4572924345148622397}
   m_Layer: 7
@@ -15692,7 +15693,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1000
   m_Drag: 0
-  m_AngularDrag: 0.01
+  m_AngularDrag: 0.1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -15709,7 +15710,20 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.1, y: 1, z: 6.8}
+  m_Size: {x: 3.1, y: 1.75, z: 6.8}
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!65 &-3943916307538345398
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698638841374273006}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.1, y: 1.75, z: 6.8}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!82 &7698638841374273007
 AudioSource:
@@ -15825,8 +15839,8 @@ MonoBehaviour:
     TurningSpeed: 50
     sensitivity: 50
     sensitivityMultiplier: 1
-    minimumTurretRotationY: 0
-    maximumTurretRotationY: 8
+    minimumTurretRotationY: -2
+    maximumTurretRotationY: 6
     clampedCameraXRotation: 0
     audioFadeDuration: 1
     turretAimingVolumeMin: 0
@@ -15846,23 +15860,29 @@ MonoBehaviour:
     MaximumAmmunition: 20
     maximumReloadingTime: 1.5
     bulletSpeed: 850
+    fov: 80
+    switchViewTime: 1.5
+    aimDownSightFieldOfView: 50
     currentAmmunition: 0
     currentBulletVelocity: 0
     currentReloadSpeed: 0
     isWeaponReloading: 0
     weaponHasBeenFired: 0
     weaponOutOfAmmo: 0
+    hasAimedDownWeaponSight: 0
     m_WeaponAllowedToFire: 0
   Health:
     MinimumHealth: 0
     MaximumHealth: 100
     playerIsDead: 1
+    m_CurrentHealth: 0
   Controls:
     Forward: 119
     Backwards: 115
     Left: 97
     Right: 100
     MouseFire: 323
+    MouseAim: 324
   enablePlayerControl: 1
 --- !u!1 &8114460831339410276
 GameObject:
