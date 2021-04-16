@@ -3347,13 +3347,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Movement:
-    timeBeforeNextAttack: 1
+    timeBeforeNextAttack: 4
     PrimaryWeaponTransform: {fileID: 4160563191188373434}
   Weapons:
     WeaponFirePoint: {fileID: 4160563192177948118}
     shellProjectilePrefab: {fileID: 6863767184128917887, guid: 64d33ca7dc1959b43b854fc666f30204,
       type: 3}
-    maximumBulletVelocity: 500
+    maximumBulletVelocity: 850
   explosionPrefab: {fileID: 151086, guid: 6bc6d0dd8b8428e4ca316513f2cf13c6, type: 3}
   GroundLayer:
     serializedVersion: 2

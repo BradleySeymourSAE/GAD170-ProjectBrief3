@@ -30,6 +30,13 @@ public static class FireModeEvents
 	public delegate void FloatParameterDelegate(float Amount);
 
 	/// <summary>
+	///		Transform Float Parameter Delegate 
+	/// </summary>
+	/// <param name="Transform"></param>
+	/// <param name="Amount"></param>
+	public delegate void TransformFloatParameterDelegate(Transform Transform, float Amount);
+
+	/// <summary>
 	///		Spawn a set amount of health packs and ammunition packs into the game 
 	/// </summary>
 	/// <param name="HealthPackCount"></param>
@@ -59,10 +66,6 @@ public static class FireModeEvents
 	/// </summary>
 	/// <param name="AI"></param>
 	public delegate void HandleAIDestroyed(GameObject AI);
-
-
-
-
 
 
 	/// <summary>
@@ -170,6 +173,11 @@ public static class FireModeEvents
 	/// </summary>
 	public static HandleOnPlayerSpawned HandleOnPlayerSpawnedEvent; 
 
+	/// <summary>
+	///		Handle when a player receives damage from an enemy 
+	/// </summary>
+	public static TransformFloatParameterDelegate HandlePlayerDamageEvent;
+
 
 	/// <summary>
 	///		Called to spawn in a weapon pickup 
@@ -201,7 +209,7 @@ public static class FireModeEvents
 	/// <summary>
 	///		Handles what happens when an AI character has been damaged 
 	/// </summary>
-	public static FloatParameterDelegate HandleAIDamageEvent;
+	public static TransformFloatParameterDelegate HandleAIDamageEvent;
 
 	/// <summary>
 	///		Handles when an AI character has been destroyed 

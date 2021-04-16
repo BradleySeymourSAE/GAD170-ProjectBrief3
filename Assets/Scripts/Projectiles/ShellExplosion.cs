@@ -11,7 +11,8 @@ using UnityEngine;
 public class ShellExplosion : MonoBehaviour
 {
     public GameObject explosionPrefab; // the explosion we want to spawn in
-    public LayerMask tanksLayer; // the layer of the game object to effect
+    public LayerMask AILayer; // the layer of the game object to effect
+    public LayerMask PlayerLayer;
     public float maxDamage = 100f; // the maximum amount of damage that my shell can do.
     public float explosionForce = 1000f; // the amount of force this shell has
     public float maxShellLifeTime = 2f; // how long should the shell live for before it goes boom!
@@ -38,39 +39,52 @@ public class ShellExplosion : MonoBehaviour
     /// </summary>
     private void Boom()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, tanksLayer); // draw a sphere, if any objects are on the tank layer, grab them and store them in this array
+        Collider[] aiColliders = Physics.OverlapSphere(transform.position, explosionRadius, AILayer); // draw a sphere, if any objects are on the tank layer, grab them and store them in this array
+        Collider[] playerColliders = Physics.OverlapSphere(transform.position, explosionRadius, PlayerLayer); // draw a sphere if any objects are on the player layer, grab them and store them in this array 
 
-        for (int i = 0; i < colliders.Length; i++) // loop through all the colliders in the explosion
+        for (int i = 0; i < aiColliders.Length; i++)
+		{
+            Rigidbody targetAI = aiColliders[i].GetComponent<Rigidbody>();
+
+
+            if (!targetAI)
+			{
+                continue;
+			}
+
+            targetAI.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+
+            float damage = CalculateDamage(targetAI.position);
+
+              
+            FireModeEvents.HandleAIDamageEvent?.Invoke(targetAI.transform, -damage);
+		}
+
+        for (int i = 0; i < playerColliders.Length; i++) // loop through all the colliders in the explosion
         {
-            Rigidbody targetRigidbody = colliders[i].GetComponent<Rigidbody>(); // grab a reference to the rigidbody
+            if (playerColliders[i].GetComponent<MainPlayerTank>())
+            { 
+                Rigidbody playerTargetRigidbody = aiColliders[i].GetComponent<Rigidbody>(); // grab a reference to the rigidbody
            
-            if(!targetRigidbody)
+            if (!playerTargetRigidbody)
             {
-                Debug.Log("Target Has No Rigidbody Ignoring");
+                Debug.Log("Player Target Has No Rigidbody Ignoring");
                 continue; // if there is no rigidbody continue on to the next element, so skip the rest of this code below.
             }
 
-            targetRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius); // add a force at the point of impact
+                 playerTargetRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius); // add a force at the point of impact
 
 
-            float damage = CalculateDamage(targetRigidbody.position); // calculate the damage based on the distance
-
-            if (colliders[i].gameObject.tag == "AI")
-			{
-                Debug.Log("AI has been hit!");
-			}
-            else if (colliders[i].gameObject.tag == "Player")
-			{
-                Debug.Log("Player has been hit!");
-			}
-
-
-            // TankGameEvents.OnObjectTakeDamageEvent?.Invoke(targetRigidbody.transform, -damage); // invoke our take damage event
+                 float damage = CalculateDamage(playerTargetRigidbody.position); // calculate the damage based on the distanc
+             
+                // Assign the damage value to the player 
+                FireModeEvents.HandlePlayerDamageEvent?.Invoke(playerTargetRigidbody.transform, -damage);
+            }
         }
 
         // spawn in our explosion effect
         GameObject clone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
-        Destroy(clone,maxShellLifeTime);
+        Destroy(clone, maxShellLifeTime);
 
     }
 

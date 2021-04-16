@@ -115,12 +115,19 @@ public class AI : MonoBehaviour
 	}
 
 
-	private void HandleDamage(float amount)
+	private void HandleDamage(Transform EnemyAI, float amount)
 	{
+		if (!EnemyAI.GetComponent<AI>())
+		{
+			Debug.LogError("Enemy AI not found!");
+			return;
+		}
+		else
+		{ 
 		Debug.Log("[AI.HandleDamage]: " + "AI has taken damage " + amount);
 
-
-
+		
+		}
 	}
 	
 
@@ -150,7 +157,7 @@ public class AI : MonoBehaviour
 
 		public GameObject shellProjectilePrefab;
 
-		public float maximumBulletVelocity = 500f;
+		public float maximumBulletVelocity = 1000f;
 
 		private float currentBulletVelocity; 
 

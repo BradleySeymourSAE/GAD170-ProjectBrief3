@@ -106,7 +106,7 @@ public class FireModeGameManager : MonoBehaviour
 		FireModeEvents.HandleGameItemsSpawnedEvent += SpawnedGameItems;
 		FireModeEvents.ResetGameEvent += ResetGame;
 		FireModeEvents.HardResetFireMode += ResetGame;
-
+		FireModeEvents.HandleOnPlayerSpawnedEvent += SpawnedPlayerEntity;
 
 
 		FireModeEvents.IncreaseLivesEvent += IncreaseLives;
@@ -125,6 +125,7 @@ public class FireModeGameManager : MonoBehaviour
 		FireModeEvents.HandleGameItemsSpawnedEvent -= SpawnedGameItems;
 		FireModeEvents.ResetGameEvent -= ResetGame;
 		FireModeEvents.HardResetFireMode -= ResetGame;
+		FireModeEvents.HandleOnPlayerSpawnedEvent -= SpawnedPlayerEntity;
 
 		FireModeEvents.IncreaseLivesEvent -= IncreaseLives;
 		FireModeEvents.IncreasePlayerScoreEvent -= IncreaseScore;
@@ -145,6 +146,7 @@ public class FireModeGameManager : MonoBehaviour
 		if (PlayerEntity.GetComponent<MainPlayerTank>())
 		{
 			m_currentPlayerReference = PlayerEntity.GetComponent<MainPlayerTank>().transform;
+			Debug.Log("[FireModeGameManager.SpawnedPlayerEntity]: " + "Spawned player entity!");
 		}
 	}
 
@@ -177,7 +179,6 @@ public class FireModeGameManager : MonoBehaviour
 	{
 		Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Attempting to despawn Entity " + EnemyEntity.name);
 
-		
 
 
 
@@ -297,10 +298,10 @@ public class FireModeGameManager : MonoBehaviour
 		FireModeEvents.SpawnAIEvent(startingTanks); // spawns the enemies...
 
 		// Starts the first round! 
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "On Wave Started Event has been called!");
+		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "On Game Started Event has been called!");
 		
 
-		Invoke(nameof(GameStarted), nextWaveStartTimer);
+		Invoke("GameStarted", 3f);
 		yield return null; // Tells coroutine when the next update is 
 	}
 

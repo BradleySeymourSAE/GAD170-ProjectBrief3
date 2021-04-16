@@ -33,7 +33,7 @@ public class CollectableItemData : ScriptableObject
 	/// <summary>
 	///		Whether the item is enabled or not 
 	/// </summary>
-	public bool Enabled { get; set; }
+	public bool Enabled = false;
 
 	/// <summary>
 	///		The type of item the collectable is 
@@ -49,4 +49,15 @@ public class CollectableItemData : ScriptableObject
 	///		The desired offset position to move to
 	/// </summary>
 	public Vector3 Offset;
+
+	/// <summary>
+	///		The amount of ammunition rounds to give to a player
+	/// </summary>
+	public int Rounds;
+
+	/// <summary>
+	///		The amount of hit points to give to a player
+	/// </summary>
+	public float HP;
+
 }

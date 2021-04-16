@@ -5,103 +5,82 @@ using UnityEngine;
 #endregion
 
 
-
-
+[System.Serializable]
 /// <summary>
 ///     Main Player Class 
 /// </summary>
 public class MainPlayerTank : MonoBehaviour
 {
 
-	public PlayerMovement Movement;
+	#region Public Variables 
 
-	public PlayerWeapons Weapons;
+	public PlayerMovement Movement = new PlayerMovement();
 
-	public PlayerHealth Health;
+	public PlayerWeapons Weapons = new PlayerWeapons();
 
-	public PlayerInput Controls;
+	public PlayerHealth Health = new PlayerHealth();
 
-	private bool enablePlayerMovement = false;
+	public PlayerInput Controls = new PlayerInput();
+
+	public bool enablePlayerControl = false;
+
+	#endregion
+
+	#region Private Variables 
 
 	private bool cursorLocked = false;
 
+	#endregion
+
+	#region Unity References 
+
 	private void OnEnable()
 	{
-		FireModeEvents.SpawnPlayerEvent += () =>
-		{
-			Movement.Setup(this);
-		};
 
-		FireModeEvents.SpawnPlayerEvent += () =>
-		{
-			Weapons.Setup(this);
-		};
-
-		FireModeEvents.SpawnPlayerEvent += () =>
-		{
-			Health.Setup(this);
-		};
-
-		FireModeEvents.GameStartedEvent += EnablePlayerInput;
+		FireModeEvents.SpawnPlayerEvent += EnablePlayerInput;
+		FireModeEvents.HandlePlayerDamageEvent += ChangeHealth;
 	}
 
 	private void OnDisable()
 	{
-		FireModeEvents.SpawnPlayerEvent -= () =>
-		{
-			Movement.Setup(this);
-		};
 
-		FireModeEvents.SpawnPlayerEvent -= () =>
-		{
-			Weapons.Setup(this);
-		};
-		
-		FireModeEvents.SpawnPlayerEvent -= () =>
-		{
-			Health.Setup(this);
-		};
-
-		FireModeEvents.GameStartedEvent -= EnablePlayerInput;
+		FireModeEvents.SpawnPlayerEvent -= EnablePlayerInput;
+		FireModeEvents.HandlePlayerDamageEvent -= ChangeHealth;
 	}
-
 
 	private void Start()
 	{
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
+		Movement.Setup(transform);
+		Weapons.Setup(transform);
+		Health.Setup(transform);
 
-		if (enablePlayerMovement)
+
+
+		if (enablePlayerControl)
 		{
 			EnablePlayerInput();
 		}
 	}
-
-	private void EnablePlayerInput()
-	{
-		Movement.EnablePlayerMovementInput(true);
-		Weapons.EnableWeapons(true);
-	}
-
 
 	private void Update()
 	{
 
 		HandleCursorLocking();
 
-		if (!enablePlayerMovement)
+		if (!enablePlayerControl)
 		{
 			return;
 		}
 
 
-		Movement.AimWeapon();
+		Movement.AimPrimaryWeapon();
 	}
-
 
 	private void FixedUpdate()
 	{
-		if (!enablePlayerMovement)
+		if (!enablePlayerControl)
 		{
 			return;
 		}
@@ -110,6 +89,16 @@ public class MainPlayerTank : MonoBehaviour
 		Movement.SetMovementInput(Controls.GetUserInput(PlayerInput.UserInput.Move), Controls.GetUserInput(PlayerInput.UserInput.Rotate));
 
 		Weapons.SetWeaponFiringInput(Controls.GetUserInput(PlayerInput.UserInput.Fire));
+	}
+
+	#endregion
+
+	#region Private Methods 
+
+	private void EnablePlayerInput()
+	{
+		Movement.EnablePlayerMovementInput(true);
+		Weapons.EnableWeapons(true);
 	}
 
 
@@ -130,13 +119,32 @@ public class MainPlayerTank : MonoBehaviour
 	}
 
 
+	private void ChangeHealth(Transform Player, float Amount)
+	{
+		if (!Player.GetComponent<MainPlayerTank>())
+		{
+			Debug.Log("Not the correct player!");
+			return;
+		}
+		else
+		{
+			Debug.Log("Setting Health!");
+			Health.SetHealth(Amount);
+		}
+	}
+	#endregion
+
+	#region Public Data Classes 
 
 	/// <summary>
 	///		Handles input received by our player 
 	/// </summary>
 	[System.Serializable]
 	public class PlayerInput
-	{ 
+	{
+
+		#region Public Variables 
+
 		public enum UserInput { Move, Rotate, Fire };
 
 		public KeyCode Forward = KeyCode.W;
@@ -144,7 +152,16 @@ public class MainPlayerTank : MonoBehaviour
 		public KeyCode Left = KeyCode.A;
 		public KeyCode Right = KeyCode.D;
 		public KeyCode MouseFire = KeyCode.Mouse0;
+
+		#endregion
+
+		#region private Variables 
+
 		private bool leftMouseButtonPressed = false;
+
+		#endregion
+
+		#region Public Methods
 
 		public float GetUserInput(UserInput Code)
 		{
@@ -179,12 +196,12 @@ public class MainPlayerTank : MonoBehaviour
 					}
 				case UserInput.Fire:
 					{ 
-						if (Input.GetMouseButton(0))
+						if (Input.GetKeyDown(MouseFire))
 						{
 							value = 1;
 							leftMouseButtonPressed = true;
 						}
-						else if (Input.GetMouseButtonUp(0) && leftMouseButtonPressed == true)
+						else if (Input.GetKeyUp(MouseFire) && leftMouseButtonPressed == true)
 						{
 							leftMouseButtonPressed = false;
 							value = -1;
@@ -196,6 +213,9 @@ public class MainPlayerTank : MonoBehaviour
 
 			return value;
 		}
+
+		#endregion
+
 	}
 
 
@@ -205,7 +225,8 @@ public class MainPlayerTank : MonoBehaviour
 	[System.Serializable]
 	public class PlayerMovement
 	{
-
+		#region Public Variables 
+		
 		[Header("Movement Settings")]
 		public Transform MainTurretParent;
 
@@ -213,41 +234,43 @@ public class MainPlayerTank : MonoBehaviour
 		
 		public float TurningSpeed = 50;
 
+		public float sensitivity = 50f;
+
+		public float sensitivityMultiplier = 1;
+
+
+		#endregion
+
+		#region Private Variables 
 
 		[Header("Mouse Settings")]
 		[SerializeField] private float minimumTurretRotationY = -0.5f;
 		
 		[SerializeField] private float maximumTurretRotationY = 7f;
 
-		public float sensitivity = 50f;
-
-		public float sensitivityMultiplier = 1;
-
-		[Header("Camera")]
-		[HideInInspector] float clampedCameraXRotation;
-		[HideInInspector] float audioFadeDuration = 1;
-		[HideInInspector] float turretAimingVolumeMin = 0, turretAimingVolumeMax = 100;
-
+		[HideInInspector] public float clampedCameraXRotation;
+		[HideInInspector] public float audioFadeDuration = 1;
+		[HideInInspector] public float turretAimingVolumeMin = 0, turretAimingVolumeMax = 100;
 
 		[SerializeField] private float MouseX, MouseY;
 
-		#region Private Variables 
-
-		private MainPlayerTank m_PlayerRef;
+		[SerializeField] private Transform m_PlayerRef;
 
 		private Rigidbody m_Rigidbody;
 
-		private T90ParticleEffects m_Effects;
+		private TankEffects m_Effects = new TankEffects();
 
-		private T90AudioEffects m_AudioEffects;
+		public TankAudio m_AudioEffects = new TankAudio();
 
-		private Transform m_Camera;
+		[SerializeField] private Transform m_CameraReference;
 
-		private bool m_EnablePlayerMovementInput = true;
+		[SerializeField] private bool m_EnablePlayerMovementInput;
 
 		#endregion
 
-		public void Setup(MainPlayerTank Player)
+		#region Public Methods 
+		
+		public void Setup(Transform Player)
 		{
 			m_PlayerRef = Player;
 
@@ -262,21 +285,20 @@ public class MainPlayerTank : MonoBehaviour
 
 			if (m_PlayerRef.GetComponentInChildren<Camera>())
 			{ 
-				m_Camera = m_PlayerRef.GetComponentInChildren<Camera>().transform;
+				m_CameraReference = m_PlayerRef.GetComponentInChildren<Camera>().transform;
+			}
+			else
+			{
+				Debug.LogWarning("[MainPlayerTank.PlayerMovement.Setup]: " + "Could not find a camera attached to the player!");
 			}
 
 			m_AudioEffects.Setup(m_PlayerRef);
 			m_Effects.Setup(m_PlayerRef);
 			m_Effects.PlayDustTrails(true);
-			EnablePlayerMovementInput(true);
+			EnablePlayerMovementInput(false);
 		}
 
-
-		public void EnablePlayerMovementInput(bool AllowPlayerMovement)
-		{
-			m_EnablePlayerMovementInput = AllowPlayerMovement;
-		}
-	
+		public void EnablePlayerMovementInput(bool AllowPlayerMovement) => m_EnablePlayerMovementInput = AllowPlayerMovement;
 		
 		public void SetMovementInput(float ForwardInput, float RotationInput)
 		{
@@ -291,6 +313,12 @@ public class MainPlayerTank : MonoBehaviour
 			m_AudioEffects.PlayEngineSound(ForwardInput, RotationInput);
 		}
 
+		public void AimPrimaryWeapon() => AimWeapon();
+
+		#endregion
+
+		#region Private Methods 
+
 		private void Movement(float vertical, float horizontal)
 		{
 			Vector3 direction = m_PlayerRef.transform.forward * vertical * MovementSpeed * Time.deltaTime;
@@ -303,8 +331,9 @@ public class MainPlayerTank : MonoBehaviour
 			m_Rigidbody.MoveRotation(m_Rigidbody.rotation * turningRotation);
 		}
 	
+		private float desiredX;
 
-		public void AimWeapon()
+		private void AimWeapon()
 		{
 
 			MouseX += Input.GetAxis("Mouse X") * sensitivity * Time.fixedDeltaTime * sensitivityMultiplier;
@@ -316,7 +345,7 @@ public class MainPlayerTank : MonoBehaviour
 
 			AudioSource s_TankAimingAudioSource = AudioManager.Instance.GetAudioSource(GameAudio.T90_PrimaryWeapon_Aiming);
 
-			if (s_AimPosition.magnitude > 0.1f)
+			if (s_AimPosition.magnitude >= 0.1f)
 			{
 				if (!s_TankAimingAudioSource.isPlaying)
 				{
@@ -331,21 +360,21 @@ public class MainPlayerTank : MonoBehaviour
 
 				clampedCameraXRotation = Mathf.Clamp(clampedCameraXRotation, 0, 0);
 
-				m_Camera.transform.localRotation = Quaternion.Euler(clampedCameraXRotation, desiredX, 0); 
+				m_CameraReference.transform.localRotation = Quaternion.Euler(clampedCameraXRotation, desiredX, 0); 
 
 				MainTurretParent.transform.localRotation = Quaternion.Euler(MouseY, MouseX, 0); 
 			}
 			else
 			{
-				if (s_AimPosition.magnitude < 0.1f)
+				if (s_AimPosition.magnitude <= 0.1f)
 				{
 					AudioManager.Instance.FadeSoundEffect(GameAudio.T90_PrimaryWeapon_Aiming, turretAimingVolumeMin, (audioFadeDuration - 0.4f));
 				}
 			}
 		}
 
+		#endregion
 
-		private float desiredX;
 	}
 
 	/// <summary>
@@ -355,38 +384,50 @@ public class MainPlayerTank : MonoBehaviour
 	public class PlayerWeapons
 	{
 
+		#region Public Variables 
+
 		public GameObject projectile;
 
 		public Transform weaponFirePoint;
 
-		public int maximumAmmunition = 20;
+		public int MinimumAmmunition = 0;
+		public int MaximumAmmunition = 20;
 
 		public float maximumReloadingTime = 1.5f;
 
 		public float bulletSpeed = 1000f;
 
-		
-		[SerializeField] private int Ammunition;
+		#endregion
+
+		#region Private Variables 
+
+		[SerializeField] private int currentAmmunition;
 		
 		[SerializeField] private float currentBulletVelocity;
 
 		[SerializeField] private float currentReloadSpeed;
 
-		[SerializeField] private bool isWeaponReloading, weaponHasBeenFired; 
+		[SerializeField] private bool isWeaponReloading, weaponHasBeenFired, weaponOutOfAmmo; 
 
 		[SerializeField] private bool m_WeaponAllowedToFire;
 
-		private MainPlayerTank m_PlayerRef;
+		private Transform m_PlayerRef;
 
-		public void Setup(MainPlayerTank Player)
+		#endregion
+
+		#region Public Methods 
+
+		public void Setup(Transform Player)
 		{
 			m_PlayerRef = Player;
-
 			
-			currentBulletVelocity = Random.Range(bulletSpeed - 150f, bulletSpeed + 100f);
+			currentBulletVelocity = bulletSpeed;
 			currentReloadSpeed = maximumReloadingTime;
-			Ammunition = maximumAmmunition;
-
+			currentAmmunition = MaximumAmmunition;
+			
+			
+			
+			weaponOutOfAmmo = false;
 			isWeaponReloading = false;
 			EnableWeapons(false); // by default disable weapon firing 
 		}
@@ -397,10 +438,9 @@ public class MainPlayerTank : MonoBehaviour
 		/// <param name="ShouldEnableWeapons"></param>
 		public void EnableWeapons(bool ShouldEnableWeapons) => m_WeaponAllowedToFire = ShouldEnableWeapons;
 
-
 		public void SetWeaponFiringInput(float FiringInput)
 		{
-			if (!m_WeaponAllowedToFire || isWeaponReloading)
+			if (!m_WeaponAllowedToFire == true || isWeaponReloading == true)
 			{
 				return;
 			}
@@ -408,7 +448,7 @@ public class MainPlayerTank : MonoBehaviour
 
 			if (FiringInput > 0 && !weaponHasBeenFired)
 			{
-				if (Ammunition <= 0)
+				if (currentAmmunition <= 0)
 				{
 					Debug.Log("[MainPlayerTank.Weapons.SetWeaponFiringInput]: " + "There is no more ammunition remaining!");
 					return;
@@ -419,7 +459,7 @@ public class MainPlayerTank : MonoBehaviour
 				if (weaponHasBeenFired)
 				{
 					Debug.Log("[MainPlayerTank.Weapons.SetWeaponFiringInput]: " + "Weapon has fired! Reloading primary weapon...");
-					m_PlayerRef.StartCoroutine(ReloadPrimaryWeapon());
+					m_PlayerRef.GetComponent<MainPlayerTank>().StartCoroutine(ReloadPrimaryWeapon());
 				}
 			}
 			else if (FiringInput <= 0 && weaponHasBeenFired)
@@ -428,7 +468,48 @@ public class MainPlayerTank : MonoBehaviour
 			}
 		}
 
+		/// <summary>
+		/// Returns the current ammunitin remaining for the players tank 
+		/// </summary>
+		public int CurrentAmmunitionRemaining
+		{
+			get
+			{
+				return currentAmmunition;
+			}
+			set
+			{
 
+				currentAmmunition = value;
+
+				currentAmmunition = Mathf.Clamp(currentAmmunition, MinimumAmmunition, MaximumAmmunition);
+
+
+				if (currentAmmunition <= 0)
+				{
+					weaponOutOfAmmo = true;
+				}
+				else
+				{
+					weaponOutOfAmmo = false;
+				}
+			}
+		}
+
+		/// <summary>
+		///		Sets the players ammunition 
+		/// </summary>
+		/// <param name="amount"></param>
+		public void SetAmmunition(int amount)
+		{
+			Debug.Log("[MainPlayerTank.PlayerWeapons.SetAmmunition]: " + "Setting Player ammunition change! " + amount);
+
+			CurrentAmmunitionRemaining += amount;
+		}
+
+		#endregion
+
+		#region Private Methods 
 
 		/// <summary>
 		///		Fires the primary weapon 
@@ -470,7 +551,6 @@ public class MainPlayerTank : MonoBehaviour
 			}
 		}
 
-
 		private IEnumerator ReloadPrimaryWeapon()
 		{
 			isWeaponReloading = true;
@@ -484,6 +564,9 @@ public class MainPlayerTank : MonoBehaviour
 
 			isWeaponReloading = false;
 		}
+
+		#endregion
+	
 	}
 
 	/// <summary>
@@ -491,24 +574,94 @@ public class MainPlayerTank : MonoBehaviour
 	/// </summary>
 	[System.Serializable]
 	public class PlayerHealth
-	{ 
-		
-		private MainPlayerTank m_PlayerRef;
+	{
 
-	
-		public void Setup(MainPlayerTank Player)
+		#region Public Variables 
+
+		public float MinimumHealth = 0;
+		
+		public float MaximumHealth = 100;
+
+		public bool playerIsDead = true;
+
+		#endregion
+
+		#region Private Variables 
+
+		private float m_CurrentHealth;
+
+		private Transform m_playerReference;
+
+		#endregion
+
+		#region Public Methods
+
+		public void Setup(Transform Player)
 		{
-			m_PlayerRef = Player;
+			// Set reference to the current player 
+			if (Player.GetComponent<MainPlayerTank>())
+			{
+				// Set player tank ref 
+				m_playerReference = Player.GetComponent<MainPlayerTank>().transform;
+			}
+
+			// Set the current players health to the maximum health value 
+			PlayersCurrentHealth = MaximumHealth;
 		}
 
-		
+		/// <summary>
+		///		Returns the players current health 
+		/// </summary>
+		public float PlayersCurrentHealth
+		{
+			get
+			{
+				return m_CurrentHealth;
+			}
+			set
+			{
+				m_CurrentHealth = value;
+
+				m_CurrentHealth = Mathf.Clamp(m_CurrentHealth, MinimumHealth, MaximumHealth);
+			
+			
+				if (m_CurrentHealth <= 0)
+				{
+					playerIsDead = true;
+
+					
+				}
+				else
+				{
+					playerIsDead = false;
+				}
+
+
+
+				
+			}
+		}
+
+		/// <summary>
+		///		If positive amount, will add health to the player,
+		///		If negative amount will decrease the health of the player 
+		/// </summary>
+		/// <param name="amount"></param>
+		public void SetHealth(float amount)
+		{
+			Debug.Log("[MainPlayerTank.SetHealth]: " + "Setting main player's health " + amount);
+			PlayersCurrentHealth += amount;
+		}
+
+		#endregion
+
 	}
 
 	/// <summary>
 	///		Reference to the main players particle effects 
 	/// </summary>
 	[System.Serializable]
-	public class T90ParticleEffects
+	public class TankEffects
 	{
 		private ParticleSystem[] allDustTrails = new ParticleSystem[] { }; // an array to store all our particle effects
 
@@ -516,7 +669,7 @@ public class MainPlayerTank : MonoBehaviour
 		/// takes in the transform of the tank and finds the particle effects to play for movement
 		/// </summary>
 		/// <param name="tank"></param>
-		public void Setup(MainPlayerTank PlayerRef)
+		public void Setup(Transform PlayerRef)
 		{
 			allDustTrails = PlayerRef.GetComponentsInChildren<ParticleSystem>(); // find all the particle systems
 		}
@@ -546,18 +699,28 @@ public class MainPlayerTank : MonoBehaviour
 	}
 
 	[System.Serializable]
-	public class T90AudioEffects
-	{ 
+	public class TankAudio
+	{
+		#region Public Variables 
+		
 		[Header("Movement Audio")]
 		public bool shouldLoop = true;
+
+		#endregion
+
+		#region Private Variables 
 
 		private AudioClip EngineIdle;
 		private AudioClip EngineDriving;
 		private AudioSource EngineAudioSource;
 
-		public void Setup(MainPlayerTank Player)
+		#endregion
+
+		#region Public Methods 
+
+		public void Setup(Transform Player)
 		{
-			if (Player.GetComponent<AudioSource>())
+			if (Player.GetComponent<AudioSource>() != null)
 			{
 				EngineAudioSource = Player.GetComponent<AudioSource>();
 
@@ -572,8 +735,6 @@ public class MainPlayerTank : MonoBehaviour
 				Debug.LogError("[MainPlayerTank.T90AudioEffects.Setup]: " + "Audio Source Instance could not be found for the main player tank!");
 			}	
 		}
-
-
 
 		/// <summary>
 		/// takes in the movement and the rotation, if either is moving, play the move sound effect, else play the idle sound effect
@@ -601,5 +762,10 @@ public class MainPlayerTank : MonoBehaviour
 				}
 			}
 		}
+
+		#endregion
 	}
+
+	#endregion
+
 }
