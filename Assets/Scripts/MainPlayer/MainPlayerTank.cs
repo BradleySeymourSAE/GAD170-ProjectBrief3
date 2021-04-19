@@ -503,6 +503,8 @@ public class MainPlayerTank : MonoBehaviour
 
 		private float m_CurrentFOV;
 
+		private float fovScalingDuration = 3;
+
 
 		#endregion
 
@@ -610,6 +612,9 @@ public class MainPlayerTank : MonoBehaviour
 				{
 					weaponOutOfAmmo = false;
 				}
+
+
+				FireModeEvents.IncreaseAmmunitionEventUI?.Invoke(currentAmmunition);
 			}
 		}
 
@@ -628,12 +633,15 @@ public class MainPlayerTank : MonoBehaviour
 		{
 			if (Aiming > 0f && !aimingDownWeaponSight)
 			{
-				m_CameraReference.fieldOfView = aimDownSightFieldOfView;
+				// m_CameraReference.fieldOfView = aimDownSightFieldOfView;
+				m_CameraReference.fieldOfView = Mathf.Lerp(m_CameraReference.fieldOfView, aimDownSightFieldOfView, fovScalingDuration);
 				aimingDownWeaponSight = true;
 			}
 			else if (Aiming <= 0f && aimingDownWeaponSight)
 			{
-				m_CameraReference.fieldOfView = fov;
+				
+				// m_CameraReference.fieldOfView = fov;
+				m_CameraReference.fieldOfView = Mathf.Lerp(m_CameraReference.fieldOfView, fov, fovScalingDuration);
 				aimingDownWeaponSight = false;
 			}
 		}

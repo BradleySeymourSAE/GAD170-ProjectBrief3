@@ -1,41 +1,38 @@
 using UnityEngine;
 using System.Collections;
 
-
-[CreateAssetMenu(menuName = "Environment/Settings", fileName = "New Terrain Mesh Settings")]
+[CreateAssetMenu()]
 public class MeshSettings : UpdatableData
-{ 
+{
 
-	public const int NumberSupportedLODs = 5;
-	public const int NumberOfSupportedChunkSizes = 9;
+	public const int numSupportedLODs = 5;
+	public const int numSupportedChunkSizes = 9;
+	public const int numSupportedFlatshadedChunkSizes = 3;
 	public static readonly int[] supportedChunkSizes = { 48, 72, 96, 120, 144, 168, 192, 216, 240 };
 
-	public float MeshScalingFactor = 2.5f;
-	
-	[Range(0, NumberOfSupportedChunkSizes - 1)]
-	public int ChunkSizeIndex;
+	public float meshScale = 2.5f;
+	public bool useFlatShading;
 
-	/// <summary>
-	///		Returns the number of vertices per line 
-	/// </summary>
-	public int NumberOfVerticesPerLine
+	[Range(0, numSupportedChunkSizes - 1)]
+	public int chunkSizeIndex;
+	[Range(0, numSupportedFlatshadedChunkSizes - 1)]
+	public int flatshadedChunkSizeIndex;
+
+
+	// num verts per line of mesh rendered at LOD = 0. Includes the 2 extra verts that are excluded from final mesh, but used for calculating normals
+	public int numberOfVerticesPerLine
 	{
 		get
 		{
-			return supportedChunkSizes [ChunkSizeIndex] + 5;
+			return supportedChunkSizes[(useFlatShading) ? flatshadedChunkSizeIndex : chunkSizeIndex] + 5;
 		}
 	}
 
-
-	/// <summary>
-	///		Returns the number of vertices per line and scales the mesh by the scaling factor accordingly 
-	/// </summary>
-	public float MeshWorldSize
+	public float meshWorldSize
 	{
 		get
 		{
-			return (NumberOfVerticesPerLine - 3) * MeshScalingFactor;
+			return (numberOfVerticesPerLine - 3) * meshScale;
 		}
 	}
-
 }

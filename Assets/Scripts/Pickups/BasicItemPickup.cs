@@ -41,7 +41,7 @@ public class BasicItemPickup : MonoBehaviour
 	/// </summary>
 	private void Start()
 	{
-		CollectableItem.startingPosition = transform.position;
+		CollectableItem.startingPosition = transform.localPosition;
 	}
 
 	/// <summary>
@@ -112,7 +112,7 @@ public class BasicItemPickup : MonoBehaviour
 			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with a player - Item Type: " + CollectableItem.ItemType);
 			
 			//	Find the players transform component 
-			Transform s_PlayerFound = col.transform;
+			Transform s_PlayerFound = col.gameObject.transform;
 
 
 			switch (CollectableItem.ItemType)
@@ -154,9 +154,10 @@ public class BasicItemPickup : MonoBehaviour
 
 			// Could instantiate a item pickup effect here?
 
-			FireModeEvents.HandleOnGameItemDestroyed?.Invoke(gameObject);
+			gameObject.SetActive(false);
 
-			Destroy(gameObject);
+
+			FireModeEvents.HandleOnGameItemDestroyed?.Invoke(gameObject);
 		}
 	}
 	#endregion

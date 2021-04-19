@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 
 
-[CreateAssetMenu(menuName = "Environment/Settings", fileName = "New 2D Texture Settings")]
+[CreateAssetMenu(fileName = "New 2D Texture Settings")]
 public class TextureData2DSettings : UpdatableData
 { 
 

@@ -12,7 +12,7 @@ public struct LevelOfDetail
 	/// <summary>
 	///		The level of detail 
 	/// </summary>
-	[Range(0, MeshSettings.NumberSupportedLODs - 1)]
+	[Range(0, MeshSettings.numSupportedLODs - 1)]
 	public int lod;
 	
 	/// <summary>

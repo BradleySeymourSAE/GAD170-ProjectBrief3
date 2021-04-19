@@ -12,7 +12,7 @@ public class PreviewMapEditor : Editor {
         if (DrawDefaultInspector())
         {
             // If map preview auto update is equal to true 
-            if (mapPreview.AutoUpdate)
+            if (mapPreview.autoUpdate)
             {
                 // Draw the map in editor mode 
                 mapPreview.DrawPreviewMapInEditor();

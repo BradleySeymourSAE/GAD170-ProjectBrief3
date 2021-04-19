@@ -11,7 +11,7 @@ public static class EnvironmentHeightMapGenerator
 {
 		public static HeightMap CreateHeightMap(int width, int height, HeightMapSettings settings, Vector2 sampleCentre)
 		{
-			float[,] values = EnvironmentNoiseGenerator.CreateNoiseMap(width, height, settings.noiseSettings, sampleCentre);
+			float[,] values = Noise.GenerateNoiseMap(width, height, settings.noiseSettings, sampleCentre);
 
 			AnimationCurve heightCurve_threadsafe = new AnimationCurve(settings.heightCurve.keys);
 

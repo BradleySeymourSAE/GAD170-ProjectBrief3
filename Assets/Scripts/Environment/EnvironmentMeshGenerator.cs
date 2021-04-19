@@ -17,9 +17,9 @@ public static class EnvironmentMeshGenerator
 	public static MeshData CreateTerrainMesh(float[,] HeightMap, MeshSettings Settings, int DetailLevel)
 	{
 		int skipDetailIncrement = (DetailLevel == 0) ? 1 : DetailLevel * 2;
-		int totalMeshVerticesPerLine = Settings.NumberOfVerticesPerLine;
+		int totalMeshVerticesPerLine = Settings.numberOfVerticesPerLine;
 
-		Vector2 topLeft = new Vector2(-1, 1) * Settings.MeshWorldSize / 2f;
+		Vector2 topLeft = new Vector2(-1, 1) * Settings.meshWorldSize / 2f;
 
 		MeshData meshData = new MeshData(totalMeshVerticesPerLine, skipDetailIncrement);
 
@@ -61,7 +61,7 @@ public static class EnvironmentMeshGenerator
 
 					int vertexIndex = vertexIndicesMap[x, y];
 					Vector2 percent = new Vector2(x - 1, y - 1) / (totalMeshVerticesPerLine - 3);
-					Vector2 vertexPosition2D = topLeft + new Vector2(percent.x, -percent.y) * Settings.MeshWorldSize;
+					Vector2 vertexPosition2D = topLeft + new Vector2(percent.x, -percent.y) * Settings.meshWorldSize;
 					float height = HeightMap[x, y];
 
 					if (isEdgeConnectionVertex)

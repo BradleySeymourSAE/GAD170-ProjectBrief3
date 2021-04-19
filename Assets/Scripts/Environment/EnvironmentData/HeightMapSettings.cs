@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[CreateAssetMenu(fileName = "New Height Map Settings", menuName = "Environment/Settings")]
+[CreateAssetMenu()]
 public class HeightMapSettings : UpdatableData {
 
     public TerrainNoiseSettings noiseSettings;

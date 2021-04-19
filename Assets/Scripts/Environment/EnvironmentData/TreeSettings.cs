@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "New Tree Settings", menuName = "Environment/Settings")]
+[CreateAssetMenu(fileName = "New Tree Settings")]
 public class TreeSettings : UpdatableData
 {
 	public TreeData treeData; // class for holding tree data settings 

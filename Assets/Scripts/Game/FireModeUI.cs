@@ -102,6 +102,37 @@ public class FireModeUI : MonoBehaviour
 		inGameWaveUI.Setup(this);
 		postWaveUI.Setup(this);
 		onScreenUI.Setup(this);
+
+
+		// As this is the first function to be called once the application begins, we should be fading the audio to a lower volume 
+
+		// Grab the audio manager instance 
+		if (AudioManager.Instance)
+		{
+			// Fade the volume down to a lower level as overall it's quite loud upon start 
+			// Grab the audio sound by its string name "Background Audio", set the volume to 0.1 over the duration of 
+			// one and a half seconds 
+			AudioSource s = AudioManager.Instance.GetAudioSource(GameAudio.BackgroundThemeTrack);
+
+			if (s.isPlaying == true)
+			{
+				StartCoroutine(StartFade(s, 4f, 0.15f));
+				
+			}
+			else
+			{
+				Debug.LogWarning("Could not find a background theme track audio source!");
+			}
+
+			
+			
+		}
+		else
+		{
+			Debug.LogWarning("[FireModeUI.Start]: " + "Could not find audio manager instance to fade backing track out!");
+		}
+
+
 	}
 
 	private void Update()
@@ -123,6 +154,26 @@ public class FireModeUI : MonoBehaviour
 			postWaveUI.nextRoundStarting.GetComponentInChildren<TMP_Text>().text = m_NextWaveCountdownTimer.ToString("0");
 		}
 
+	}
+
+	#endregion
+
+	#region Public Methods
+
+	public IEnumerator StartFade(AudioSource source, float durationTime, float target)
+	{
+		float s_CurrentTime = 0;
+		float start = source.volume;
+
+		while (s_CurrentTime < durationTime)
+		{
+			s_CurrentTime += Time.deltaTime;
+			source.volume = Mathf.Lerp(start, target, s_CurrentTime / durationTime);
+
+			yield return null;
+		}
+
+		yield break;
 	}
 
 	#endregion

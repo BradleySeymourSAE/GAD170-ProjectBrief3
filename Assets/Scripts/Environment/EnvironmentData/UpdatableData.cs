@@ -1,21 +1,19 @@
 using UnityEngine;
 using System.Collections;
-using System;
-using UnityEditor;
 
 public class UpdatableData : ScriptableObject {
 
-    public event Action OnValuesUpdatedEvent;
-    public bool AutoUpdate;
+    public event System.Action OnValuesUpdated;
+    public bool autoUpdate;
 
 
     #if UNITY_EDITOR
 
     protected virtual void OnValidate()
     {
-        if (AutoUpdate)
+        if (autoUpdate)
         {
-           EditorApplication.update += NotifyOfUpdatedValues;
+           UnityEditor.EditorApplication.update += NotifyOfUpdatedValues;
         }
     }
 
@@ -24,12 +22,12 @@ public class UpdatableData : ScriptableObject {
     /// </summary>
     public void NotifyOfUpdatedValues()
     {
-        EditorApplication.update -= NotifyOfUpdatedValues;
+        UnityEditor.EditorApplication.update -= NotifyOfUpdatedValues;
 
-        if (OnValuesUpdatedEvent != null)
+        if (OnValuesUpdated != null)
         {
             // Update the values 
-            OnValuesUpdatedEvent();
+            OnValuesUpdated();
         }
     }
 
