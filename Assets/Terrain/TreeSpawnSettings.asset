@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4642883d9fada7046b4da40fb59e82b0, type: 3}
   m_Name: TreeSpawnSettings
   m_EditorClassIdentifier: 
-  AutoUpdate: 1
-  treeData:
-    tree: {fileID: 196434, guid: 1833ba93709e80944b9f2627881f3f4c, type: 3}
-    amount: 15
-    offset: {x: 0, y: 0, z: 0}
-    treeScale: 15
+  autoUpdate: 1
+  treeDataSettings:
+    Amount: 200
+    Scale: 0
+    Seed: 0
+    Offset: {x: 0, y: 0}
   treeSpawnMultiplier: 1
   treeSpawnCurve:
     serializedVersion: 2

@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.AI;
+
 
 
 public class TerrainChunk
@@ -29,6 +31,11 @@ public class TerrainChunk
 	MeshSettings meshSettings;
 	TreeSettings treeSettings;
 	Transform viewer;
+	NavMeshSurface navigationMeshSurface;
+
+
+
+
 
 	public TerrainChunk(Vector2 coord, HeightMapSettings heightMapSettings, MeshSettings meshSettings, TreeSettings treeSettings, LevelOfDetail[] detailLevels, int colliderLODIndex, Transform parent, Transform viewer, Material material)
 	{
@@ -42,8 +49,7 @@ public class TerrainChunk
 
 		Debug.Log("Mesh Scale: " + meshSettings.meshScale);
 		Debug.Log("Mesh World Size: " + meshSettings.meshWorldSize);
-
-
+		Debug.Log("Number Of Vertices Per Line: " + meshSettings.numberOfVerticesPerLine);
 
 
 		sampleCentre = coord * meshSettings.meshWorldSize / meshSettings.meshScale;
@@ -51,12 +57,13 @@ public class TerrainChunk
 		bounds = new Bounds(position, Vector2.one * meshSettings.meshWorldSize);
 
 		Debug.Log("Sample Center: " + sampleCentre);
-
+		Debug.Log("Bounds Extents: " + bounds.extents);
 
 		meshObject = new GameObject("Terrain Chunk");
 		meshRenderer = meshObject.AddComponent<MeshRenderer>();
 		meshFilter = meshObject.AddComponent<MeshFilter>();
 		meshCollider = meshObject.AddComponent<MeshCollider>();
+
 		meshRenderer.material = material;
 
 		meshObject.transform.position = new Vector3(position.x, 0, position.y);
@@ -110,6 +117,9 @@ public class TerrainChunk
 		{
 			float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
 
+		
+			Debug.Log(detailLevels);
+
 			bool wasVisible = IsVisible();
 			bool visible = viewerDstFromNearestEdge <= maxViewDst;
 
@@ -132,10 +142,13 @@ public class TerrainChunk
 				if (lodIndex != previousLODIndex)
 				{
 					LODMesh lodMesh = lodMeshes[lodIndex];
+
+
 					if (lodMesh.hasMesh)
 					{
 						previousLODIndex = lodIndex;
 						meshFilter.mesh = lodMesh.mesh;
+
 					}
 					else if (!lodMesh.hasRequestedMesh)
 					{

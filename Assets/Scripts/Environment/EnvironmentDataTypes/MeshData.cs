@@ -70,6 +70,7 @@ public class MeshData
 	{
 		if (a < 0 || b < 0 || c < 0)
 		{
+			// Belongs to the border triangles 
 			outsideMeshTriangles[outsideMeshTriangleIndex] = a;
 			outsideMeshTriangles[outsideMeshTriangleIndex + 1] = b;
 			outsideMeshTriangles[outsideMeshTriangleIndex + 2] = c;
@@ -77,6 +78,7 @@ public class MeshData
 		}
 		else
 		{
+			// belongs to the inside triangles 
 			triangles[currentTriangleIndex] = a;
 			triangles[currentTriangleIndex + 1] = b;
 			triangles[currentTriangleIndex + 2] = c;
@@ -107,6 +109,8 @@ public class MeshData
 		}
 
 		int borderTriangleCount = outsideMeshTriangles.Length / 3;
+
+
 		for (int i = 0; i < borderTriangleCount; i++)
 		{
 			int normalTriangleIndex = i * 3;
@@ -115,6 +119,8 @@ public class MeshData
 			int vertexIndexC = outsideMeshTriangles[normalTriangleIndex + 2];
 
 			Vector3 triangleNormal = SurfaceNormalFromIndices(vertexIndexA, vertexIndexB, vertexIndexC);
+			
+			
 			if (vertexIndexA >= 0)
 			{
 				vertexNormals[vertexIndexA] += triangleNormal;

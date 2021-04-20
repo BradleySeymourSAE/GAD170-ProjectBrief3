@@ -27,18 +27,22 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 
 	public Transform m_CurrentPlayer;
 	public Material mapMaterial;
-	private NavMeshSurface m_navigationMeshSurface;
 
 	[Header("Tree Spawning")]
 	public int maximumTreeSpawnCount = 125;
 	public float maximumSpawnTreeXPosition = 500;
-	public float maximumSpawnTreeYPosition = 500;
-	public float treeSpawnWaitTimer = 0.05f;
+	public float maximumSpawnTreeZPosition = 500;
+	public float treeSpawnWaitTimer = 0.01f;
+
+	public GameObject TreePrefab;
+
+	private Transform m_CameraReference;
+
 
 	private List<GameObject> spawnedTrees = new List<GameObject>();
 	
 	float spawnTreeXPosition;
-	float spawnTreeYPosition;
+	float spawnTreeZPosition;
 	float m_maximumViewDistance;
 	float m_meshWorldSize;
 
@@ -51,7 +55,14 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 	List<TerrainChunk> currentlyVisibleTerrains = new List<TerrainChunk>();
 
 
+	private void Awake()
+	{
+		if (GameObject.Find("Main Camera").GetComponent<Camera>())
+		{
+			m_CameraReference = GameObject.Find("Main Camera").transform;
 
+		}
+	}
 
 
 	private void Start()
@@ -67,21 +78,13 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 		
 		m_maximumViewDistance = DetailLevels[DetailLevels.Length - 1].visibleDistanceThreshold;
 		
-		// Set the mesh world size 
+		// Set the reference mesh world size 
 		m_meshWorldSize = meshSettings.meshWorldSize;
 
 		VisibleTerrainInViewDistance = Mathf.RoundToInt(m_maximumViewDistance / m_meshWorldSize);
 
 		// Generate the trees along the mesh 
 		StartCoroutine(SpawnTreesOnMesh(maximumTreeSpawnCount));
-
-		// Builds navigation Mesh 
-		
-		if (GetComponent<NavMeshSurface>())
-		{
-			m_navigationMeshSurface = GetComponent<NavMeshSurface>();
-			Debug.Log("Navigation Mesh Surface Found!");
-		}
 
 
 		Initialize();
@@ -91,6 +94,7 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 	private void Update()
 	{
 		viewerPosition = new Vector2 (m_CurrentPlayer.position.x, m_CurrentPlayer.position.z);
+
 
 		if (viewerPosition != viewerPositionOld)
 		{
@@ -166,23 +170,39 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 	/// <returns></returns>
 	IEnumerator SpawnTreesOnMesh(int SpawnTreeAmount)
 	{
+
+		float baseY = 0;
 		
 		for (int i = 0; i < SpawnTreeAmount; i++)
 		{
 			yield return new WaitForSeconds(treeSpawnWaitTimer);
 
 			spawnTreeXPosition = Random.Range(-maximumSpawnTreeXPosition, maximumSpawnTreeXPosition);
-			spawnTreeYPosition = Random.Range(-maximumSpawnTreeYPosition, maximumSpawnTreeYPosition);
-
-			Vector3 treeSpawnPosition = new Vector3(spawnTreeXPosition, 0, spawnTreeYPosition);
-
-			GameObject spawnedTree = Instantiate(treeSettings.treeData.tree, treeSpawnPosition, treeSettings.treeData.tree.transform.rotation);
-
-
-
-			Instantiate(treeSettings.treeData.tree, treeSpawnPosition, Quaternion.identity);
+			spawnTreeZPosition = Random.Range(-maximumSpawnTreeZPosition, maximumSpawnTreeZPosition);
 			
-			spawnedTrees.Add(spawnedTree);
+			float spawnTreeY = Random.Range(-baseY, baseY);
+
+			// GameObject spawnedTree = Instantiate(treeSettings.treeDataSettings., treeSpawnPosition, treeSettings.treeDataSettings.tree.transform.rotation);
+
+			Vector3 newSpawnPosition = new Vector3(spawnTreeXPosition, baseY, spawnTreeZPosition);
+
+			m_CameraReference.transform.position = new Vector3(newSpawnPosition.x, m_CameraReference.transform.position.y, newSpawnPosition.z);
+
+			RaycastHit hit;
+
+			if (Physics.Raycast(m_CameraReference.position, -Vector3.up, out hit))
+			{
+				Debug.Log("[EnvironmentTerrainGenerator.SpawnTreesOnMesh]: " +  "Spawn Offset Y Raycast Hit: " + hit.point.y);
+			
+				Debug.DrawLine(m_CameraReference.position, hit.point, Color.red);
+
+				// Set the new spawn position y to where the raycast hit an object. 
+				newSpawnPosition.y += hit.point.y;
+			}
+			
+			GameObject spawned = Instantiate(TreePrefab, newSpawnPosition, TreePrefab.transform.rotation);
+
+			spawnedTrees.Add(spawned);
 		}
 	}
 

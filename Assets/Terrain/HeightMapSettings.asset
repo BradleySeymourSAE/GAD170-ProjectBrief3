@@ -12,64 +12,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e45585affec5df4394ed0ed1dd25d6f, type: 3}
   m_Name: HeightMapSettings
   m_EditorClassIdentifier: 
-  autoUpdate: 0
+  autoUpdate: 1
   noiseSettings:
     normalizeMode: 1
-    scale: 100
+    scale: 60
     octaves: 12
-    persistance: 0.516
-    lacunarity: 2
+    persistance: 0.6
+    lacunarity: 1.65
     seed: 0
     offset: {x: 0, y: 0}
   useFalloff: 0
-  heightMultiplier: 150
+  heightMultiplier: 300
   heightCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.037573315
-      value: 0.022795577
-      inSlope: 0.22823703
-      outSlope: 0.22823703
-      tangentMode: 34
+      time: 0.018165354
+      value: 0.016677087
+      inSlope: 0.015509549
+      outSlope: 0.015509549
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.33333334
+      outWeight: 1
     - serializedVersion: 3
-      time: 0.21083993
-      value: 0.062341437
-      inSlope: 0.61704654
-      outSlope: 0.61704654
+      time: 0.3992864
+      value: 0.1195625
+      inSlope: 1.0412755
+      outSlope: 1.0412755
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.107713886
+      inWeight: 0.29365435
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.53441
-      value: 0.2664204
-      inSlope: 0.35446802
-      outSlope: 0.35446802
+      time: 0.6147534
+      value: 0.30797052
+      inSlope: 0.76167
+      outSlope: 0.76167
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.9094571
+      inWeight: 0.40669626
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.86297816
-      value: 0.6513125
-      inSlope: 0.8125365
-      outSlope: 0.8125365
+      time: 0.8437097
+      value: 0.36191034
+      inSlope: 0.5728368
+      outSlope: 0.5728368
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.15374693
+      inWeight: 0.9665242
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.9478663
-      value: 0.9013596
-      inSlope: 4.7212324
-      outSlope: 4.7212324
+      time: 0.95528454
+      value: 0.9275373
+      inSlope: 3.1586268
+      outSlope: 3.1586268
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.04317971
+      inWeight: 0.24481434
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0696255
+      value: 1.2204667
+      inSlope: 0.96745163
+      outSlope: 0.96745163
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.7155481
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

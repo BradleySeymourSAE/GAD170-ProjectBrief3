@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[CreateAssetMenu(fileName = "New Tree Settings")]
+[CreateAssetMenu()]
 public class TreeSettings : UpdatableData
 {
-	public TreeData treeData; // class for holding tree data settings 
+	public TerrainTreeDataSettings treeDataSettings; // class for holding tree data settings 
 
 	public float treeSpawnMultiplier; // multiplier for spawning trees 
 	public AnimationCurve treeSpawnCurve; // height curve to show min max amount of trees to spawn 
@@ -13,7 +13,7 @@ public class TreeSettings : UpdatableData
 	/// <summary>
 	///  Minimum Tree Spawn Curve Value 
 	/// </summary>
-	public float minimumTreeSpawnCurve
+	public float MinimumTreeSpawnHeight
 	{
 		get
 		{
@@ -24,11 +24,24 @@ public class TreeSettings : UpdatableData
 	/// <summary>
 	///		Maximum Tree Spawn Curve Value 
 	/// </summary>
-	public float maximumTreeSpawnCurve
+	public float MaximumTreeSpawnHeight
 	{
 		get
 		{
 			return treeSpawnMultiplier * treeSpawnCurve.Evaluate(1);
 		}
 	}
+
+
+
+#if UNITY_EDITOR
+
+	protected override void OnValidate()
+	{
+		treeDataSettings.ValidateValues();
+		base.OnValidate();
+	}
+
+
+#endif
 }
