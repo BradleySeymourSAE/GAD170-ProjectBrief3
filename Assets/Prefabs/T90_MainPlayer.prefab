@@ -15861,7 +15861,6 @@ MonoBehaviour:
     maximumReloadingTime: 1.5
     bulletSpeed: 850
     fov: 80
-    switchViewTime: 1.5
     aimDownSightFieldOfView: 50
     currentAmmunition: 0
     currentBulletVelocity: 0
@@ -15869,7 +15868,7 @@ MonoBehaviour:
     isWeaponReloading: 0
     weaponHasBeenFired: 0
     weaponOutOfAmmo: 0
-    hasAimedDownWeaponSight: 0
+    aimingDownWeaponSight: 0
     m_WeaponAllowedToFire: 0
   Health:
     MinimumHealth: 0
@@ -15882,8 +15881,10 @@ MonoBehaviour:
     Left: 97
     Right: 100
     MouseFire: 323
-    MouseAim: 324
+    LockCursor: 27
   enablePlayerControl: 1
+  m_FlashTimer: 0.1
+  maximumFlashCount: 10
 --- !u!1 &8114460831339410276
 GameObject:
   m_ObjectHideFlags: 0

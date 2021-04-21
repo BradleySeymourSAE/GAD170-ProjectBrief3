@@ -126,9 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4457375ac7a200749a666f0c807e812f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CollectableItem: {fileID: 11400000, guid: 0bf8c1ad6cead634d9557fd1683471f6, type: 2}
-  minimumHealthPoints: 25
-  minimumAmmunitionRounds: 10
+  GameItem: {fileID: 11400000, guid: 0bf8c1ad6cead634d9557fd1683471f6, type: 2}
+  maximumHealthPoints: 25
+  maximumAmmunitionRounds: 10
 --- !u!65 &1436435221243773151
 BoxCollider:
   m_ObjectHideFlags: 0

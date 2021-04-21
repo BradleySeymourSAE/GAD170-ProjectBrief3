@@ -29,7 +29,7 @@ public class FireModeUI : MonoBehaviour
 	/// <summary>
 	///		Post Wave User Interface Data Class 
 	/// </summary>
-	public PostWaveUI postWaveUI; 
+	public NextWaveUI nextWaveUI; 
 
 	/// <summary>
 	///		On Screen Heads Up Display UI
@@ -82,6 +82,10 @@ public class FireModeUI : MonoBehaviour
 
 		//	Updating Wave, Player & HUD Events 
 		FireModeEvents.SpawnPlayerEvent += DisplayOnScreenUI;
+
+		FireModeEvents.IncreasePlayerScoreEventUI += SetPlayerScoreUI; // not working 
+		FireModeEvents.IncreaseAmmunitionEventUI += SetPlayerAmmunitionUI; // Working 
+		FireModeEvents.IncreaseWaveEventUI += SetNextWave; // On and off 
 	}
 
 	/// <summary>
@@ -93,8 +97,11 @@ public class FireModeUI : MonoBehaviour
 		FireModeEvents.PreGameStartedEvent -= DisplayPreWaveUI;
 		FireModeEvents.GameStartedEvent -= DisplayInGameUI;
 		FireModeEvents.HandleNextWaveStarted -= DisplayNextWaveUI;
-
 		FireModeEvents.SpawnPlayerEvent -= DisplayOnScreenUI;
+
+		FireModeEvents.IncreasePlayerScoreEventUI -= SetPlayerScoreUI; // not working 
+		FireModeEvents.IncreaseAmmunitionEventUI -= SetPlayerAmmunitionUI; // Working 
+		FireModeEvents.IncreaseWaveEventUI -= SetNextWave; // On and off 
 	}
 
 	/// <summary>
@@ -105,7 +112,7 @@ public class FireModeUI : MonoBehaviour
 		Debug.Log("[FireModeUI.Start]: " + "Setting up UI using Fire Mode UI Reference");
 		preGameWaveUI.Setup(this);
 		inGameWaveUI.Setup(this);
-		postWaveUI.Setup(this);
+		nextWaveUI.Setup(this);
 		onScreenUI.Setup(this);
 
 		if (FindObjectOfType<FireModeGameManager>())
@@ -122,20 +129,17 @@ public class FireModeUI : MonoBehaviour
 			// Fade the volume down to a lower level as overall it's quite loud upon start 
 			// Grab the audio sound by its string name "Background Audio", set the volume to 0.1 over the duration of 
 			// one and a half seconds 
-			AudioSource s = AudioManager.Instance.GetAudioSource(GameAudio.BackgroundThemeTrack);
+			AudioSource s_Source = AudioManager.Instance.GetAudioSource(GameAudio.BackgroundThemeTrack);
 
-			if (s.isPlaying == true)
+			if (s_Source.isPlaying == true)
 			{
-				StartCoroutine(StartFade(s, 4f, 0.15f));
+				StartCoroutine(StartFade(s_Source, 4f, 0.15f));
 				
 			}
 			else
 			{
-				Debug.LogWarning("Could not find a background theme track audio source!");
-			}
-
-			
-			
+				Debug.LogWarning("[FireModeUI.Start]: " + "Could not find a background theme track audio source that's currently playing!");
+			}			
 		}
 		else
 		{
@@ -153,7 +157,7 @@ public class FireModeUI : MonoBehaviour
 		{
 			m_PreWaveCountdownTimer -= 1 * Time.deltaTime;
 
-			preGameWaveUI.SetPreGameWaveUI(m_PreWaveCountdownTimer);
+			preGameWaveUI.SetPreGameTimer(m_PreWaveCountdownTimer);
 		}
 
 
@@ -161,24 +165,23 @@ public class FireModeUI : MonoBehaviour
 		{
 			m_NextWaveCountdownTimer -= 1 * Time.deltaTime;
 
-			postWaveUI.nextRoundStarting.GetComponentInChildren<TMP_Text>().text = m_NextWaveCountdownTimer.ToString("0");
+			nextWaveUI.SetNextWaveTimer(m_NextWaveCountdownTimer);
 		}
-
 	}
 
 	#endregion
 
 	#region Public Methods
 
-	public IEnumerator StartFade(AudioSource source, float durationTime, float target)
+	public IEnumerator StartFade(AudioSource source, float duration, float targetVolume)
 	{
 		float s_CurrentTime = 0;
 		float start = source.volume;
 
-		while (s_CurrentTime < durationTime)
+		while (s_CurrentTime < duration)
 		{
 			s_CurrentTime += Time.deltaTime;
-			source.volume = Mathf.Lerp(start, target, s_CurrentTime / durationTime);
+			source.volume = Mathf.Lerp(start, targetVolume, s_CurrentTime / duration);
 
 			yield return null;
 		}
@@ -186,6 +189,25 @@ public class FireModeUI : MonoBehaviour
 		yield break;
 	}
 
+	/// <summary>
+	///		Sets the next wave index 
+	/// </summary>
+	/// <param name="NextWaveIndex"></param>
+	private void SetNextWave(int NextWaveIndex) => nextWaveUI.SetNextWave(NextWaveIndex);
+
+
+	private void SetPlayerAmmunitionUI(int Rounds) => onScreenUI.Ammunition.SetAmmunition(Rounds);
+
+	/// <summary>
+	///		Sets the current players score 
+	/// </summary>
+	/// <param name="Score"></param>
+	private void SetPlayerScoreUI(int Score)
+	{
+		Debug.Log("[FireModeUI.SetPlayerScoreUI]: " + "DEBUG: SETTING PLAYERS SCORE: " + Score);
+	}
+
+	
 	#endregion
 
 	#region Private Methods 
@@ -213,7 +235,7 @@ public class FireModeUI : MonoBehaviour
 		//	 Start the pre wave countdown 	
 		shouldStartPreWaveCountdown = true;
 
-		Debug.Log("[FireModeUI.ShowPreWaveUI]: " + "DISPLAY PRE WAVE UI FOR " + m_GameManager.preWaveSetupTimer + " seconds");
+		Debug.Log("[FireModeUI.ShowPreWaveCountdownTimer]: " + "DISPLAY PRE WAVE UI FOR " + m_GameManager.preWaveSetupTimer + " seconds");
 		// Display the pre game wave ui 
 		preGameWaveUI.ShowScreen(true);
 
@@ -254,13 +276,13 @@ public class FireModeUI : MonoBehaviour
 		Debug.Log("[FireModeUI.ShowNextWaveUI]: " + "DISPLAYING NEXT WAVE UI FOR " + m_GameManager.nextWaveStartTimer + " seconds");
 
 		//	 Show the next wave UI 
-		postWaveUI.ShowScreen(true);
+		nextWaveUI.ShowScreen(true);
 
 		// Wait X next wave countdown seconds 
 		yield return new WaitForSeconds(m_GameManager.nextWaveStartTimer);
 
 		// Stop displaying the next wave UI 
-		postWaveUI.ShowScreen(false);
+		nextWaveUI.ShowScreen(false);
 
 		// Stop counting down 
 		shouldStartNextWaveCountdown = false;
@@ -277,7 +299,7 @@ public class FireModeUI : MonoBehaviour
 	private void DisplayInGameUI()
 	{
 		Debug.Log("[FireModeUI.DisplayInGameUI]: " + "Displaying in game UI!");
-		inGameWaveUI.Show(true);
+		inGameWaveUI.ShowScreen(true);
 	}
 
 	/// <summary>

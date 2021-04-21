@@ -6,16 +6,19 @@ using UnityEngine.AI;
 #endregion
 
 
-
-
 /// <summary>
 ///     AI Tank Class 
 /// </summary>
 public class AI : MonoBehaviour
 {
-
+	/// <summary>
+	///		Reference to the AI Navigation Mesh Agent 
+	/// </summary>
 	private NavMeshAgent m_Agent;
 
+	/// <summary>
+	///		Reference to the MainPlayerTank Transform 
+	/// </summary>
 	private Transform m_MainPlayerReference;
 
 	/// <summary>
@@ -28,15 +31,36 @@ public class AI : MonoBehaviour
 	/// </summary>
 	public AIWeapon Weapons;
 
+	/// <summary>
+	///		Handles the AI Health   
+	/// </summary>
 	public AIHealth Health;
 
+	/// <summary>
+	///		The explosion prefab for when an AI character is defeated 
+	/// </summary>
 	public GameObject explosionPrefab;
 
+	/// <summary>
+	///		What is the ground Layer? 
+	///		What is the Player Layer? 
+	/// </summary>
 	public LayerMask GroundLayer, PlayerLayer;
 
+	/// <summary>
+	///		The range that the AI will begin attacking the player 
+	/// </summary>
 	public float attackRange;
+
+	/// <summary>
+	///		Is the player currently in attack range? 
+	/// </summary>
 	public bool playerInAttackRange;
 
+
+	/// <summary>
+	///		Is the AI currently able to move / enabled? 
+	/// </summary>
 	private bool enableAI;
 
 
@@ -62,50 +86,27 @@ public class AI : MonoBehaviour
 	private void Awake()
 	{
 		m_MainPlayerReference = FindObjectOfType<MainPlayerTank>().transform;
-		m_Agent = GetComponent<NavMeshAgent>();
-
-		m_Agent.updatePosition = true;
-		m_Agent.updateRotation = false;
-		m_Agent.updateUpAxis = false;
+		
+		if (GetComponent<NavMeshAgent>())
+		{
+			m_Agent = GetComponent<NavMeshAgent>();
+			m_Agent.updatePosition = true;
+			m_Agent.updateRotation = false;
+			m_Agent.updateUpAxis = false;
+		}
+		else
+		{
+			Debug.LogWarning("[AI.Awake]: " + "Could not find Navigation Mesh Agent on AI!");
+		}
 	}
 
 	private void Start()
 	{
-		Movement.Setup(this, m_Agent);
-		Weapons.Setup(this);
-		Health.Setup(this);
+		Movement.Setup(transform, m_Agent);
+		Weapons.Setup(transform);
+		Health.Setup(transform);
 
-
-		if (enableAI)
-		{
-			Initialize();
-		}
-	}
-
-
-	/// <summary>
-	///		Enables the AI character to move around 
-	/// </summary>
-	/// <param name="Enable"></param>
-	private void EnableAI(bool Enable)
-	{
-		enableAI = Enable;
-	}
-
-	/// <summary>
-	///		Sets up the ai class references 
-	/// </summary>
-	private void Initialize()
-	{
-		
-		//Movement.Setup(this, m_Agent);
-	//	Weapons.Setup(this);
-		//Health.Setup(this);
-
-		Movement.EnableAIMovement(true);
-		Weapons.EnableWeaponFiring(true);
-				
-		EnableAI(true);
+		Initialize();
 	}
 
 	private void Update()
@@ -132,20 +133,33 @@ public class AI : MonoBehaviour
 
 	#endregion
 
+
+
 	#region Private Methods 
+
+	/// <summary>
+	///		Sets up the ai class references 
+	/// </summary>
+	private void Initialize()
+	{
+		Movement.EnableAIMovement(true);
+		Weapons.EnableWeaponFiring(true);
+
+		enableAI = true;
+	}
 
 	private void HandleDamage(Transform EnemyAI, float amount)
 	{
 		if (!EnemyAI.GetComponent<AI>())
 		{
-			Debug.LogError("Enemy AI not found!");
+			Debug.LogWarning("[AI.HandleDamage]: " + "AI could not be found!");
 			return;
 		}
 		else
 		{ 
-		Debug.Log("[AI.HandleDamage]: " + "AI has taken damage " + amount);
+			Debug.Log("[AI.HandleDamage]: " + "AI has taken damage " + amount);
 
-			EnemyAI.GetComponent<AI>().Health.SetHealth(amount);
+			Health.SetHealth(amount);
 		}
 	}
 	
@@ -154,16 +168,24 @@ public class AI : MonoBehaviour
 	{
 		if (DeadAI.transform != transform)
 		{
+			 // Debug.LogWarning("[AI.HandleDeath]: " + "Not the correct AI! " + DeadAI.name);
 			return;
 		}
 
 		GameObject deathClone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
 
-		Destroy(deathClone, 2); 
+		Destroy(deathClone, 2f); 
 
-		DeadAI.SetActive(false);
+		// EDIT: changed this from DeadAI.SetActive(false); 
+		//		 to gameObject.SetActive(false); 
+		// Checking to see if this causes errors for any reason.. curiosity? 
+
+		gameObject.SetActive(false);
+
+
+		// Call the Handle AI Destroyed Event. 
+		FireModeEvents.HandleAIDestroyedEvent?.Invoke(DeadAI);
 	}
-
 
 	#endregion
 
@@ -181,7 +203,7 @@ public class AI : MonoBehaviour
 
 		[SerializeField] private bool m_WeaponAllowedToFire;
 
-		private AI m_AIReference;
+		private Transform m_AIReference;
 
 		/// <summary>
 		///		Can our AI character fire its weapon? 
@@ -189,9 +211,9 @@ public class AI : MonoBehaviour
 		/// <param name="ShouldEnableWeaponFiring"></param>
 		public void EnableWeaponFiring(bool ShouldEnableWeaponFiring) => m_WeaponAllowedToFire = ShouldEnableWeaponFiring;
 		
-		public void Setup(AI AI)
+		public void Setup(Transform AIReference)
 		{
-			m_AIReference = AI;
+			m_AIReference = AIReference;
 			currentBulletVelocity = maximumBulletVelocity;
 
 			EnableWeaponFiring(false);
@@ -223,7 +245,7 @@ public class AI : MonoBehaviour
 
 		private Transform PlayerTarget;
 
-		private AI m_AI;
+		private Transform m_AIReference;
 
 		private NavMeshAgent m_Agent;
 
@@ -237,23 +259,23 @@ public class AI : MonoBehaviour
 
 		[SerializeField] private bool m_EnableAIMovement;
 
-		public void Setup(AI AI, NavMeshAgent Agent)
+		public void Setup(Transform AIReference, NavMeshAgent Agent)
 		{
-			m_AI = AI;
+			m_AIReference = AIReference;
 			m_Agent = Agent;
-			PlayerTarget = m_AI.m_MainPlayerReference;
+			PlayerTarget = m_AIReference.GetComponent<AI>().m_MainPlayerReference;
 
-			if (m_AI.GetComponent<Rigidbody>())
+			if (m_AIReference.GetComponent<Rigidbody>())
 			{
-				m_Rigidbody = m_AI.GetComponent<Rigidbody>();
+				m_Rigidbody = m_AIReference.GetComponent<Rigidbody>();
 			}
 			else
 			{
 				Debug.LogWarning("[AI.AIMovement.Setup]: " + "No rigidbody could be found for the current AI character!");
 			}
 
-			m_AudioEffects.Setup(m_AI);
-			m_Effects.Setup(m_AI);
+			m_AudioEffects.Setup(m_AIReference);
+			m_Effects.Setup(m_AIReference);
 			m_Effects.StartDustEffects(true);
 			EnableAIMovement(false);
 		}
@@ -273,7 +295,7 @@ public class AI : MonoBehaviour
 			m_Agent.SetDestination(PlayerTarget.position);
 
 			// Look at the player target 
-			m_AI.transform.LookAt(PlayerTarget);
+			m_AIReference.transform.LookAt(PlayerTarget);
 			
 			// Look at the player with the primary weapon 
 			PrimaryWeaponTransform.LookAt(PlayerTarget);
@@ -286,21 +308,21 @@ public class AI : MonoBehaviour
 		public void Attack()
 		{
 			// STOP the enemy AI in its position 
-			m_Agent.SetDestination(m_AI.transform.position);
+			m_Agent.SetDestination(m_AIReference.transform.position);
 
 			// Look at player, as well as rotate turret transform to look at the player 
-			m_AI.transform.LookAt(PlayerTarget);
+			m_AIReference.transform.LookAt(PlayerTarget);
 			PrimaryWeaponTransform.LookAt(PlayerTarget);
 
 			
 			if (!alreadyAttackedPlayer)
 			{
 
-				m_AI.Weapons.StartFiringWeapon();
+				m_AIReference.GetComponent<AI>().Weapons.StartFiringWeapon();
 
 
 				alreadyAttackedPlayer = true;
-				m_AI.StartCoroutine(ResetWeapon());
+				m_AIReference.GetComponent<AI>().StartCoroutine(ResetWeapon());
 			}
 		}
 
@@ -351,7 +373,7 @@ public class AI : MonoBehaviour
 		/// <summary>
 		///		Reference to the AI character 
 		/// </summary>
-		private AI m_AI;
+		private Transform m_AI;
 
 		#endregion
 
@@ -384,10 +406,9 @@ public class AI : MonoBehaviour
 				}
 
 
-
-				if (isCurrentlyDead == true)
+				if (isCurrentlyDead)
 				{
-					FireModeEvents.HandleAIDestroyedEvent?.Invoke(m_AI.gameObject);
+					Debug.Log("AI DEAD: " + isCurrentlyDead);	
 				}
 			}
 		}
@@ -409,9 +430,9 @@ public class AI : MonoBehaviour
 		///		Sets up the AI Characters Health 
 		/// </summary>
 		/// <param name="AI"></param>
-		public void Setup(AI AI)
+		public void Setup(Transform CurrentAI)
 		{
-			m_AI = AI;
+			m_AI = CurrentAI;
 
 			CurrentAIHealth = MaximumHealth;
 		}
@@ -430,11 +451,11 @@ public class AI : MonoBehaviour
 		private AudioClip EngineIdle;
 		private AudioClip EngineDriving;
 	
-		public void Setup(AI AI)
+		public void Setup(Transform AIReference)
 		{
-			if (AI.GetComponent<AudioSource>() != null)
+			if (AIReference.GetComponent<AudioSource>() != null)
 			{
-				Engine = AI.GetComponent<AudioSource>();
+				Engine = AIReference.GetComponent<AudioSource>();
 
 				Engine.loop = shouldLoop;
 				EngineIdle = AudioManager.Instance.GetAudioClip(GameAudio.T90_EngineIdle);
@@ -473,9 +494,9 @@ public class AI : MonoBehaviour
 		
 		private ParticleSystem[] DustEffects = new ParticleSystem[] { };
 
-		public void Setup(AI AI)
+		public void Setup(Transform AIReference)
 		{
-			DustEffects = AI.GetComponentsInChildren<ParticleSystem>();
+			DustEffects = AIReference.GetComponentsInChildren<ParticleSystem>();
 		}
 
 		public void StartDustEffects(bool EnableDustEffects)

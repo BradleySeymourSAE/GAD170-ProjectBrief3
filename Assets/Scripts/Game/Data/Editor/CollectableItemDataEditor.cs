@@ -9,7 +9,7 @@ using System.Reflection;
 /// <summary>
 ///		Custom editor object to show and hide fields based on enum value 
 /// </summary>
-[CustomEditor(typeof(CollectableItemData))]
+[CustomEditor(typeof(GameItemData))]
 [CanEditMultipleObjects]
 public class CollectableItemDataEditor : Editor
 {

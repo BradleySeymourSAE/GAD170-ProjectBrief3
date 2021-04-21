@@ -7,13 +7,13 @@ using UnityEngine;
 /// <summary>
 ///		Object to hold type of item the collectable is
 /// </summary>
-public enum SpecialItemPickup { Health, Ammunition };
+public enum GameItemType { Health, Ammunition };
 
-[CreateAssetMenu(menuName="Collectables/Items", fileName = "Add Item")]
+[CreateAssetMenu(menuName="Game Item Pickups", fileName = "Game Item")]
 /// <summary>
 ///		Collectable Item Object Data 
 /// </summary>
-public class CollectableItemData : ScriptableObject
+public class GameItemData : ScriptableObject
 {
 	/// <summary>
 	///		The amount of rotations the item will do per second 
@@ -38,7 +38,7 @@ public class CollectableItemData : ScriptableObject
 	/// <summary>
 	///		The type of item the collectable is 
 	/// </summary>
-	public SpecialItemPickup ItemType;
+	public GameItemType ItemType;
 
 	/// <summary>
 	///		 Starting position offset for the item 

@@ -148,7 +148,7 @@ public static class FireModeEvents
 	/// <summary>
 	///		Sets the players health ui 
 	/// </summary>
-	public static IntParameterDelegate IncreasePlayerHealthEventUI;
+	public static FloatParameterDelegate IncreasePlayerHealthEventUI;
 
 
 	/// <summary>

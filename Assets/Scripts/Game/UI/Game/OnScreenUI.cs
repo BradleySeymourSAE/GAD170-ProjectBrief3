@@ -22,13 +22,6 @@ public class OnScreenUI
 	public CrosshairUI Crosshair;
 
 	public HealthBarUI Health;
-	
-	// Add minimap UI references 
-
-
-	// Add Ammunition counter UI references 
-
-	// Link them up 
 
 	#endregion
 
@@ -163,25 +156,18 @@ public class AmmunitionUI
 		ammunitionText.GetComponentInChildren<TMP_Text>().text =  GameTextUI.OnScreen_Ammunition;
 	}
 
-
 	/// <summary>
 	///		Toggle whether to display the ammunition UI 
 	/// </summary>
 	/// <param name="ShouldDisplay"></param>
-	public void Show(bool ShouldDisplay)
-	{
-		ammunitionUI.SetActive(ShouldDisplay);
-	}
-
+	public void Show(bool ShouldDisplay) => ammunitionUI.SetActive(ShouldDisplay);
 
 	/// <summary>
 	///		Sets the Ammunition On Screen UI  
 	/// </summary>
 	/// <param name="Ammunition"></param>
-	public void SetAmmunition(int Ammunition)
-	{
-		ammunitionText.GetComponentInChildren<TMP_Text>().text = Ammunition.ToString();
-	}
+	public void SetAmmunition(int Ammunition) => ammunitionText.GetComponentInChildren<TMP_Text>().text = Ammunition.ToString("0");
+	
 	#endregion
 }
 
@@ -215,7 +201,7 @@ public class CrosshairUI
 	/// <summary>
 	///		Default Color for the reticle 
 	/// </summary>
-	private Color m_ReticleColor = Color.white;
+	[SerializeField] private Color m_ReticleColor = Color.white;
 
 	#endregion
 
@@ -263,11 +249,6 @@ public class HealthBarUI
 	///		The health bar slider 
 	/// </summary>
 	public Slider healthBarSlider;
-	
-	/// <summary>
-	///		The fill image component of the slider 
-	/// </summary>
-	private Image m_FillImage;
 
 	#endregion
 
@@ -290,6 +271,7 @@ public class HealthBarUI
 	{
 		m_FireModeUI = FireModeUI;
 
+		currentHealth.GetComponentInChildren<TMP_Text>().text = GameTextUI.OnScreen_Health;
 	}
 
 	
@@ -302,18 +284,6 @@ public class HealthBarUI
 		healthUI.SetActive(ShouldDisplay);
 	}
 
-
-	/// <summary>
-	///		Updates the Health Bar of the player 
-	/// </summary>
-	/// <param name="CurrentHealth"></param>
-	public void UpdateHealth(float HP)
-	{
-		healthBarSlider.value = HP;
-
-		Debug.Log("Updating Health UI: " + HP);
-		
-	}
 	#endregion
 
 }

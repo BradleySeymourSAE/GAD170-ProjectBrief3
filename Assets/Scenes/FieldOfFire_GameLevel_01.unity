@@ -157,6 +157,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &444488188 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732088180396992, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &546290471
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,6 +199,42 @@ Transform:
   m_Father: {fileID: 423761324}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &569370622 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732088080185484, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &648260165 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732086069129215, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &891810355 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732087368389405, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &936082014
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +265,18 @@ Transform:
   m_Father: {fileID: 423761324}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1078359660 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732086629579200, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1112385303
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,14 +327,17 @@ MonoBehaviour:
   startingAmmunitionPacks: 5
   triggerItemRespawnAmount: 2
   startingLives: 3
-  totalCollectableItemsRemaining: 0
-  totalEnemiesRemaining: 0
+  totalGameItemsRemaining: 0
+  totalAITanksRemaining: 0
   currentWaveIndex: 1
   m_AliveEnemies: []
-  spawnedCollectableItemsRemaining: []
+  spawnedGameItemsRemaining: []
   m_currentPlayerReference: {fileID: 0}
   totalPlayerScore: 0
   currentLives: 0
+  healthPackSpawnAmount: 0
+  ammunitionPackSpawnAmount: 0
+  tankAISpawnAmount: 0
 --- !u!1 &1153832657
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,6 +370,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1293387236 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732087031526451, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1321749085
 GameObject:
   m_ObjectHideFlags: 0
@@ -933,6 +1008,36 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1828439299 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732087972326620, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1999239599 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4580732086271844767, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &2100284000 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4580732088188662261, guid: 61824b3c5f81e074e9aa0190728084b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6481380495451329437}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6481380495451329437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -945,6 +1050,51 @@ PrefabInstance:
       propertyPath: m_Name
       value: --- Fire Mode UI Manager ---
       objectReference: {fileID: 0}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.waveText
+      value: 
+      objectReference: {fileID: 1293387236}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.waveLabel
+      value: 
+      objectReference: {fileID: 1999239599}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.nextWaveText
+      value: 
+      objectReference: {fileID: 1078359660}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.nextWaveLabel
+      value: 
+      objectReference: {fileID: 569370622}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.backgroundImage
+      value: 
+      objectReference: {fileID: 648260165}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.foregroundImage
+      value: 
+      objectReference: {fileID: 444488188}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.nextRoundStarting
+      value: 
+      objectReference: {fileID: 891810355}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.postWaveUIContainer
+      value: 
+      objectReference: {fileID: 2100284000}
+    - target: {fileID: 4580732087892089001, guid: 61824b3c5f81e074e9aa0190728084b9,
+        type: 3}
+      propertyPath: nextWaveUI.nextRoundStartingLabel
+      value: 
+      objectReference: {fileID: 1828439299}
     - target: {fileID: 4580732087892089002, guid: 61824b3c5f81e074e9aa0190728084b9,
         type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag

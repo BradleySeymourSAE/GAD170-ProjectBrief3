@@ -12,7 +12,7 @@ public class BasicItemPickup : MonoBehaviour
 	/// <summary>
 	///		Public Object for holding collectable Item data 
 	/// </summary>
-	public CollectableItemData CollectableItem;
+	public GameItemData GameItem;
 
 	/// <summary>
 	///		The minimum amount of health points to add to the player 
@@ -41,7 +41,7 @@ public class BasicItemPickup : MonoBehaviour
 	/// </summary>
 	private void Start()
 	{
-		CollectableItem.startingPosition = transform.localPosition;
+		GameItem.startingPosition = transform.localPosition;
 	}
 
 	/// <summary>
@@ -49,7 +49,7 @@ public class BasicItemPickup : MonoBehaviour
 	/// </summary>
 	private void Update()
 	{
-		if (!CollectableItem.Enabled)
+		if (!GameItem.Enabled)
 		{
 			return;
 		}
@@ -65,7 +65,7 @@ public class BasicItemPickup : MonoBehaviour
 	///		Enables / Disables pickup of the item
 	/// </summary>
 	/// <param name="Allow"></param>
-	private void AllowItemPickup(bool Allow) => CollectableItem.Enabled = Allow;
+	private void AllowItemPickup(bool Allow) => GameItem.Enabled = Allow;
 
 	/// <summary>
 	///		Enables the item 
@@ -77,16 +77,16 @@ public class BasicItemPickup : MonoBehaviour
 	/// </summary>
 	private void SpinAndRotate()
 	{
-		Vector3 _rotate = new Vector3(0f, Time.deltaTime * CollectableItem.RotationsPerSecond, 0f);
+		Vector3 spinningRotation = new Vector3(0f, Time.deltaTime * GameItem.RotationsPerSecond, 0f);
 		// Spin object on the y axis 
-		transform.Rotate(_rotate, Space.World);
+		transform.Rotate(spinningRotation, Space.World);
 
 
 		// Float the object up and down using a sin curve 
-		CollectableItem.Offset = CollectableItem.startingPosition;
-		CollectableItem.Offset.y += Mathf.Sin(Time.fixedTime * Mathf.PI * CollectableItem.Frequency) * CollectableItem.Amplitude;
+		GameItem.Offset = GameItem.startingPosition;
+		GameItem.Offset.y += Mathf.Sin(Time.fixedTime * Mathf.PI * GameItem.Frequency) * GameItem.Amplitude;
 
-		transform.position = CollectableItem.Offset;
+		transform.position = GameItem.Offset;
 	}
 
 
@@ -104,19 +104,19 @@ public class BasicItemPickup : MonoBehaviour
 			return;
 		}
 
-		if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<MainPlayerTank>())
+		if (col.gameObject.tag == "Player" || col.gameObject.GetComponent<MainPlayerTank>())
 		{
-			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with a player - Item Type: " + CollectableItem.ItemType);
+			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with a player - Item Type: " + GameItem.ItemType);
 			
 			//	Find the players transform component 
 			Transform s_PlayerFound = col.transform;
 
 
-			switch (CollectableItem.ItemType)
+			switch (GameItem.ItemType)
 			{
-				case SpecialItemPickup.Health:
+				case GameItemType.Health:
 					{ 
-						float randomHealthAmount = Random.Range(CollectableItem.HP, maximumHealthPoints);
+						float randomHealthAmount = Random.Range(GameItem.HP, maximumHealthPoints);
 						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Player Current Health: " + s_PlayerFound.GetComponent<MainPlayerTank>().Health.PlayersCurrentHealth + "! Increasing players health by " + randomHealthAmount);
 						
 						
@@ -131,10 +131,10 @@ public class BasicItemPickup : MonoBehaviour
 						FireModeEvents.IncreasePlayerHealthEvent?.Invoke(s_PlayerFound, randomHealthAmount);
 					}
 					break;
-				case SpecialItemPickup.Ammunition:
+				case GameItemType.Ammunition:
 					{ 
-						int increaseAmmoAmount = Random.Range(CollectableItem.Rounds, maximumAmmunitionRounds);
-						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Current Ammunition: " + s_PlayerFound.GetComponentInChildren<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + "! Increasing by " + increaseAmmoAmount);
+						int randomAmmunitionAmount = Random.Range(GameItem.Rounds, maximumAmmunitionRounds);
+						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Current Ammunition: " + s_PlayerFound.GetComponentInChildren<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + "! Increasing by " + randomAmmunitionAmount);
 
 						if (AudioManager.Instance)
 						{
@@ -143,7 +143,7 @@ public class BasicItemPickup : MonoBehaviour
 						}
 
 						// Invoke an event to increase the players ammunition 
-						FireModeEvents.IncreasePlayerAmmunitionEvent?.Invoke(s_PlayerFound, increaseAmmoAmount);
+						FireModeEvents.IncreasePlayerAmmunitionEvent?.Invoke(s_PlayerFound, randomAmmunitionAmount);
 					}
 					break;
 			}

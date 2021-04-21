@@ -50,21 +50,9 @@ public class InGameWaveUI
 	///		Toggles whether the In Game Wave UI should be display 
 	/// </summary>
 	/// <param name="ShouldDisplay"></param>
-	public void Show(bool ShouldDisplay)
+	public void ShowScreen(bool ShouldDisplay)
 	{
 		inGameWaveUI.SetActive(ShouldDisplay);
-	}
-
-	/// <summary>
-	///		Sets In Game Wave UI fields 
-	/// </summary>
-	/// <param name="nextWave"></param>
-	/// <param name="EnemiesRemaining"></param>
-	/// <param name="WaveEnemiesKilled"></param>
-	public void SetWave(int nextWave, int EnemiesRemaining, int WaveEnemiesKilled)
-	{
-		waveCounterUI.currentWave.GetComponentInChildren<TMP_Text>().text = nextWave.ToString();
-		waveCounterUI.enemiesRemaining.GetComponentInChildren<TMP_Text>().text = EnemiesRemaining.ToString();
 	}
 
 	#endregion
@@ -85,10 +73,6 @@ public class WaveCounterUI
 	/// </summary>
 	public GameObject waveCounterUI;
 
-	/// <summary>
-	///		The background image of the wave counter 
-	/// </summary>
-	public Image BackgroundImage;
 
 	/// <summary>
 	///		The current wave ui text label
@@ -117,10 +101,6 @@ public class WaveCounterUI
 	///		The Fire Mode UI Instance Reference 
 	/// </summary>
 	private FireModeUI m_FireModeUI;
-	/// <summary>
-	///		The current wave counter ui background color 
-	/// </summary>
-	[SerializeField] private Color m_CurrentBackgroundColor;
 
 	#endregion
 
@@ -128,8 +108,6 @@ public class WaveCounterUI
 	public void Setup(FireModeUI FireModeUI)
 	{
 		m_FireModeUI = FireModeUI;
-
-		m_CurrentBackgroundColor = BackgroundImage.color;
 
 		currentWaveLabel.GetComponentInChildren<TMP_Text>().text = GameTextUI.WaveCounterUI_CurrentWaveLabel;
 		enemiesRemainingLabel.GetComponentInChildren<TMP_Text>().text = GameTextUI.WaveCounterUI_EnemiesRemainingLabel;
@@ -148,5 +126,18 @@ public class WaveCounterUI
 		waveCounterUI.SetActive(ShouldDisplay);
 	}
 
+
+
+	/// <summary>
+	///		Sets the current enemies remaining 
+	/// </summary>
+	/// <param name="Remaining"></param>
+	public void SetEnemiesRemaining(int Remaining) => enemiesRemaining.GetComponentInChildren<TMP_Text>().text = Remaining.ToString("0");
+
+	/// <summary>
+	///		Sets the current wave index in game 
+	/// </summary>
+	/// <param name="CurrentWaveIndex"></param>
+	public void SetCurrentWaveInGame(int CurrentWaveIndex) => currentWave.GetComponentInChildren<TMP_Text>().text = CurrentWaveIndex.ToString("0");
 	#endregion
 }

@@ -111,7 +111,7 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// <summary>
 	///		List of spawned collectable items 
 	/// </summary>
-	private List<GameObject> m_SpawnedCollectableItems = new List<GameObject>();
+	private List<GameObject> m_SpawnedGameItems = new List<GameObject>();
 	
 	/// <summary>
 	///		Reference to the current player instance 
@@ -128,7 +128,7 @@ public class FireModeSpawnManager : MonoBehaviour
 	private void OnEnable()
 	{
 		FireModeEvents.SpawnPlayerEvent += SpawnPlayer; // spawns the player into the game 
-		FireModeEvents.SpawnAIEvent += SpawnEnemyWave; // spawns in the enemies 
+		FireModeEvents.SpawnAIEvent += SpawnWave; // spawns in the enemies 
 		FireModeEvents.SpawnGameItemsEvent += SpawnGameItems; // spawns in the collectable items
 	
 		FireModeEvents.HardResetFireMode += HandleOnReset; // on game restart 
@@ -141,7 +141,7 @@ public class FireModeSpawnManager : MonoBehaviour
 	private void OnDisable()
 	{
 		FireModeEvents.SpawnPlayerEvent -= SpawnPlayer; // spawns player in the game 
-		FireModeEvents.SpawnAIEvent -= SpawnEnemyWave; // removes enemy listener  
+		FireModeEvents.SpawnAIEvent -= SpawnWave; // removes enemy listener  
 		FireModeEvents.SpawnGameItemsEvent -= SpawnGameItems; // removes event listener 
 		
 		FireModeEvents.HardResetFireMode -= HandleOnReset; // restarts the game 
@@ -164,25 +164,32 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// </summary>
 	private void SpawnPlayer()
 	{
-		GameObject SpawnedPlayer = Instantiate(PlayerPrefab, m_PlayerSpawnPoint, PlayerPrefab.transform.rotation);
+		GameObject spawnedPlayer = Instantiate(PlayerPrefab, m_PlayerSpawnPoint, PlayerPrefab.transform.rotation);
 
-		if (SpawnedPlayer.GetComponent<MainPlayerTank>())
+		if (spawnedPlayer.GetComponent<MainPlayerTank>())
 		{
 			Debug.Log("Spawning in the player!");
-			m_PlayerReference = SpawnedPlayer.transform;
+			m_PlayerReference = spawnedPlayer.transform;
 		
 			// Check for audio listener 
 			if (!m_PlayerReference.GetComponent<AudioListener>())
 			{
 				// Add one if it doesnt exist.
-				Debug.Log("[FireModeSpawnManager.SpawnPlayer]: " + "Player does not have an audio listener - Adding one to the player!");
-				SpawnedPlayer.AddComponent<AudioListener>();
+				Debug.LogWarning("[FireModeSpawnManager.SpawnPlayer]: " + "Player does not have an audio listener - Adding one to the player!");
+				spawnedPlayer.AddComponent<AudioListener>();
 			}
-		
-		}
+			else
+			{
+				Debug.LogWarning("[FireModeSpawnManager.SpawnPlayer]: " + "Player already has an audio listener - Ignoring!");
+			}
 
-		// Invoke the spawning of the player ref 
-		FireModeEvents.HandleOnPlayerSpawnedEvent?.Invoke(m_PlayerReference);
+			// Invoke the spawning of the player reference 
+			FireModeEvents.HandleOnPlayerSpawnedEvent?.Invoke(m_PlayerReference);
+		}
+		else
+		{
+			Debug.LogError("[FireModeSpawnManager.SpawnPlayer]: " + "Player does not have the MainPlayerTank script attached! Please attach the script and try again!");
+		}
 	}
 
 	/// <summary>
@@ -200,30 +207,30 @@ public class FireModeSpawnManager : MonoBehaviour
 		}
 
 			// Loop through and destroy all the currently spawned in item pickups 
-		for (int i = 0; i < m_SpawnedCollectableItems.Count; i++)
+		for (int i = 0; i < m_SpawnedGameItems.Count; i++)
 		{
-				Destroy(m_SpawnedCollectableItems[i]);
+				Destroy(m_SpawnedGameItems[i]);
 		}
 
 		// Clear the spawned in enemy AI & item pickup lists. 
 		m_SpawnedAIEnemies.Clear();
-		m_SpawnedCollectableItems.Clear();
+		m_SpawnedGameItems.Clear();
 	}
 
 	/// <summary>
 	///		Spawns in an enemy wave
 	/// </summary>
 	/// <param name="InfantryAmount"></param>
-	/// <param name="AmountOfEnemies"></param>
-	private void SpawnEnemyWave(int AmountOfEnemies)
+	/// <param name="AISpawnAmount"></param>
+	private void SpawnWave(int AISpawnAmount)
 	{
-		Debug.Log("[FieldOfFireSpawnManager.SpawnEnemyWave]: " + "Spawning Enemy AI " + AmountOfEnemies);
+		Debug.Log("[FieldOfFireSpawnManager.SpawnEnemyWave]: " + "Spawning Enemy AI " + AISpawnAmount);
 		
 		// Repeat the process for the amount of tanks we want in the round 
-		for (int i = 0; i < AmountOfEnemies; i++)
+		for (int i = 0; i < AISpawnAmount; i++)
 		{
-			float xPosition = Mathf.Round(Random.Range(-minimumWaveSpawnRange, waveSpawnRange) * magnitude);
-			float zPosition = Mathf.Round(Random.Range(-minimumWaveSpawnRange, waveSpawnRange) * magnitude);
+			float xPosition = Mathf.Round(Random.Range(-waveSpawnRange, waveSpawnRange) * magnitude);
+			float zPosition = Mathf.Round(Random.Range(-waveSpawnRange, waveSpawnRange) * magnitude);
 
 			Vector3 tempSpawnPosition = new Vector3(m_WaveSpawnPoint.x + xPosition, 0f, m_WaveSpawnPoint.z + zPosition);
 
@@ -253,9 +260,9 @@ public class FireModeSpawnManager : MonoBehaviour
 			
 			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + xPosition, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + zPosition);
 
-			GameObject _health = Instantiate(HealthPackPrefab, newSpawnPoint, HealthPackPrefab.transform.rotation);
+			GameObject s_Health = Instantiate(HealthPackPrefab, newSpawnPoint, HealthPackPrefab.transform.rotation);
 			
-			m_SpawnedCollectableItems.Add(_health);
+			m_SpawnedGameItems.Add(s_Health);
 		}
 
 		// Create ammunition packs and set their spawn points randomly.
@@ -266,14 +273,14 @@ public class FireModeSpawnManager : MonoBehaviour
 
 			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + x, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + z);
 
-			GameObject _ammo = Instantiate(AmmunitionPackPrefab, newSpawnPoint, AmmunitionPackPrefab.transform.rotation);
+			GameObject s_Ammunition = Instantiate(AmmunitionPackPrefab, newSpawnPoint, AmmunitionPackPrefab.transform.rotation);
 
-			m_SpawnedCollectableItems.Add(_ammo);
+			m_SpawnedGameItems.Add(s_Ammunition);
 		}
 
 		
 		Debug.LogWarning("[FireModeSpawnManager.SpawnGameItems]: " + "Spawned items - Calling Handle Game Items Spawned Event!");
-		FireModeEvents.HandleGameItemsSpawnedEvent?.Invoke(m_SpawnedCollectableItems);
+		FireModeEvents.HandleGameItemsSpawnedEvent?.Invoke(m_SpawnedGameItems);
 	}
 
 	#endregion

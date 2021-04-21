@@ -5,6 +5,9 @@ using UnityEngine;
 #endregion
 
 
+public enum Player { CurrentPlayer };
+
+
 [System.Serializable]
 /// <summary>
 ///     Main Player Class 
@@ -21,6 +24,11 @@ public class MainPlayerTank : MonoBehaviour
 	public PlayerHealth Health = new PlayerHealth();
 
 	public PlayerInput Controls = new PlayerInput();
+
+	/// <summary>
+	///		Testing current player reference events ? 
+	/// </summary>
+	public Player m_CurrentPlayerReference;
 
 	public bool enablePlayerControl = false;
 
@@ -78,6 +86,7 @@ public class MainPlayerTank : MonoBehaviour
 	{
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
+
 		Movement.Setup(transform);
 		Weapons.Setup(transform);
 		Health.Setup(transform);
@@ -90,9 +99,6 @@ public class MainPlayerTank : MonoBehaviour
 			BeginFlashing();
 		}
 
-
-
-
 		if (enablePlayerControl)
 		{
 			EnablePlayerInput();
@@ -101,8 +107,8 @@ public class MainPlayerTank : MonoBehaviour
 
 	private void Update()
 	{
-
 		HandleCursorLocking();
+		
 
 		if (!enablePlayerControl)
 		{
@@ -120,7 +126,6 @@ public class MainPlayerTank : MonoBehaviour
 			return;
 		}
 
-
 		Movement.SetMovementInput(Controls.GetUserInput(PlayerInput.UserInput.Move), Controls.GetUserInput(PlayerInput.UserInput.Rotate));
 
 		Weapons.SetWeaponFiringInput(Controls.GetUserInput(PlayerInput.UserInput.Fire));
@@ -132,13 +137,10 @@ public class MainPlayerTank : MonoBehaviour
 
 	#region Private Methods 
 
-	private void EnablePlayerInput()
-	{
-		Movement.EnablePlayerMovementInput(true);
-		Weapons.EnableWeapons(true);
-	}
 
-
+	/// <summary>
+	///     Locks & hides the players cursor on game start 
+	/// </summary>
 	private void HandleCursorLocking()
 	{
 		if (Input.GetKeyDown(KeyCode.Escape) && !cursorLocked)
@@ -155,6 +157,12 @@ public class MainPlayerTank : MonoBehaviour
 		}
 	}
 
+	private void EnablePlayerInput()
+	{
+		Movement.EnablePlayerMovementInput(true);
+		Weapons.EnableWeapons(true);
+	}
+
 	/// <summary>
 	///		Changes the current players health 
 	/// </summary>
@@ -164,12 +172,12 @@ public class MainPlayerTank : MonoBehaviour
 	{
 		if (!Player.GetComponent<MainPlayerTank>())
 		{
-			Debug.Log("Not the correct player!");
+			Debug.LogWarning("[MainPlayerTank.ChangeHealth]: " + "Not the correct player! Transform: " + Player.name);
 			return;
 		}
 		else
 		{
-			Debug.Log("Setting Health!");
+			Debug.Log("MainPlayerTank.ChangeHealth]: " + "Calling Health.SetHealth() for the current players Health");
 			Health.SetHealth(Amount);
 		}
 	}
@@ -184,10 +192,11 @@ public class MainPlayerTank : MonoBehaviour
 		if (!Player.GetComponent<MainPlayerTank>())
 		{
 			Debug.Log("[MainPlayerTank.ChangeAmmunition]: " + "Not the correct player!");
+			return;
 		}
 		else
 		{
-			Debug.Log("[MainPlayerTank.ChangeAmmunition]: " + "Setting Player Ammunition: " + (Player.GetComponent<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + Amount));
+			Debug.Log("[MainPlayerTank.ChangeAmmunition]: " + "Setting Player Ammunition: " + (Weapons.CurrentAmmunitionRemaining) + " Adding Change: " + Amount);
 			Weapons.SetAmmunition(Amount);
 		}
 	}
@@ -213,7 +222,6 @@ public class MainPlayerTank : MonoBehaviour
 
 		yield return null;
 	}
-
 
 	private void EnableRenders(MeshRenderer[] renderers, bool ShouldEnable)
 	{
@@ -248,6 +256,7 @@ public class MainPlayerTank : MonoBehaviour
 		#region private Variables 
 
 		private bool leftMouseButtonPressed = false;
+
 
 		#endregion
 
@@ -680,11 +689,8 @@ public class MainPlayerTank : MonoBehaviour
 
 			currentBulletVelocity = bulletSpeed;
 
-			currentAmmunition--;
-
 			FireModeEvents.IncreasePlayerAmmunitionEvent?.Invoke(m_PlayerRef, -1);
 
-			// I guess this is where we would invoke the ammunition event? 
 
 			if (ButtonReleased)
 			{
@@ -766,22 +772,23 @@ public class MainPlayerTank : MonoBehaviour
 
 				m_CurrentHealth = Mathf.Clamp(m_CurrentHealth, MinimumHealth, MaximumHealth);
 			
-			
+				// If the players current health is less than or equal to zero 
 				if (m_CurrentHealth <= 0)
 				{
+					// Player is dead 
 					playerIsDead = true;
-
-					
+			
 				}
 				else
 				{
+					// Player isn't dead 
 					playerIsDead = false;
 				}
 
 
 				if (playerIsDead)
-				{ 
-					
+				{
+					// We probably either want to call the event for restarting the game 
 					// Decrease the amount of lives the player has 
 					FireModeEvents.IncreaseLivesEvent?.Invoke(-1);
 					

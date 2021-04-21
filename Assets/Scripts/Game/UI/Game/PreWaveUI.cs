@@ -84,7 +84,7 @@ public class PreWaveUI
 	///		Set pre game countdown timer 
 	/// </summary>
 	/// <param name="Seconds"></param>
-	public void SetPreGameWaveUI(float Seconds)
+	public void SetPreGameTimer(float Seconds)
 	{
 		preWaveCounterText.GetComponentInChildren<TMP_Text>().text = Seconds.ToString("0");
 	}

@@ -42,37 +42,37 @@ public class AudioManager : MonoBehaviour
 		}
 
 
-		foreach (SoundFX s in GameSoundEffects)
+		foreach (SoundFX s_SoundFX in GameSoundEffects)
 		{
-				s.source = gameObject.AddComponent<AudioSource>();
+				s_SoundFX.source = gameObject.AddComponent<AudioSource>();
 
 
 				// set the source's clip, volume and pitch 
-				s.source.clip = s.clip;
-				s.source.loop = s.loop;
+				s_SoundFX.source.clip = s_SoundFX.clip;
+				s_SoundFX.source.loop = s_SoundFX.loop;
 
-				s.source.outputAudioMixerGroup = AudioMixer;
+				s_SoundFX.source.outputAudioMixerGroup = AudioMixer;
 		
 		}
 
-		foreach (SoundFX sound in HealthSoundEffects)
+		foreach (SoundFX s_SoundFX in HealthSoundEffects)
 		{
-			sound.source = gameObject.AddComponent<AudioSource>();
-			sound.source.clip = sound.clip;
-			sound.source.loop = sound.loop;
+			s_SoundFX.source = gameObject.AddComponent<AudioSource>();
+			s_SoundFX.source.clip = s_SoundFX.clip;
+			s_SoundFX.source.loop = s_SoundFX.loop;
 
 
-			sound.source.outputAudioMixerGroup = AudioMixer;
+			s_SoundFX.source.outputAudioMixerGroup = AudioMixer;
 		}
 
-		foreach (SoundFX sound in AmmoSoundEffects)
+		foreach (SoundFX s_SoundFX in AmmoSoundEffects)
 		{
-			sound.source = gameObject.AddComponent<AudioSource>();
-			sound.source.clip = sound.clip;
-			sound.source.loop = sound.loop;
+			s_SoundFX.source = gameObject.AddComponent<AudioSource>();
+			s_SoundFX.source.clip = s_SoundFX.clip;
+			s_SoundFX.source.loop = s_SoundFX.loop;
 
 
-			sound.source.outputAudioMixerGroup = AudioMixer;
+			s_SoundFX.source.outputAudioMixerGroup = AudioMixer;
 		}
 	}
 
@@ -85,18 +85,18 @@ public class AudioManager : MonoBehaviour
 
 		int selected = rand.Next(HealthSoundEffects.Length);
 
-		SoundFX s = HealthSoundEffects[selected];
+		SoundFX s_SoundFX = HealthSoundEffects[selected];
 
-		if (s == null)
+		if (s_SoundFX == null)
 		{
-			Debug.LogWarning("[AudioManager.PlayAmmunitionPickupAudio]: " + "Health sound " + name + " could not be found!");
+			Debug.LogWarning("[AudioManager.PlayHealthPickupAudio]: " + "Health sound " + name + " could not be found!");
 			return;
 		}
 
-		s.source.volume = s.volume;
-		s.source.pitch = s.pitch;
+		s_SoundFX.source.volume = s_SoundFX.volume;
+		s_SoundFX.source.pitch = s_SoundFX.pitch;
 
-		s.source.Play();
+		s_SoundFX.source.Play();
 	}
 
 	/// <summary>
@@ -108,17 +108,17 @@ public class AudioManager : MonoBehaviour
 
 		int selectedIndex = rand.Next(AmmoSoundEffects.Length);
 
-		SoundFX s = AmmoSoundEffects[selectedIndex];
+		SoundFX s_SoundFX = AmmoSoundEffects[selectedIndex];
 
-		if (s == null)
+		if (s_SoundFX == null)
 		{
 			Debug.LogWarning("[AudioManager.PlayAmmunitionPickupAudio]: " + "Ammunition sound " + name + " could not be found!");
 		}
 
-		s.source.volume = s.volume;
-		s.source.pitch = s.pitch;
+		s_SoundFX.source.volume = s_SoundFX.volume;
+		s_SoundFX.source.pitch = s_SoundFX.pitch;
 
-		s.source.Play();
+		s_SoundFX.source.Play();
 	}
 
 	/// <summary>
@@ -147,9 +147,9 @@ public class AudioManager : MonoBehaviour
 	/// <returns></returns>
 	public AudioClip GetAudioClip(string AudioSourceName)
 	{
-		SoundFX s = Array.Find(GameSoundEffects, soundEffect => soundEffect.name == AudioSourceName);
+		SoundFX s_SoundFX = Array.Find(GameSoundEffects, soundEffect => soundEffect.name == AudioSourceName);
 
-		if (s == null)
+		if (s_SoundFX == null)
 		{
 
 			Debug.LogWarning("Audio Source Sound " + name + " could not be found!");
@@ -157,7 +157,7 @@ public class AudioManager : MonoBehaviour
 		}
 
 
-		return s.source.clip;
+		return s_SoundFX.source.clip;
 	}
 
 	/// <summary>
@@ -166,70 +166,70 @@ public class AudioManager : MonoBehaviour
 	/// <param name="SoundEffectName"></param>
 	public void PlaySound(string soundEffect)
 	{
-		SoundFX s = Array.Find(GameSoundEffects, item => item.name == soundEffect);
+		SoundFX s_SoundFX = Array.Find(GameSoundEffects, item => item.name == soundEffect);
 	
-		if (s == null)
+		if (s_SoundFX == null)
 		{
 			Debug.LogWarning("Sound: " + name + " could not be found!");
 			return;
 		}
 
-		s.source.volume = s.volume;
-		s.source.pitch = s.pitch;
+		s_SoundFX.source.volume = s_SoundFX.volume;
+		s_SoundFX.source.pitch = s_SoundFX.pitch;
 
-		s.source.Play();
+		s_SoundFX.source.Play();
 	}
 
 	/// <summary>
 	///		Stops playing an audio clip by the audio sources name 
 	/// </summary>
-	/// <param name="Sound"></param>
-	public void StopPlaying(string Sound)
+	/// <param name="soundEffect"></param>
+	public void StopPlaying(string soundEffect)
 	{
-		SoundFX s = Array.Find(GameSoundEffects, item => item.name == Sound);
+		SoundFX s_SoundFX = Array.Find(GameSoundEffects, item => item.name == soundEffect);
 
-		if (s == null)
+		if (s_SoundFX == null)
 		{
 			Debug.LogWarning("Sound: " + name + " not found!");
 			return;
 		}
 
-		s.source.volume = s.volume;
-		s.source.pitch = s.pitch;
+		s_SoundFX.source.volume = s_SoundFX.volume;
+		s_SoundFX.source.pitch = s_SoundFX.pitch;
 
-		s.source.Stop();
+		s_SoundFX.source.Stop();
 	}
 
 	/// <summary>
 	///		Starts the Fade out sound effect using a coroutine
 	/// </summary>
-	/// <param name="Sound">The SoundFX audiosource sound to fade</param>
+	/// <param name="soundEffect">The SoundFX audiosource sound to fade</param>
 	/// <param name="volume">The target volume to fade to</param>
 	/// <param name="duration">The duration of the fade </param>
-	public void FadeSoundEffect(string Sound, float volume, float duration)
+	public void FadeSoundEffect(string soundEffect, float volume, float duration)
 	{
-		StartCoroutine(Fade(Sound, volume, duration));
+		StartCoroutine(Fade(soundEffect, volume, duration));
 	}
 
 	/// <summary>
 	///		Fades out a audio sound by an audio sources name name 
 	/// </summary>
-	/// <param name="Sound">The audio source name</param>
-	/// <param name="p_targetVolume">The target volume to fade to</param>
-	/// <param name="p_fadeSpeed">The speed of the fade to apply</param>
+	/// <param name="soundEffect">The audio source name</param>
+	/// <param name="volume">The target volume to fade to</param>
+	/// <param name="fadingDuration">The speed of the fade to apply</param>
 	/// <returns></returns>
-	private IEnumerator Fade(string Sound, float p_targetVolume, float p_fadeSpeed)
+	private IEnumerator Fade(string soundEffect, float volume, float fadingDuration)
 	{
-		AudioSource targetSource = GetAudioSource(Sound);
+		AudioSource s_TargetAudioSource = Instance.GetAudioSource(soundEffect);
 
-		if (targetSource == null)
+		if (s_TargetAudioSource == null)
 		{
 			Debug.LogWarning("Sound: " + name + " could not be found!");
 			yield return null;
 		}
 
-		targetSource.volume = Mathf.Lerp(targetSource.volume, p_targetVolume, p_fadeSpeed * Time.deltaTime);
-		targetSource.pitch = targetSource.pitch;
+		s_TargetAudioSource.volume = Mathf.Lerp(s_TargetAudioSource.volume, volume, fadingDuration * Time.deltaTime);
+		s_TargetAudioSource.pitch = s_TargetAudioSource.pitch;
 		
 
 		yield return null;

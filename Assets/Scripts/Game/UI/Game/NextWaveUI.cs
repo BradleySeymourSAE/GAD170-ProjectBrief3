@@ -8,7 +8,7 @@ using TMPro;
 
 
 [System.Serializable]
-public class PostWaveUI
+public class NextWaveUI
 {
 	#region Public Variables 
 	public GameObject postWaveUIContainer;
@@ -24,20 +24,11 @@ public class PostWaveUI
 	#endregion
 
 	#region Private Variables
+	
 	/// <summary>
 	///  Reference to the fire mode instance 
 	/// </summary>
 	private FireModeUI m_FireModeUI;
-
-	/// <summary>
-	///		The color of the background image 
-	/// </summary>
-	private Color m_BackgroundColor;
-
-	/// <summary>
-	///		The color of the foreground image 
-	/// </summary>
-	private Color m_ForegroundColor;
 
 	#endregion
 
@@ -50,9 +41,6 @@ public class PostWaveUI
 	public void Setup(FireModeUI FireModeUI)
 	{
 		m_FireModeUI = FireModeUI;
-		
-		m_BackgroundColor = backgroundImage.color;
-		m_ForegroundColor = foregroundImage.color;
 		
 		nextRoundStartingLabel.GetComponentInChildren<TMP_Text>().text = GameTextUI.PostWaveUI_NextRoundStartingLabel;
 		nextRoundStarting.GetComponentInChildren<TMP_Text>().text = GameTextUI.PostWaveUI_NextRoundStarting;
@@ -73,5 +61,21 @@ public class PostWaveUI
 	{
 		postWaveUIContainer.SetActive(ShouldDisplay);
 	}
+
+
+	/// <summary>
+	///		Sets the next round starting timer text field and formats it to one decimal place 
+	/// </summary>
+	/// <param name="timeInSeconds"></param>
+	public void SetNextWaveTimer(float timeInSeconds)
+	{ 
+		nextRoundStarting.GetComponentInChildren<TMP_Text>().text = timeInSeconds.ToString("0");
+	}
+
+	public void SetNextWave(int NextWaveIndex) => nextWaveText.GetComponentInChildren<TMP_Text>().text = NextWaveIndex.ToString("0");
+
+	public void SetCurrentWave(int CurrentWaveIndex) => waveText.GetComponentInChildren<TMP_Text>().text = CurrentWaveIndex.ToString("0");
+	
 	#endregion
+
 }
