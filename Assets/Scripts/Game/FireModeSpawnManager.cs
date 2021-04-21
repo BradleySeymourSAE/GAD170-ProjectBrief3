@@ -89,11 +89,6 @@ public class FireModeSpawnManager : MonoBehaviour
 	private float minimumWaveSpawnRange = 50f;
 
 	/// <summary>
-	///		The minimum range for spawning items 
-	/// </summary>
-	private float minimumItemSpawnRange = 15f;
-
-	/// <summary>
 	///		The position of the wave spawn point 
 	/// </summary>
 	private Vector3 m_WaveSpawnPoint;
@@ -169,7 +164,7 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// </summary>
 	private void SpawnPlayer()
 	{
-		GameObject SpawnedPlayer = Instantiate(PlayerPrefab, PlayerSpawnPoint.position, PlayerPrefab.transform.rotation);
+		GameObject SpawnedPlayer = Instantiate(PlayerPrefab, m_PlayerSpawnPoint, PlayerPrefab.transform.rotation);
 
 		if (SpawnedPlayer.GetComponent<MainPlayerTank>())
 		{
@@ -253,8 +248,8 @@ public class FireModeSpawnManager : MonoBehaviour
 		// Create health packs and set their spawn points randomly 
 		for (int i = 0; i < HealthPacks; i++)
 		{
-			float xPosition = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
-			float zPosition = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
+			float xPosition = Random.Range(-itemSpawnRange, itemSpawnRange);
+			float zPosition = Random.Range(-itemSpawnRange, itemSpawnRange);
 			
 			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + xPosition, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + zPosition);
 
@@ -266,8 +261,8 @@ public class FireModeSpawnManager : MonoBehaviour
 		// Create ammunition packs and set their spawn points randomly.
 		for (int i = 0; i < AmmunitionPacks; i++)
 		{
-			float x = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
-			float z = Random.Range(-minimumItemSpawnRange, itemSpawnRange);
+			float x = Random.Range(-itemSpawnRange, itemSpawnRange);
+			float z = Random.Range(-itemSpawnRange, itemSpawnRange);
 
 			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + x, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + z);
 

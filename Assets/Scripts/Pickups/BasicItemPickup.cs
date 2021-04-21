@@ -17,12 +17,12 @@ public class BasicItemPickup : MonoBehaviour
 	/// <summary>
 	///		The minimum amount of health points to add to the player 
 	/// </summary>
-	public float minimumHealthPoints = 25f;
+	public float maximumHealthPoints = 25f;
 
 	/// <summary>
 	///		The minimum amount of ammunition rounds to give to a player 
 	/// </summary>
-	public int minimumAmmunitionRounds = 10;
+	public int maximumAmmunitionRounds = 10;
 
 	#region Unity References 
 	
@@ -70,10 +70,7 @@ public class BasicItemPickup : MonoBehaviour
 	/// <summary>
 	///		Enables the item 
 	/// </summary>
-	private void EnableItem()
-	{
-		AllowItemPickup(true);
-	}
+	private void EnableItem() => AllowItemPickup(true);
 
 	/// <summary>
 	///		Handles the spin / Rotate of the Object 
@@ -112,14 +109,14 @@ public class BasicItemPickup : MonoBehaviour
 			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with a player - Item Type: " + CollectableItem.ItemType);
 			
 			//	Find the players transform component 
-			Transform s_PlayerFound = col.gameObject.transform;
+			Transform s_PlayerFound = col.transform;
 
 
 			switch (CollectableItem.ItemType)
 			{
 				case SpecialItemPickup.Health:
 					{ 
-						float randomHealthAmount = Random.Range(minimumHealthPoints, CollectableItem.HP);
+						float randomHealthAmount = Random.Range(CollectableItem.HP, maximumHealthPoints);
 						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Player Current Health: " + s_PlayerFound.GetComponent<MainPlayerTank>().Health.PlayersCurrentHealth + "! Increasing players health by " + randomHealthAmount);
 						
 						
@@ -136,7 +133,7 @@ public class BasicItemPickup : MonoBehaviour
 					break;
 				case SpecialItemPickup.Ammunition:
 					{ 
-						int increaseAmmoAmount = Random.Range(minimumAmmunitionRounds, CollectableItem.Rounds);
+						int increaseAmmoAmount = Random.Range(CollectableItem.Rounds, maximumAmmunitionRounds);
 						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Current Ammunition: " + s_PlayerFound.GetComponentInChildren<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + "! Increasing by " + increaseAmmoAmount);
 
 						if (AudioManager.Instance)

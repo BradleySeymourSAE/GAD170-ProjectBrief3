@@ -59,6 +59,11 @@ public class FireModeUI : MonoBehaviour
 	///		Float for storing the next wave countdown timer 
 	/// </summary>
 	private float m_NextWaveCountdownTimer;
+
+	/// <summary>
+	///		 Reference to the Game Manager Script 
+	/// </summary>
+	private FireModeGameManager m_GameManager;
 	
 	#endregion
 
@@ -102,6 +107,11 @@ public class FireModeUI : MonoBehaviour
 		inGameWaveUI.Setup(this);
 		postWaveUI.Setup(this);
 		onScreenUI.Setup(this);
+
+		if (FindObjectOfType<FireModeGameManager>())
+		{
+			m_GameManager = FindObjectOfType<FireModeGameManager>();
+		}
 
 
 		// As this is the first function to be called once the application begins, we should be fading the audio to a lower volume 
@@ -187,11 +197,8 @@ public class FireModeUI : MonoBehaviour
 	/// <returns></returns>
 	private void DisplayPreWaveUI()
 	{
-		float displaySeconds = FindObjectOfType<FireModeGameManager>().preWaveSetupTimer;
-
-
-		Debug.Log("[FireModeUI.DisplayPreWaveUI]: " + "Displaying Pre Wave Game UI for " + displaySeconds);
-		StartCoroutine(ShowPreWaveCountdownTimer(displaySeconds));
+		Debug.Log("[FireModeUI.DisplayPreWaveUI]: " + "Display Pre Wave UI - Starting Pre Wave Countdown timer!");
+		StartCoroutine(ShowPreWaveCountdownTimer());
 	}
 
 	/// <summary>
@@ -199,19 +206,19 @@ public class FireModeUI : MonoBehaviour
 	/// </summary>
 	/// <param name="Seconds"></param>
 	/// <returns></returns>
-	private IEnumerator ShowPreWaveCountdownTimer(float Seconds)
+	private IEnumerator ShowPreWaveCountdownTimer()
 	{
 		// Set the pre wave countdown seconds 
-		m_PreWaveCountdownTimer = Seconds;
+		m_PreWaveCountdownTimer = m_GameManager.preWaveSetupTimer;
 		//	 Start the pre wave countdown 	
 		shouldStartPreWaveCountdown = true;
 
-		Debug.Log("[FireModeUI.ShowPreWaveUI]: " + "Showing screen!");
+		Debug.Log("[FireModeUI.ShowPreWaveUI]: " + "DISPLAY PRE WAVE UI FOR " + m_GameManager.preWaveSetupTimer + " seconds");
 		// Display the pre game wave ui 
 		preGameWaveUI.ShowScreen(true);
 
 		// Wait pre wave countdown amount of seconds 
-		yield return new WaitForSeconds(Seconds);
+		yield return new WaitForSeconds(m_GameManager.preWaveSetupTimer);
 
 		// Set the pre game wave ui screen off 
 		preGameWaveUI.ShowScreen(false);
@@ -220,9 +227,9 @@ public class FireModeUI : MonoBehaviour
 		shouldStartPreWaveCountdown = false;
 
 		// reset the wave countdown seconds 
-		m_PreWaveCountdownTimer = Seconds; // Reset the seconds to default. (or zero) 
+		m_PreWaveCountdownTimer = m_GameManager.preWaveSetupTimer; // Reset the seconds to default. (or zero) 
 
-		Debug.Log("[FireModeUI.ShowPreWaveUI]: " + "Stopped showing screen!");
+		Debug.Log("[FireModeUI.ShowPreWaveUI]: " + "STOPPED DISPLAYING PRE WAVE UI!");
 		yield return null;
 	}
 
@@ -232,8 +239,37 @@ public class FireModeUI : MonoBehaviour
 	private void DisplayNextWaveUI()
 	{
 		Debug.Log("[FireModeUI.DisplayPostWaveUI]: " + "Displaying Post Wave UI!");
-		postWaveUI.ShowScreen(true);
+		StartCoroutine(ShowNextWaveCountdownTimer());
 	}
+
+	private IEnumerator ShowNextWaveCountdownTimer()
+	{
+		// Set the Next Wave Countdown timer seconds 
+		m_NextWaveCountdownTimer = m_GameManager.nextWaveStartTimer;
+
+		// Start the next wave countdown 
+
+		shouldStartNextWaveCountdown = true;
+
+		Debug.Log("[FireModeUI.ShowNextWaveUI]: " + "DISPLAYING NEXT WAVE UI FOR " + m_GameManager.nextWaveStartTimer + " seconds");
+
+		//	 Show the next wave UI 
+		postWaveUI.ShowScreen(true);
+
+		// Wait X next wave countdown seconds 
+		yield return new WaitForSeconds(m_GameManager.nextWaveStartTimer);
+
+		// Stop displaying the next wave UI 
+		postWaveUI.ShowScreen(false);
+
+		// Stop counting down 
+		shouldStartNextWaveCountdown = false;
+
+		// Reset the next wave countdown timer 
+		m_NextWaveCountdownTimer = m_GameManager.nextWaveStartTimer;
+
+		yield return null;
+	}	
 
 	/// <summary>
 	///		Displays the In-Game UI with the wave! 

@@ -54,12 +54,12 @@ public class FireModeGameManager : MonoBehaviour
 	///		The total amount of collectable items remaining 
 	/// </summary>
 	[Header("Debugging")]
-	[SerializeField] private int totalCollectableItemsRemaining;
+	[SerializeField] private int totalGameItemsRemaining;
 
 	/// <summary>
 	///		The total amount of enemies remaining 
 	/// </summary>
-	[SerializeField] private int totalEnemiesRemaining;
+	[SerializeField] private int totalAITanksRemaining;
 	
 	/// <summary>
 	///		The current wave the player is on 
@@ -74,7 +74,7 @@ public class FireModeGameManager : MonoBehaviour
 	/// <summary>
 	///		List of currently spawned in collectable items 
 	/// </summary>
-	[SerializeField] private List<GameObject> spawnedCollectableItemsRemaining = new List<GameObject>();
+	[SerializeField] private List<GameObject> spawnedGameItemsRemaining = new List<GameObject>();
 	
 	/// <summary>
 	///		A reference to the current player in the scene 
@@ -90,10 +90,9 @@ public class FireModeGameManager : MonoBehaviour
 	///		The total amount of player lives remaining 
 	/// </summary>
 	[SerializeField] private int currentLives;
-
 	[SerializeField] private int healthPackSpawnAmount;
 	[SerializeField] private int ammunitionPackSpawnAmount;
-
+	[SerializeField] private int tankAISpawnAmount; 
 
 
 
@@ -111,7 +110,7 @@ public class FireModeGameManager : MonoBehaviour
 		FireModeEvents.HardResetFireMode += ResetGame;
 		FireModeEvents.HandleOnPlayerSpawnedEvent += SpawnedPlayerEntity;
 		FireModeEvents.HandleAIDestroyedEvent += DespawnEnemyAI;
-		FireModeEvents.HandleOnGameItemDestroyed += DespawnCollectableItems;
+		FireModeEvents.HandleOnGameItemDestroyed += DespawnGameItem;
 
 
 		FireModeEvents.IncreaseLivesEvent += IncreaseLives;
@@ -138,7 +137,7 @@ public class FireModeGameManager : MonoBehaviour
 		FireModeEvents.PlayerWinsEvent -= HandlePlayerWins;
 		FireModeEvents.AIWinsEvent -= HandleAIWins;
 		FireModeEvents.HandleAIDestroyedEvent -= DespawnEnemyAI;
-		FireModeEvents.HandleOnGameItemDestroyed -= DespawnCollectableItems;
+		FireModeEvents.HandleOnGameItemDestroyed -= DespawnGameItem;
 	}
 
 	#endregion
@@ -163,21 +162,21 @@ public class FireModeGameManager : MonoBehaviour
 	/// </summary>
 	/// <param name="EnemyTanksSpawned"></param>
 	/// <param name="EnemyCharactersSpawned"></param>
-	private void SpawnedAI(List<GameObject> enemiesSpawned)
+	private void SpawnedAI(List<GameObject> spawnedAITanks)
 	{
-
+		Debug.Log("[FireModeGameManager.SpawnedAI]: " + "AI Have been Spawned in!");
 		m_AliveEnemies.Clear();
 
-		for (int i = 0; i < enemiesSpawned.Count; i++)
+		for (int i = 0; i < spawnedAITanks.Count; i++)
 		{
 
 			// Add the newly spawned enemy to the alive enemies list 
-			m_AliveEnemies.Add(enemiesSpawned[i]);
+			m_AliveEnemies.Add(spawnedAITanks[i]);
 		}
 
-		totalEnemiesRemaining = m_AliveEnemies.Count;
+		totalAITanksRemaining = m_AliveEnemies.Count;
 
-
+		Debug.Log("[FireModeGameManager.SpawnedAI]: " + "Total AI Tanks Remaining: " + totalAITanksRemaining);
 	}
 
 
@@ -187,12 +186,12 @@ public class FireModeGameManager : MonoBehaviour
 	/// <param name="AIEntity"></param>
 	private void DespawnEnemyAI(GameObject AIEntity)
 	{
-		Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Attempting to despawn Entity " + AIEntity.name);
+		Debug.Log("[FireModeGameManager.DespawnEnemyAI]: " + "Attempting to despawn Entity " + AIEntity.name);
 
 
 		if (AIEntity.GetComponent<AI>() == null)
 		{
-			Debug.Log("That's not an enemy Entity!");
+			Debug.Log("[FireModeGameManager.DespawnEnemyAI]: " + "That's not an enemy Entity!");
 			return;
 		}
 
@@ -204,14 +203,14 @@ public class FireModeGameManager : MonoBehaviour
 		FireModeEvents.IncreasePlayerScoreEvent?.Invoke(1);
 
 		
-		totalEnemiesRemaining = m_AliveEnemies.Count;
+		totalAITanksRemaining = m_AliveEnemies.Count;
 
 
 
-		if (totalEnemiesRemaining <= 0)
+		if (totalAITanksRemaining <= 0)
 		{
 			// Invoke the next wave event 
-			Debug.Log("[FireMode_GameManager.DespawnEntity]: " + "Starting Next Wave Event! - There are no enemies remaining - " + totalEnemiesRemaining);
+			Debug.Log("[FireModeGameManager.DespawnEnemyAI]: " + "Starting Next Wave Event! - There are no enemies remaining - " + totalAITanksRemaining);
 			
 			// Then we want to run the next round 
 			FireModeEvents.HandleNextWaveStarted?.Invoke();
@@ -221,28 +220,28 @@ public class FireModeGameManager : MonoBehaviour
 	/// <summary>
 	///		Handles adding the currently spawned collectable items to the game manager's private list 
 	/// </summary>
-	private void SpawnedGameItems(List<GameObject> spawnedCollectableItems)
+	private void SpawnedGameItems(List<GameObject> spawnedGameItems)
 	{
 
-		spawnedCollectableItemsRemaining.Clear();
+		spawnedGameItemsRemaining.Clear();
 
-		for (int i = 0; i < spawnedCollectableItems.Count; i++)
+		for (int i = 0; i < spawnedGameItems.Count; i++)
 		{
 
-			GameObject item = spawnedCollectableItems[i];
+			GameObject item = spawnedGameItems[i];
 
-			spawnedCollectableItemsRemaining.Add(item);
+			spawnedGameItemsRemaining.Add(item);
 		}
 
 
-		totalCollectableItemsRemaining = spawnedCollectableItemsRemaining.Count;
+		totalGameItemsRemaining = spawnedGameItemsRemaining.Count;
 	}
 
 	/// <summary>
 	///		Handles despawning of the pickup items 
 	/// </summary>
 	/// <param name="Pickup"></param>
-	private void DespawnCollectableItems(GameObject Pickup)
+	private void DespawnGameItem(GameObject Pickup)
 	{
 		// If the pickup item does not have the basic item pickup class 
 		if (Pickup.GetComponent<BasicItemPickup>() == null)
@@ -252,18 +251,18 @@ public class FireModeGameManager : MonoBehaviour
 		}
 
 		// Remove the item from the list 
-		spawnedCollectableItemsRemaining.Remove(Pickup);
+		spawnedGameItemsRemaining.Remove(Pickup);
 
 
-		totalCollectableItemsRemaining = spawnedCollectableItemsRemaining.Count; 
+		totalGameItemsRemaining = spawnedGameItemsRemaining.Count; 
 
 
 
 		// If the total remaining items count is less than or equal to the trigger item respawn count 
-		if (totalCollectableItemsRemaining <= triggerItemRespawnAmount)
+		if (totalGameItemsRemaining <= triggerItemRespawnAmount)
 		{
 			
-			Debug.Log("[FireModeGameManager.DespawnedCollectableItem]: " + "Triggering Respawn of Items!");
+			Debug.Log("[FireModeGameManager.DespawnGameItem]: " + "Triggering Respawn of Items!");
 
 			// respawn more items 
 			FireModeEvents.SpawnGameItemsEvent?.Invoke(healthPackSpawnAmount, ammunitionPackSpawnAmount);
@@ -271,7 +270,7 @@ public class FireModeGameManager : MonoBehaviour
 
 			
 
-			Debug.Log("[FireMode_GameManager.CollectedItem]: " + "Total items remaining " + totalCollectableItemsRemaining + " less than or equal to trigger respawn " + triggerItemRespawnAmount + ". Spawning " + startingHealthPacks + " Health, " + startingAmmunitionPacks + " Ammunition!");
+			Debug.Log("[FireModeGameManager.DespawnGameItem]: " + "Total items remaining " + totalGameItemsRemaining + " less than or equal to trigger respawn " + triggerItemRespawnAmount + ". Spawning " + startingHealthPacks + " Health, " + startingAmmunitionPacks + " Ammunition!");
 			
 		}
 	}
@@ -298,6 +297,7 @@ public class FireModeGameManager : MonoBehaviour
 		totalPlayerScore = 0;
 		healthPackSpawnAmount = startingHealthPacks;
 		ammunitionPackSpawnAmount = startingAmmunitionPacks;
+		tankAISpawnAmount = startingTanks;
 
 		Debug.Log("[FireModeGameManager.ResetGame]: " + "Resetting current wave index, current lives and total players score!");
 	}
@@ -308,27 +308,27 @@ public class FireModeGameManager : MonoBehaviour
 	/// <returns></returns>
 	private IEnumerator RunGameModeLogic()
 	{
-		Debug.Log("[FireMode_GameManager.RunGameModeLogic]: " + "Running game mode logic!");
+		Debug.Log("[FireModeGameManager.RunGameModeLogic]: " + "Running game mode logic!");
 		FireModeEvents.ResetGameEvent?.Invoke(); 
 
 		FireModeEvents.SpawnPlayerEvent?.Invoke(); // spawn the player in
 
-		FireModeEvents.PreGameStartedEvent?.Invoke(); 
+		FireModeEvents.PreGameStartedEvent?.Invoke();
+
+		Debug.Log("[FireModeGameManager.RunGameModeLogic]: " + "Spawn Pickups Event Called! Starting Health Packs: " + startingHealthPacks + " Starting Ammunition Packs: " + startingAmmunitionPacks);
+		FireModeEvents.SpawnGameItemsEvent(healthPackSpawnAmount, ammunitionPackSpawnAmount);
 
 		// Wait X amount of seconds before spawning enemies and weapon pickups 
 		yield return new WaitForSeconds(preWaveSetupTimer);
 
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Spawn Pickups Event Called! Starting Health Packs: " + startingHealthPacks + " Starting Ammunition Packs: " + startingAmmunitionPacks);
-		FireModeEvents.SpawnGameItemsEvent(healthPackSpawnAmount, ammunitionPackSpawnAmount);
-
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "Spawn Event Wave Event called! Starting AI Tanks: " + startingTanks);
-		FireModeEvents.SpawnAIEvent(startingTanks); // spawns the enemies...
+		Debug.Log("[FireModeGameManager.RunGameModeLogic]: " + "Spawn Event Wave Event called! Starting AI Tanks: " + tankAISpawnAmount);
+		FireModeEvents.SpawnAIEvent(tankAISpawnAmount); // spawns the enemies...
 
 		// Starts the first round! 
-		Debug.Log("[FireMode_GameManager.StartFieldOfFire]: " + "On Game Started Event has been called!");
+		Debug.Log("[FireModeGameManager.RunGameModeLogic]: " + "On Game Started Event has been called!");
 		
 
-		Invoke(nameof(GameStarted), nextWaveStartTimer);
+		Invoke(nameof(GameStarted), 3f);
 		yield return null; // Tells coroutine when the next update is 
 	}
 
@@ -337,10 +337,31 @@ public class FireModeGameManager : MonoBehaviour
 	/// </summary>
 	private void NextWave()
 	{
-		Debug.Log("[FireMode_GameManager.NextWave]: " + "Starting next wave!!");
-	
+		Debug.Log("[FireModeGameManager.NextWave]: " + "Starting next wave!!");
+		int s_previousWaveIndex = currentWaveIndex;
+
+		Debug.Log("[FireModeGameManager.NextWave]: " + "Previous Wave Index: " + s_previousWaveIndex);
+
+		//	 Invoke Increase Wave Event by 1 
+		FireModeEvents.IncreaseWaveEvent?.Invoke(1);
 			
+		// Increase the next wave health packs count 
+
+		// Increase the next wave ammunition packs count 
+
+		// Increase the next wave AI spawn count 
+
+		// Invoke Spawn Game Items Event 
+
+		// Invoke Spawn AI Wave Event 
+
+
 		Debug.Break();	
+
+
+		Debug.Log("[FireModeGameManager.NextWave]: " + "Calling GameStarted and running the next wave!");
+		// Starts the game again and enables the AI tanks and pickups  
+		Invoke(nameof(GameStarted), nextWaveStartTimer);
 	}
 
 
@@ -360,15 +381,20 @@ public class FireModeGameManager : MonoBehaviour
 		if (currentLives <= 0)
 		{
 			Debug.Log("[FireModeGameManager.IncreaseLives]: " + "Player lives are less than or equal to 0! Lives: " + currentLives);
-			
-			
-			
-			
+
+
+
+			// Hard Reset the Game 
+			FireModeEvents.ResetGameEvent?.Invoke();
 			Debug.Break();
 		}
+		else
+		{
+			// Update the UI to reflect the lives remaining 
+			Debug.Log("[FireModeGameManager.IncreaseLives]: " + "Increase Lives Event UI Invoked! Lives Remaining: " + currentLives);
 
-		// Hard Reset the Game 
-		FireModeEvents.ResetGameEvent?.Invoke();
+			FireModeEvents.IncreaseLivesEventUI?.Invoke(currentLives);
+		}
 	}
 
 	/// <summary>
@@ -377,18 +403,23 @@ public class FireModeGameManager : MonoBehaviour
 	/// <param name="amount"></param>
 	private void IncreaseWave(int amount)
 	{
-		int previous = currentWaveIndex;
 		currentWaveIndex += amount;
 
-		Debug.Log("[FireModeGameManager.IncreaseWave]: " + "Increased Wave from " + previous + " by " + amount + ". Current Wave: " + currentWaveIndex);
+		Debug.Log("[FireModeGameManager.IncreaseWave]: " + "WAVE INCREASED: " + currentWaveIndex);
 		
-		if (currentWaveIndex >= 3)
+		if (currentWaveIndex >= 10)
 		{
-			Debug.Log("[FireModeGameManager.IncreaseWave]: " + "Player has won the game!");
+			Debug.Log("[FireModeGameManager.IncreaseWave]: " + "PLAYER HAS WON THE GAME!");
+
+			// Invoke Player Won Event, Or just Call the function.. 
+
+
 			Debug.Break();
 		}
-
-		FireModeEvents.IncreaseWaveEventUI?.Invoke(currentWaveIndex);
+		else
+		{
+			FireModeEvents.IncreaseWaveEventUI?.Invoke(currentWaveIndex);
+		}
 	}
 
 	/// <summary>
@@ -421,6 +452,12 @@ public class FireModeGameManager : MonoBehaviour
 	private void HandleAIWins()
 	{
 		Debug.Log("[FireModeGameManager.HandleAIWins]: " + "AI Wins the game!");
+
+		// Find the player object and reset the game object 
+
+		// Spawn the player back into the game 
+
+		// Invoke Hard Reset Game Event 
 		
 
 		Debug.Break();
