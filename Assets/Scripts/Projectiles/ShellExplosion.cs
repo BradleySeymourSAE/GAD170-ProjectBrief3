@@ -60,15 +60,20 @@ public class ShellExplosion : MonoBehaviour
             
             float s_DamageToApply = CalculateDamage(s_Target.position);
 
-            if (colliders[i].transform.GetComponent<AI>())
+            if (colliders[i].GetComponent<AI>())
 			{
+
                 Debug.LogWarning("[ShellExplosion.Boom]: " + "Applying " + s_DamageToApply + " to AI CHARACTER!");
+
                 FireModeEvents.HandleAIDamageEvent?.Invoke(colliders[i].transform, -s_DamageToApply);
 			}
-            else if (colliders[i].transform.GetComponent<MainPlayerTank>())
+            else if (colliders[i].GetComponent<MainPlayerTank>())
 			{
+
                 Debug.LogWarning("[ShellExplosion.Boom]: " + "Applying " + -s_DamageToApply + " to Main Player!");
+
                 FireModeEvents.HandlePlayerDamageEvent?.Invoke(colliders[i].transform, -s_DamageToApply);
+
 			}
         }
 
@@ -90,11 +95,15 @@ public class ShellExplosion : MonoBehaviour
     private float CalculateDamage(Vector3 targetPosition)
     {
         Vector3 explosionToTarget = targetPosition - transform.position; // get the direction of the explosion compared to our main explosion point
+
         float explosionDistance = explosionToTarget.magnitude; // the length of the explosion target vector
+
         float relativeDistance = (explosionRadius - explosionDistance) / explosionRadius; // calculate the portoion of the explosion distance that we are engulfed in
 
         float damage = relativeDistance * maxDamage; // multiple the distance by the max damage
+
         damage = Mathf.Max(0f, damage); // get biggest value between the two
+
         return damage;
     }
 

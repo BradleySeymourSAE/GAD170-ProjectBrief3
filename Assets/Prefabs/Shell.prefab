@@ -127,7 +127,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 0.9398438, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.8057231, b: 0, a: 1}
   m_Intensity: 1
   m_Range: 5
   m_SpotAngle: 30
@@ -167,7 +167,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -190,12 +190,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2aba1f23cc7b8a4ea8c7f9147998baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionPrefab: {fileID: 195792, guid: 1911d89758d97cc4898d240e9e2545f4, type: 3}
+  explosionPrefab: {fileID: 4577931505699952433, guid: 6b568f7c223607842860e6570de486bf,
+    type: 3}
   ObjectLayer:
     serializedVersion: 2
     m_Bits: 384
   maxDamage: 15
-  explosionForce: 1000
+  explosionForce: 1200
   maxShellLifeTime: 5
   explosionRadius: 10
 --- !u!82 &2260574393947628213

@@ -242,6 +242,7 @@ public class MainPlayerTank : MonoBehaviour
 		public KeyCode Left = KeyCode.A;
 		public KeyCode Right = KeyCode.D;
 		public KeyCode MouseFire = KeyCode.Mouse0;
+		public KeyCode MouseAim = KeyCode.Mouse1;
 
 		#endregion
 
@@ -301,7 +302,7 @@ public class MainPlayerTank : MonoBehaviour
 					}
 				case UserInput.ADS:
 					{ 
-						if (Input.GetMouseButton(1))
+						if (Input.GetKey(MouseAim))
 						{
 							value = 1;	
 						}
@@ -493,14 +494,14 @@ public class MainPlayerTank : MonoBehaviour
 		public Transform weaponFirePoint;
 
 		public int MinimumAmmunition = 0;
-		public int MaximumAmmunition = 20;
+		public int MaximumAmmunition = 50;
 
-		public float maximumReloadingTime = 1.5f;
-		public float bulletSpeed = 850f;
+		public float maximumReloadingTime = 1.1f;
+		public float bulletSpeed = 1000f;
 
-		public float fov = 80;
+		public float fov = 70;
 
-		[Min(50)] [HideInInspector] public float aimDownSightFieldOfView = 50;
+		[Min(50)] [HideInInspector] public float aimDownSightFieldOfView = 55;
 
 		private float m_CurrentFOV;
 
@@ -630,6 +631,10 @@ public class MainPlayerTank : MonoBehaviour
 			CurrentAmmunitionRemaining += amount;
 		}
 
+		/// <summary>
+		///		Sets the players field of view (Aim down sight weapon zooming / scaling) 
+		/// </summary>
+		/// <param name="Aiming"></param>
 		public void SetWeaponADSInput(float Aiming)
 		{
 			if (Aiming > 0f && !aimingDownWeaponSight)
@@ -690,6 +695,11 @@ public class MainPlayerTank : MonoBehaviour
 			}
 		}
 
+		/// <summary>
+		///		Handles reloading of the primary weapon 
+		///		Plays the Weapon Reload Sound 
+		/// </summary>
+		/// <returns></returns>
 		private IEnumerator ReloadPrimaryWeapon()
 		{
 			isWeaponReloading = true;
@@ -769,8 +779,6 @@ public class MainPlayerTank : MonoBehaviour
 				{
 					// Player is dead 
 					playerIsDead = true;
-					
-					FireModeEvents.IncreaseLivesEvent?.Invoke(-1);
 				}
 				else
 				{
@@ -778,10 +786,15 @@ public class MainPlayerTank : MonoBehaviour
 					playerIsDead = false;
 				}
 
-				Mathf.Round(m_CurrentHealth);
+
+				// Convert health to a rounded integer  value to update AI 
+				int hp = Mathf.RoundToInt(m_CurrentHealth);
+
+
+				Debug.Log("SETTING PLAYERS HEALTH: " + hp);
 
 				// We want to set the players health UI i guess
-				FireModeEvents.IncreasePlayerHealthEventUI(m_CurrentHealth);
+				FireModeEvents.IncreasePlayerHealthEventUI(hp);
 			}
 		}
 

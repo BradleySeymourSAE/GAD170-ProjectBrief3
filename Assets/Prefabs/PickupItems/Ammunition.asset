@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Ammunition
   m_EditorClassIdentifier: 
   RotationsPerSecond: 190
-  Amplitude: 0.3
+  Amplitude: 0.5
   Frequency: 2
   Enabled: 1
   ItemType: 1
-  startingPosition: {x: 83.84025, y: 0.35, z: 14.242597}
-  Offset: {x: 83.84025, y: 0.25729465, z: 14.242597}
+  startingPosition: {x: 147.15521, y: 0.35, z: -134.98865}
+  Offset: {x: 147.15521, y: -0.13429168, z: -134.98865}
   Rounds: 5
   HP: 0

@@ -157,7 +157,7 @@ public class AI : MonoBehaviour
 		} 
 		else
 		{ 
-			Debug.Log("[AI.HandleDamage]: " + "AI has taken damage?" + amount);
+			Debug.Log("[AI.HandleDamage]: " + "AI has taken damage? " + amount);
 
 			Health.SetHealth(amount);
 		}
@@ -173,7 +173,9 @@ public class AI : MonoBehaviour
 		}
 
 		GameObject deathClone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
+		
 		Destroy(deathClone, 2); 
+		
 		gameObject.SetActive(false);
 	}
 
@@ -389,6 +391,15 @@ public class AI : MonoBehaviour
 					isCurrentlyDead = true;
 
 
+					if (AudioManager.Instance)
+					{
+						AudioManager.Instance.PlaySound(GameAudio.PlayerDeathOOFT);
+					}
+
+					Debug.LogWarning("[AI.CurrentAIHealth]: "+ "Invoking Increase Enemies Remaining Event - AI Killed!");
+					FireModeEvents.IncreaseEnemiesRemainingEvent?.Invoke(-1);
+
+					Debug.Log("[AI.CurrentAIHealth]: " + "Invoking Handle AI Destroyed Event");
 					FireModeEvents.HandleAIDestroyedEvent?.Invoke(m_CurrentAI);
 				}
 				else
@@ -406,7 +417,7 @@ public class AI : MonoBehaviour
 		/// <param name="amount"></param>
 		public void SetHealth(float amount)
 		{
-			Debug.Log("[AI.AIHealth.SetHealth]: " + "Setting AI TANKS Health: " + amount);
+			// Debug.Log("[AI.AIHealth.SetHealth]: " + "Setting AI TANKS Health: " + amount);
 
 			CurrentAIHealth += amount;
 		}

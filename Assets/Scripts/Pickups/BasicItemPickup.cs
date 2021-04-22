@@ -109,14 +109,14 @@ public class BasicItemPickup : MonoBehaviour
 			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with Main Player - Item Type: " + GameItem.ItemType);
 			
 			//	Find the players transform component 
-			Transform s_PlayerFound = col.gameObject.transform;
+			Transform s_PlayerFound = col.transform;
 
 
 			switch (GameItem.ItemType)
 			{
 				case GameItemType.Health:
 					{ 
-						float randomHealthAmount = Random.Range(GameItem.HP, maximumHealthPoints);
+						float randomHealthAmount = Mathf.RoundToInt(Random.Range(GameItem.HP, maximumHealthPoints));
 						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Player Current Health: " + s_PlayerFound.GetComponent<MainPlayerTank>().Health.PlayersCurrentHealth + "! Increasing players health by " + randomHealthAmount);
 						
 						
@@ -148,8 +148,10 @@ public class BasicItemPickup : MonoBehaviour
 					break;
 			}
 
-			// Call the on game item destroyed event to handle what happens 
+
 			FireModeEvents.HandleOnGameItemDestroyed?.Invoke(gameObject);
+
+			Destroy(gameObject);
 		}
 	}
 	#endregion

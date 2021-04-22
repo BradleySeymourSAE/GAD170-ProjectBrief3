@@ -239,8 +239,8 @@ public class FireModeSpawnManager : MonoBehaviour
 			m_SpawnedAIEnemies.Add(tankClone);
 		}
 
-	 // We probably want to set the enemies remaining here, as this is where the enemeis are spawned from 
-		// TODO: THIS 
+		FireModeEvents.IncreaseEnemiesRemainingEvent?.Invoke(AISpawnAmount);
+
 
 
 		// Now we have all the enemy ai spawned in we then handle what to do with the new enemies that have been spawned 

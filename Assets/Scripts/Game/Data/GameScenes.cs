@@ -16,10 +16,13 @@ public static class GameScenes
 	#endregion
 
 	#region  Levels
+	
 	/// <summary>
 	///		Game Level 1 
 	/// </summary>
 	public const string GameLevel_01 = "FieldOfFire_GameLevel_01";
+
+	public const string ProceduralGenerationTestLevel = "ProceduralGenerationTest";
 
 	#endregion
 

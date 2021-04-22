@@ -189,11 +189,6 @@ public class CrosshairUI
 	/// </summary>
 	public Image crosshair;
 
-	/// <summary>
-	///		Width and height of the crosshair 
-	/// </summary>
-	[SerializeField] private float width, height;
-
 	#endregion
 
 	#region Private Variables 
@@ -218,9 +213,7 @@ public class CrosshairUI
 	public void Setup(FireModeUI FireModeUI)
 	{
 		m_FireModeUI = FireModeUI;
-		m_ReticleColor = crosshair.color;
-		width = crosshair.flexibleWidth;
-		height = crosshair.flexibleHeight;
+		crosshair.color = m_ReticleColor;
 	}
 
 	/// <summary>
@@ -231,12 +224,6 @@ public class CrosshairUI
 	{
 		crosshairUI.SetActive(ShouldDisplay);
 	}
-	
-	/// <summary>
-	///		Changes the color of the reticle 
-	/// </summary>
-	/// <param name="DesiredColor"></param>
-	public void SetReticleColor(Color DesiredColor) => m_ReticleColor = DesiredColor;
 	
 	#endregion
 }

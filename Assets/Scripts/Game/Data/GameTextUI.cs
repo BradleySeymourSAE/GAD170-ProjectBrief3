@@ -81,7 +81,7 @@ public static class GameTextUI
 	#endregion
 
 	#region Field Of Fire - On Screen UI 
-	public const string OnScreen_Ammunition = "20";
+	public const string OnScreen_Ammunition = "50";
 	public const string OnScreen_Health = "100";
 
 

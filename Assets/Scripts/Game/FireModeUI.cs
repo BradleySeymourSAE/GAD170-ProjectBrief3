@@ -63,7 +63,7 @@ public class FireModeUI : MonoBehaviour
 	/// <summary>
 	///		 Reference to the Game Manager Script 
 	/// </summary>
-	private FireModeGameManager m_GameManager;
+	[SerializeField] private FireModeGameManager m_GameManager;
 	
 	#endregion
 
@@ -82,6 +82,7 @@ public class FireModeUI : MonoBehaviour
 
 
 		FireModeEvents.IncreasePlayerHealthEventUI += SetPlayerHealthUI;
+		FireModeEvents.IncreasePlayerHealthEventUI += SetPlayerHealthTextUI;
 		FireModeEvents.IncreaseEnemiesRemainingEventUI += SetEnemiesRemainingUI;
 		FireModeEvents.IncreaseAmmunitionEventUI += SetPlayerAmmunitionUI; 
 		FireModeEvents.IncreaseWaveEventUI += SetNextWaveUI; 
@@ -99,6 +100,7 @@ public class FireModeUI : MonoBehaviour
 		FireModeEvents.SpawnPlayerEvent -= DisplayOnScreenUI;
 
 		FireModeEvents.IncreasePlayerHealthEventUI -= SetPlayerHealthUI;
+		FireModeEvents.IncreasePlayerHealthEventUI -= SetPlayerHealthTextUI;
 		FireModeEvents.IncreaseEnemiesRemainingEventUI -= SetEnemiesRemainingUI;
 		FireModeEvents.IncreaseAmmunitionEventUI -= SetPlayerAmmunitionUI; // Working 
 		FireModeEvents.IncreaseWaveEventUI -= SetNextWaveUI; // On and off 
@@ -118,6 +120,10 @@ public class FireModeUI : MonoBehaviour
 		if (FindObjectOfType<FireModeGameManager>())
 		{
 			m_GameManager = FindObjectOfType<FireModeGameManager>();
+		}
+		else
+		{
+			Debug.LogError("[FireModeUI.Start]: " + "Could not find Fire Mode Game Manager Instance!");
 		}
 
 
@@ -190,6 +196,12 @@ public class FireModeUI : MonoBehaviour
 	}
 
 	/// <summary>
+	///		Sets the current wave text that the player has made it to 
+	/// </summary>
+	/// <param name="CurrentWaveIndex"></param>
+	private void SetCurrentWaveUI(int CurrentWaveIndex) => nextWaveUI.SetCurrentWave(CurrentWaveIndex);
+
+	/// <summary>
 	///		Sets the next wave index 
 	/// </summary>
 	/// <param name="NextWaveIndex"></param>
@@ -208,6 +220,8 @@ public class FireModeUI : MonoBehaviour
 	private void SetEnemiesRemainingUI(int EnemiesRemaining) => inGameWaveUI.waveCounterUI.SetEnemiesRemaining(EnemiesRemaining);
 
 	private void SetPlayerHealthUI(float Health) => onScreenUI.Health.SetHealthBarSlider(Health, 100);
+
+	private void SetPlayerHealthTextUI(float Health) => onScreenUI.Health.SetHeathBarText(Health);
 	
 	#endregion
 
@@ -299,7 +313,6 @@ public class FireModeUI : MonoBehaviour
 	/// </summary>
 	private void DisplayInGameUI()
 	{
-		Debug.Log("[FireModeUI.DisplayInGameUI]: " + "Displaying in game UI!");
 		inGameWaveUI.ShowScreen(true);
 	}
 
