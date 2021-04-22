@@ -189,6 +189,11 @@ public class CrosshairUI
 	/// </summary>
 	public Image crosshair;
 
+	/// <summary>
+	///		Width and height of the crosshair 
+	/// </summary>
+	[SerializeField] private float width, height;
+
 	#endregion
 
 	#region Private Variables 
@@ -214,6 +219,8 @@ public class CrosshairUI
 	{
 		m_FireModeUI = FireModeUI;
 		m_ReticleColor = crosshair.color;
+		width = crosshair.flexibleWidth;
+		height = crosshair.flexibleHeight;
 	}
 
 	/// <summary>
@@ -224,6 +231,13 @@ public class CrosshairUI
 	{
 		crosshairUI.SetActive(ShouldDisplay);
 	}
+	
+	/// <summary>
+	///		Changes the color of the reticle 
+	/// </summary>
+	/// <param name="DesiredColor"></param>
+	public void SetReticleColor(Color DesiredColor) => m_ReticleColor = DesiredColor;
+	
 	#endregion
 }
 
@@ -250,6 +264,12 @@ public class HealthBarUI
 	/// </summary>
 	public Slider healthBarSlider;
 
+	[SerializeField] private Color NoHealth = Color.red;
+	[SerializeField] private Color FullHealth = Color.blue;
+
+
+	private Image fillImage; 
+
 	#endregion
 
 	#region Private Variables 
@@ -271,6 +291,15 @@ public class HealthBarUI
 	{
 		m_FireModeUI = FireModeUI;
 
+		if (healthBarSlider != null)
+		{
+			fillImage = healthBarSlider.fillRect.transform.GetComponent<Image>();
+		}
+		else
+		{
+			Debug.LogWarning("[FireModeUI.OnScreenUI.Setup]: " + "Could not find the health bar slide image!");
+		}
+
 		currentHealth.GetComponentInChildren<TMP_Text>().text = GameTextUI.OnScreen_Health;
 	}
 
@@ -284,6 +313,33 @@ public class HealthBarUI
 		healthUI.SetActive(ShouldDisplay);
 	}
 
+	/// <summary>
+	///		Sets the health AMOUNT as an integer 
+	/// </summary>
+	/// <param name="amount"></param>
+	public void SetHeathBarText(float amount) => currentHealth.GetComponentInChildren<TMP_Text>().text = amount.ToString("0");
 	#endregion
+
+	/// <summary>
+	///		Sets the health bar slider UI 
+	/// </summary>
+	/// <param name="CurrentHealthAmount"></param>
+	/// <param name="Maximum"></param>
+	public void SetHealthBarSlider(float CurrentHealthAmount = 0, float Maximum = 100)
+	{
+		if (healthBarSlider != null)
+		{ 
+			healthBarSlider.value = CurrentHealthAmount;
+
+			if (fillImage != null)
+			{
+				fillImage.color = Color.Lerp(NoHealth, FullHealth, CurrentHealthAmount / Maximum);
+			}
+		}
+		else
+		{
+			Debug.LogWarning("[FireModeUI.OnScreenUI.SetHealthBarSlider]: " + "There is no Health Bar slider currently set up!");
+		}
+	}
 
 }

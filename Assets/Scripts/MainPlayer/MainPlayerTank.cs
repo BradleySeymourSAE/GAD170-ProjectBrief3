@@ -5,9 +5,6 @@ using UnityEngine;
 #endregion
 
 
-public enum Player { CurrentPlayer };
-
-
 [System.Serializable]
 /// <summary>
 ///     Main Player Class 
@@ -24,11 +21,6 @@ public class MainPlayerTank : MonoBehaviour
 	public PlayerHealth Health = new PlayerHealth();
 
 	public PlayerInput Controls = new PlayerInput();
-
-	/// <summary>
-	///		Testing current player reference events ? 
-	/// </summary>
-	public Player m_CurrentPlayerReference;
 
 	public bool enablePlayerControl = false;
 
@@ -172,7 +164,7 @@ public class MainPlayerTank : MonoBehaviour
 	{
 		if (!Player.GetComponent<MainPlayerTank>())
 		{
-			Debug.LogWarning("[MainPlayerTank.ChangeHealth]: " + "Not the correct player! Transform: " + Player.name);
+			Debug.LogWarning("[MainPlayerTank.ChangeHealth]: " + "Not the correct player!");
 			return;
 		}
 		else
@@ -777,7 +769,8 @@ public class MainPlayerTank : MonoBehaviour
 				{
 					// Player is dead 
 					playerIsDead = true;
-			
+					
+					FireModeEvents.IncreaseLivesEvent?.Invoke(-1);
 				}
 				else
 				{
@@ -785,14 +778,10 @@ public class MainPlayerTank : MonoBehaviour
 					playerIsDead = false;
 				}
 
+				Mathf.Round(m_CurrentHealth);
 
-				if (playerIsDead)
-				{
-					// We probably either want to call the event for restarting the game 
-					// Decrease the amount of lives the player has 
-					FireModeEvents.IncreaseLivesEvent?.Invoke(-1);
-					
-				}
+				// We want to set the players health UI i guess
+				FireModeEvents.IncreasePlayerHealthEventUI(m_CurrentHealth);
 			}
 		}
 

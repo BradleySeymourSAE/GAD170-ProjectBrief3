@@ -150,41 +150,31 @@ public class AI : MonoBehaviour
 
 	private void HandleDamage(Transform EnemyAI, float amount)
 	{
-		if (!EnemyAI.GetComponent<AI>())
+		if (EnemyAI != transform)
 		{
-			Debug.LogWarning("[AI.HandleDamage]: " + "AI could not be found!");
+			// Debug.LogWarning("[AI.HandleDamage]: " + "AI could not be found!");
 			return;
-		}
+		} 
 		else
 		{ 
-			Debug.Log("[AI.HandleDamage]: " + "AI has taken damage " + amount);
+			Debug.Log("[AI.HandleDamage]: " + "AI has taken damage?" + amount);
 
 			Health.SetHealth(amount);
 		}
 	}
 	
 
-	private void HandleDeath(GameObject DeadAI)
+	private void HandleDeath(Transform DefeatedAI)
 	{
-		if (DeadAI.transform != transform)
+		if (DefeatedAI != transform)
 		{
-			 // Debug.LogWarning("[AI.HandleDeath]: " + "Not the correct AI! " + DeadAI.name);
+			 // Debug.LogWarning("[AI.HandleDeath]: " + "Not the correct AI! " + DeadAI);
 			return;
 		}
 
 		GameObject deathClone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
-
-		Destroy(deathClone, 2f); 
-
-		// EDIT: changed this from DeadAI.SetActive(false); 
-		//		 to gameObject.SetActive(false); 
-		// Checking to see if this causes errors for any reason.. curiosity? 
-
+		Destroy(deathClone, 2); 
 		gameObject.SetActive(false);
-
-
-		// Call the Handle AI Destroyed Event. 
-		FireModeEvents.HandleAIDestroyedEvent?.Invoke(DeadAI);
 	}
 
 	#endregion
@@ -373,7 +363,7 @@ public class AI : MonoBehaviour
 		/// <summary>
 		///		Reference to the AI character 
 		/// </summary>
-		private Transform m_AI;
+		private Transform m_CurrentAI;
 
 		#endregion
 
@@ -392,23 +382,18 @@ public class AI : MonoBehaviour
 			set
 			{
 				m_CurrentHealth = value;
-
-
 				m_CurrentHealth = Mathf.Clamp(m_CurrentHealth, MinimumHealth, MaximumHealth);
 
 				if (m_CurrentHealth <= 0)
 				{
 					isCurrentlyDead = true;
+
+
+					FireModeEvents.HandleAIDestroyedEvent?.Invoke(m_CurrentAI);
 				}
 				else
 				{
 					isCurrentlyDead = false;
-				}
-
-
-				if (isCurrentlyDead)
-				{
-					Debug.Log("AI DEAD: " + isCurrentlyDead);	
 				}
 			}
 		}
@@ -421,7 +406,7 @@ public class AI : MonoBehaviour
 		/// <param name="amount"></param>
 		public void SetHealth(float amount)
 		{
-			Debug.Log("[AI.AIHealth.SetHealth]: " + "Setting AI Player's Health: " + amount);
+			Debug.Log("[AI.AIHealth.SetHealth]: " + "Setting AI TANKS Health: " + amount);
 
 			CurrentAIHealth += amount;
 		}
@@ -432,7 +417,7 @@ public class AI : MonoBehaviour
 		/// <param name="AI"></param>
 		public void Setup(Transform CurrentAI)
 		{
-			m_AI = CurrentAI;
+			m_CurrentAI = CurrentAI;
 
 			CurrentAIHealth = MaximumHealth;
 		}

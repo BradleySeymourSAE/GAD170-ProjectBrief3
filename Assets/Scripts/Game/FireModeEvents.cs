@@ -72,7 +72,7 @@ public static class FireModeEvents
 	///		Called to handle when an AI character has been destroyed 
 	/// </summary>
 	/// <param name="AI"></param>
-	public delegate void HandleAIDestroyed(GameObject AI);
+	public delegate void HandleAIDestroyed(Transform AI);
 
 	/// <summary>
 	///		When a game object has been collected / destroyed 
@@ -161,8 +161,6 @@ public static class FireModeEvents
 	/// </summary>
 	public static IntParameterDelegate IncreaseAmmunitionEventUI;
 
-
-
 	/// <summary>
 	///		Handles when our character has been granted or had a life removed 
 	/// </summary>
@@ -172,6 +170,17 @@ public static class FireModeEvents
 	///		Increases or decreases the current players lives remaining UI 
 	/// </summary>
 	public static IntParameterDelegate IncreaseLivesEventUI;
+
+	/// <summary>
+	///		Increases or decreases the amount of enemies remaining 
+	/// </summary>
+	public static IntParameterDelegate IncreaseEnemiesRemainingEvent;
+
+
+	/// <summary>
+	///		Handles changing the UI to reflect the enemies remaining in the game
+	/// </summary>
+	public static IntParameterDelegate IncreaseEnemiesRemainingEventUI;
 
 
 	/// <summary>

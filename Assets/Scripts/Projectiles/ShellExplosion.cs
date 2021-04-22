@@ -57,16 +57,17 @@ public class ShellExplosion : MonoBehaviour
 
 
             s_Target.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+            
             float s_DamageToApply = CalculateDamage(s_Target.position);
 
-            if (colliders[i].GetComponent<AI>())
+            if (colliders[i].transform.GetComponent<AI>())
 			{
                 Debug.LogWarning("[ShellExplosion.Boom]: " + "Applying " + s_DamageToApply + " to AI CHARACTER!");
                 FireModeEvents.HandleAIDamageEvent?.Invoke(colliders[i].transform, -s_DamageToApply);
 			}
-            else if (colliders[i].GetComponent<MainPlayerTank>())
+            else if (colliders[i].transform.GetComponent<MainPlayerTank>())
 			{
-                Debug.LogWarning("[ShellExplosion.Boom]: " + "Applying " + s_DamageToApply + " to Main Player!");
+                Debug.LogWarning("[ShellExplosion.Boom]: " + "Applying " + -s_DamageToApply + " to Main Player!");
                 FireModeEvents.HandlePlayerDamageEvent?.Invoke(colliders[i].transform, -s_DamageToApply);
 			}
         }
@@ -77,7 +78,7 @@ public class ShellExplosion : MonoBehaviour
         // spawn in our explosion! 
         GameObject clone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
         
-        //  Destroy the game object!
+        //  Destroy the shell game object!
         Destroy(clone, maxShellLifeTime);
     }
 

@@ -104,12 +104,12 @@ public class BasicItemPickup : MonoBehaviour
 			return;
 		}
 
-		if (col.gameObject.tag == "Player" || col.gameObject.GetComponent<MainPlayerTank>())
+		if (col.gameObject.tag == "Player" && col.gameObject.GetComponent<MainPlayerTank>())
 		{
-			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with a player - Item Type: " + GameItem.ItemType);
+			Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Collided with Main Player - Item Type: " + GameItem.ItemType);
 			
 			//	Find the players transform component 
-			Transform s_PlayerFound = col.transform;
+			Transform s_PlayerFound = col.gameObject.transform;
 
 
 			switch (GameItem.ItemType)
@@ -134,7 +134,7 @@ public class BasicItemPickup : MonoBehaviour
 				case GameItemType.Ammunition:
 					{ 
 						int randomAmmunitionAmount = Random.Range(GameItem.Rounds, maximumAmmunitionRounds);
-						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Current Ammunition: " + s_PlayerFound.GetComponentInChildren<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + "! Increasing by " + randomAmmunitionAmount);
+						Debug.Log("[BasicItemPickup.OnTriggerEnter]: " + "Current Ammunition: " + s_PlayerFound.GetComponent<MainPlayerTank>().Weapons.CurrentAmmunitionRemaining + "! Increasing by " + randomAmmunitionAmount);
 
 						if (AudioManager.Instance)
 						{
@@ -148,12 +148,7 @@ public class BasicItemPickup : MonoBehaviour
 					break;
 			}
 
-
-			// Could instantiate a item pickup effect here?
-
-			gameObject.SetActive(false);
-
-
+			// Call the on game item destroyed event to handle what happens 
 			FireModeEvents.HandleOnGameItemDestroyed?.Invoke(gameObject);
 		}
 	}

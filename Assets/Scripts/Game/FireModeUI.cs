@@ -78,14 +78,13 @@ public class FireModeUI : MonoBehaviour
 		FireModeEvents.PreGameStartedEvent += DisplayPreWaveUI;
 		FireModeEvents.GameStartedEvent += DisplayInGameUI;
 		FireModeEvents.HandleNextWaveStarted += DisplayNextWaveUI;
-
-
-		//	Updating Wave, Player & HUD Events 
 		FireModeEvents.SpawnPlayerEvent += DisplayOnScreenUI;
 
-		FireModeEvents.IncreasePlayerScoreEventUI += SetPlayerScoreUI; // not working 
-		FireModeEvents.IncreaseAmmunitionEventUI += SetPlayerAmmunitionUI; // Working 
-		FireModeEvents.IncreaseWaveEventUI += SetNextWave; // On and off 
+
+		FireModeEvents.IncreasePlayerHealthEventUI += SetPlayerHealthUI;
+		FireModeEvents.IncreaseEnemiesRemainingEventUI += SetEnemiesRemainingUI;
+		FireModeEvents.IncreaseAmmunitionEventUI += SetPlayerAmmunitionUI; 
+		FireModeEvents.IncreaseWaveEventUI += SetNextWaveUI; 
 	}
 
 	/// <summary>
@@ -99,9 +98,10 @@ public class FireModeUI : MonoBehaviour
 		FireModeEvents.HandleNextWaveStarted -= DisplayNextWaveUI;
 		FireModeEvents.SpawnPlayerEvent -= DisplayOnScreenUI;
 
-		FireModeEvents.IncreasePlayerScoreEventUI -= SetPlayerScoreUI; // not working 
+		FireModeEvents.IncreasePlayerHealthEventUI -= SetPlayerHealthUI;
+		FireModeEvents.IncreaseEnemiesRemainingEventUI -= SetEnemiesRemainingUI;
 		FireModeEvents.IncreaseAmmunitionEventUI -= SetPlayerAmmunitionUI; // Working 
-		FireModeEvents.IncreaseWaveEventUI -= SetNextWave; // On and off 
+		FireModeEvents.IncreaseWaveEventUI -= SetNextWaveUI; // On and off 
 	}
 
 	/// <summary>
@@ -193,20 +193,21 @@ public class FireModeUI : MonoBehaviour
 	///		Sets the next wave index 
 	/// </summary>
 	/// <param name="NextWaveIndex"></param>
-	private void SetNextWave(int NextWaveIndex) => nextWaveUI.SetNextWave(NextWaveIndex);
+	private void SetNextWaveUI(int NextWaveIndex) => nextWaveUI.SetNextWave(NextWaveIndex);
 
-
+	/// <summary>
+	///		Sets the players ammunition UI! 
+	/// </summary>
+	/// <param name="Rounds"></param>
 	private void SetPlayerAmmunitionUI(int Rounds) => onScreenUI.Ammunition.SetAmmunition(Rounds);
 
 	/// <summary>
-	///		Sets the current players score 
+	///		Sets the current enemies remaining in the current wave
 	/// </summary>
-	/// <param name="Score"></param>
-	private void SetPlayerScoreUI(int Score)
-	{
-		Debug.Log("[FireModeUI.SetPlayerScoreUI]: " + "DEBUG: SETTING PLAYERS SCORE: " + Score);
-	}
+	/// <param name="EnemiesRemaining"></param>
+	private void SetEnemiesRemainingUI(int EnemiesRemaining) => inGameWaveUI.waveCounterUI.SetEnemiesRemaining(EnemiesRemaining);
 
+	private void SetPlayerHealthUI(float Health) => onScreenUI.Health.SetHealthBarSlider(Health, 100);
 	
 	#endregion
 
