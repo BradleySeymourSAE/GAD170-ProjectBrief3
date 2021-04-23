@@ -382,7 +382,7 @@ public class FireModeGameManager : MonoBehaviour
 		Debug.Log("[FireModeGameManager.NextWave]: " + "Running the next wave!");
 		
 		// Starts the game again and enables the Enemy AI tanks and Game Items  
-		Invoke(nameof(GameStarted), nextWaveStartTimer);
+		Invoke(nameof(GameStarted), 3f);
 	}
 
 	/// <summary>

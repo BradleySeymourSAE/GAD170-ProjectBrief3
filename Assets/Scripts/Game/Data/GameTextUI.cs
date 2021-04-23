@@ -38,6 +38,15 @@ public static class GameTextUI
 	public static string CreditsMenu_Exit = "Back to main menu";
 	#endregion
 
+	#region Pause Menu UI Text Elements
+
+	public static string PauseMenu_Title = "Game Paused";
+	public static string PauseMenu_Resume = "Resume";
+	public static string PauseMenu_Exit = "Exit the game";
+
+
+	#endregion
+
 	#endregion
 
 	#region Field of Fire - Game Scene Level 01 
