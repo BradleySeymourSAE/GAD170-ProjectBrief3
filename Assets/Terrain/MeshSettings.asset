@@ -15,5 +15,5 @@ MonoBehaviour:
   autoUpdate: 1
   meshScale: 10
   useFlatShading: 0
-  chunkSizeIndex: 7
+  chunkSizeIndex: 8
   flatshadedChunkSizeIndex: 0

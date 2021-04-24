@@ -59,10 +59,12 @@ public class TerrainChunk
 		Debug.Log("Sample Center: " + sampleCentre);
 		Debug.Log("Bounds Extents: " + bounds.extents);
 
-		meshObject = new GameObject("Terrain Chunk");
+		meshObject = new GameObject("Terrain");
 		meshRenderer = meshObject.AddComponent<MeshRenderer>();
 		meshFilter = meshObject.AddComponent<MeshFilter>();
 		meshCollider = meshObject.AddComponent<MeshCollider>();
+
+		
 
 		meshRenderer.material = material;
 
@@ -116,9 +118,6 @@ public class TerrainChunk
 		if (heightMapReceived)
 		{
 			float viewerDstFromNearestEdge = Mathf.Sqrt(bounds.SqrDistance(viewerPosition));
-
-		
-			Debug.Log(detailLevels);
 
 			bool wasVisible = IsVisible();
 			bool visible = viewerDstFromNearestEdge <= maxViewDst;

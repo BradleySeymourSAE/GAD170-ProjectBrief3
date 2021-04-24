@@ -29,20 +29,24 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 	public Material mapMaterial;
 
 	[Header("Tree Spawning")]
-	public int maximumTreeSpawnCount = 125;
-	public float maximumSpawnTreeXPosition = 500;
-	public float maximumSpawnTreeZPosition = 500;
-	public float treeSpawnWaitTimer = 0.01f;
+	public int maximumTreeSpawnCount = 1000;
+	public float maximumSpawnTreeXPosition = 1200;
+	public float maximumSpawnTreeZPosition = 1200;
+
+	[Range(1, 10)]
+	public float timerBeforeTreesSpawned = 10f;
+	public float timer = 0;
+	private bool timerHasEnded = false;
+
 
 	public GameObject TreePrefab;
-
 	private Transform m_CameraReference;
-
-
 	private List<GameObject> spawnedTrees = new List<GameObject>();
+	[SerializeField] private List<Vector3> spawnedTreePositions = new List<Vector3>();
 	
 	float spawnTreeXPosition;
 	float spawnTreeZPosition;
+
 	float m_maximumViewDistance;
 	float m_meshWorldSize;
 
@@ -60,36 +64,40 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 		if (GameObject.Find("Main Camera").GetComponent<Camera>())
 		{
 			m_CameraReference = GameObject.Find("Main Camera").transform;
-
 		}
+	}
+
+	private void OnEnable()
+	{
+		EnvironmentEvents.SpawnTreesEvent += SpawnTreesOnMesh;
+	}
+
+	private void OnDisable()
+	{
+		EnvironmentEvents.SpawnTreesEvent -= SpawnTreesOnMesh;
 	}
 
 
 	private void Start()
 	{
-
 		spawnedTrees.Clear();
+		spawnedTreePositions.Clear();
 
 		// Set the texture to the maps material 
 		textureSettings.ApplyTextureToMaterial(mapMaterial);
-	
+
 		// Update the mesh material heights using the map material and height map settings height curve 
 		textureSettings.UpdateMeshHeights(mapMaterial, heightSettings.minimumHeight, heightSettings.maximumHeight);
-		
+
 		m_maximumViewDistance = DetailLevels[DetailLevels.Length - 1].visibleDistanceThreshold;
-		
+
 		// Set the reference mesh world size 
 		m_meshWorldSize = meshSettings.meshWorldSize;
 
 		VisibleTerrainInViewDistance = Mathf.RoundToInt(m_maximumViewDistance / m_meshWorldSize);
 
-		// Generate the trees along the mesh 
-		StartCoroutine(SpawnTreesOnMesh(maximumTreeSpawnCount));
-
-
 		Initialize();
 	}
-
 
 	private void Update()
 	{
@@ -111,6 +119,25 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 
 			Initialize();
 		}
+
+
+		// Once the countdown timer has ended we want to call the spawn tree's event using teh maximum tree spawn count 
+		if (!timerHasEnded)
+		{ 
+			timer += Time.deltaTime;
+			
+
+			if (timer > timerBeforeTreesSpawned)
+			{
+				EnvironmentEvents.SpawnTreesEvent(maximumTreeSpawnCount);
+
+				// We want to stop the timer here 
+				timerHasEnded = true;
+			}
+		
+		}
+
+
 	}
 
 
@@ -120,11 +147,14 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 			for (int i = currentlyVisibleTerrains.Count - 1; i >= 0; i--)
 			{
 				alreadyUpdatedChunkCoords.Add(currentlyVisibleTerrains[i].coord);
-			currentlyVisibleTerrains[i].UpdateTerrainChunk();
+				currentlyVisibleTerrains[i].UpdateTerrainChunk();
 			}
 
 			int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / m_meshWorldSize);
 			int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / m_meshWorldSize);
+
+			Debug.Log("Current Chunk Coordinate X: " + currentChunkCoordX + "Current Chunk Coordinate Y: " + currentChunkCoordY);
+
 
 			for (int yOffset = -VisibleTerrainInViewDistance; yOffset <= VisibleTerrainInViewDistance; yOffset++)
 			{
@@ -168,19 +198,15 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 	/// </summary>
 	/// <param name="Trees"></param>
 	/// <returns></returns>
-	IEnumerator SpawnTreesOnMesh(int SpawnTreeAmount)
+	private void SpawnTreesOnMesh(int SpawnTreeAmount)
 	{
 
 		float baseY = 0;
-		
+
 		for (int i = 0; i < SpawnTreeAmount; i++)
 		{
-			yield return new WaitForSeconds(treeSpawnWaitTimer);
-
 			spawnTreeXPosition = Random.Range(-maximumSpawnTreeXPosition, maximumSpawnTreeXPosition);
 			spawnTreeZPosition = Random.Range(-maximumSpawnTreeZPosition, maximumSpawnTreeZPosition);
-			
-			float spawnTreeY = Random.Range(-baseY, baseY);
 
 			// GameObject spawnedTree = Instantiate(treeSettings.treeDataSettings., treeSpawnPosition, treeSettings.treeDataSettings.tree.transform.rotation);
 
@@ -192,20 +218,45 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 
 			if (Physics.Raycast(m_CameraReference.position, -Vector3.up, out hit))
 			{
-				Debug.Log("[EnvironmentTerrainGenerator.SpawnTreesOnMesh]: " +  "Spawn Offset Y Raycast Hit: " + hit.point.y);
-			
+				// Debug.Log("[EnvironmentTerrainGenerator.SpawnTreesOnMesh]: " + "Spawn Offset Y Raycast Hit: " + hit.point.y);
+
 				Debug.DrawLine(m_CameraReference.position, hit.point, Color.red);
 
 				// Set the new spawn position y to where the raycast hit an object. 
 				newSpawnPosition.y += hit.point.y;
 			}
-			
+
 			GameObject spawned = Instantiate(TreePrefab, newSpawnPosition, TreePrefab.transform.rotation);
 
+			if (!spawned.GetComponent<NavMeshObstacle>())
+			{	
+				NavMeshObstacle obstacle;
+				// Add navigation mesh obstacle script to the game object 
+				spawned.AddComponent<NavMeshObstacle>();
+
+				// After the component has been added to the spawned in tree game object, we need to get a reference to it 
+				obstacle = spawned.transform.GetComponent<NavMeshObstacle>();
+
+				// Set the obstacle to be carving out an area within the terrain 
+				obstacle.carving = true;
+
+				// Change the obstacles shape to the navigation mesh obstacle shape capsule property
+				// I don't know this sort of just makes sense for trees right ?? haha
+				obstacle.shape = NavMeshObstacleShape.Capsule;
+			}
+
+			// Add the spawned tree gameobjects to the spawned in list 
 			spawnedTrees.Add(spawned);
+
+			// Add each tree to a list of Vector 3 tree spawn positions ( mostly for debugging ) 
+			spawnedTreePositions.Add(spawned.transform.position);
 		}
+
+
+		// This could be used to generate the trees asyncronously while the game is loading in the main scene 
+		EnvironmentEvents.HandleTreesSpawnedEvent?.Invoke(spawnedTrees);
+		
+		// This is more for debugging at this point and I am just experimenting with ways to go about this!  
+		EnvironmentEvents.HandleTreeSpawnPositionsEvent?.Invoke(spawnedTreePositions);
 	}
-
-
-
 }

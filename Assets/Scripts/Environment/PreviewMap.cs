@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 
 
@@ -10,6 +11,7 @@ public class PreviewMap : MonoBehaviour
 	public Renderer textureRender;
 	public MeshFilter meshFilter;
 	public MeshRenderer meshRenderer;
+
 
 	public enum DrawMode { NoiseMap, Mesh, FalloffMap };
 	public DrawMode drawMode;
