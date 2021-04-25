@@ -118,7 +118,7 @@ public class MainPlayerTank : MonoBehaviour
 			return;
 		}
 
-		Movement.SetMovementInput(Controls.GetUserInput(PlayerInput.UserInput.Move), Controls.GetUserInput(PlayerInput.UserInput.Rotate));
+		Movement.SetMovementInput(Controls.GetUserInput(PlayerInput.UserInput.Move), Controls.GetUserInput(PlayerInput.UserInput.Rotate), Controls.GetUserInput(PlayerInput.UserInput.Boost));
 
 		Weapons.SetWeaponFiringInput(Controls.GetUserInput(PlayerInput.UserInput.Fire));
 
@@ -169,7 +169,7 @@ public class MainPlayerTank : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log("MainPlayerTank.ChangeHealth]: " + "Calling Health.SetHealth() for the current players Health");
+			Debug.Log("MainPlayerTank.ChangeHealth]: " + "Calling Health.SetHealth for the current players Health");
 			Health.SetHealth(Amount);
 		}
 	}
@@ -235,12 +235,13 @@ public class MainPlayerTank : MonoBehaviour
 
 		#region Public Variables 
 
-		public enum UserInput { Move, Rotate, Fire, ADS };
+		public enum UserInput { Move, Rotate, Fire, ADS, Boost };
 
 		public KeyCode Forward = KeyCode.W;
 		public KeyCode Backwards = KeyCode.S;
 		public KeyCode Left = KeyCode.A;
 		public KeyCode Right = KeyCode.D;
+		public KeyCode Boost = KeyCode.LeftShift;
 		public KeyCode MouseFire = KeyCode.Mouse0;
 		public KeyCode MouseAim = KeyCode.Mouse1;
 
@@ -312,6 +313,18 @@ public class MainPlayerTank : MonoBehaviour
 						}
 						break;
 					}
+				case UserInput.Boost:
+					{
+						if (Input.GetKey(Boost))
+						{
+							value = 1;
+						}
+						else if (Input.GetKeyUp(Boost))
+						{
+							value = -1;
+						}
+						break;
+					}
 			}
 
 
@@ -342,30 +355,64 @@ public class MainPlayerTank : MonoBehaviour
 
 		public float sensitivityMultiplier = 1;
 
+		public float BoostedMovementSpeed = 21;
+
 
 		#endregion
 
 		#region Private Variables 
 
+		/// <summary>
+		///		The maximum downwards amount the turret can rotate on the Y Axis 
+		/// </summary>
 		[Header("Mouse Settings")]
 		[SerializeField] private float minimumTurretRotationY = -0.5f;
 		
+		/// <summary>
+		///		The maximum amount the turret can rotate on the Y Axis 
+		/// </summary>
 		[SerializeField] private float maximumTurretRotationY = 7f;
 
+		/// <summary>
+		///		The clamped camera x rotational value 
+		/// </summary>
 		[HideInInspector] public float clampedCameraXRotation;
+
+		/// <summary>
+		///		The duration to fade the audio for between aiming and not aiming 
+		/// </summary>
 		[HideInInspector] public float audioFadeDuration = 1;
+
+		/// <summary>
+		///		Minimum and Maximum Turret Aiming Volume 
+		/// </summary>
 		[HideInInspector] public float turretAimingVolumeMin = 0, turretAimingVolumeMax = 100;
 
+		/// <summary>
+		///		The players X & Y Mouse Position 
+		/// </summary>
 		[SerializeField] private float MouseX, MouseY;
 
+		/// <summary>
+		///		Reference to the Main Player Tank's Transform 
+		/// </summary>
 		[SerializeField] private Transform m_PlayerRef;
 
 		private Rigidbody m_Rigidbody;
 
+		/// <summary>
+		///		Reference to the Tanks Particle Effects 
+		/// </summary>
 		private TankEffects m_Effects = new TankEffects();
 
-		public TankAudio m_AudioEffects = new TankAudio();
+		/// <summary>
+		///		Reference to the Tanks Audio Effects 
+		/// </summary>
+		[SerializeField] private TankAudio m_AudioEffects = new TankAudio();
 
+		/// <summary>
+		///		Reference to the Players Camera 
+		/// </summary>
 		[SerializeField] private Transform m_CameraReference;
 
 		[SerializeField] private bool m_EnablePlayerMovementInput;
@@ -402,18 +449,32 @@ public class MainPlayerTank : MonoBehaviour
 			EnablePlayerMovementInput(false);
 		}
 
+		/// <summary>
+		///		Once the game has started - The players movement gets enabled 
+		/// </summary>
+		/// <param name="AllowPlayerMovement"></param>
 		public void EnablePlayerMovementInput(bool AllowPlayerMovement) => m_EnablePlayerMovementInput = AllowPlayerMovement;
 		
-		public void SetMovementInput(float ForwardInput, float RotationInput)
+
+		/// <summary>
+		///		Sets the Main Player Tanks Forward and Reverse Input & Rotatation Input 
+		/// </summary>
+		/// <param name="ForwardInput"></param>
+		/// <param name="RotationInput"></param>
+		public void SetMovementInput(float ForwardInput, float RotationInput, float BoostingInput)
 		{
 			if (m_EnablePlayerMovementInput == false)
 			{
 				return;
 			}
 
+			 bool isCurrentlyBoosting = BoostingInput > 0 ? true : false;
 
-
-			Movement(ForwardInput, RotationInput);
+	
+			// Handles Movement for the player 
+			Movement(ForwardInput, RotationInput, isCurrentlyBoosting);
+			
+			// Begins playing the Tanks Audio Effects 
 			m_AudioEffects.PlayEngineSound(ForwardInput, RotationInput);
 		}
 
@@ -423,9 +484,17 @@ public class MainPlayerTank : MonoBehaviour
 
 		#region Private Methods 
 
-		private void Movement(float vertical, float horizontal)
+		/// <summary>
+		///		Handles the Tanks Movement Input 
+		/// </summary>
+		/// <param name="vertical"></param>
+		/// <param name="horizontal"></param>
+		private void Movement(float vertical, float horizontal, bool isCurrentlyBoosting)
 		{
-			Vector3 direction = m_PlayerRef.transform.forward * vertical * MovementSpeed * Time.deltaTime;
+			float s_CurrentMovementSpeed = isCurrentlyBoosting == true ? BoostedMovementSpeed : MovementSpeed;
+
+
+			Vector3 direction = m_PlayerRef.transform.forward * vertical * s_CurrentMovementSpeed * Time.deltaTime;
 			float turnAngle = horizontal * TurningSpeed * Time.deltaTime;
 
 
@@ -437,6 +506,11 @@ public class MainPlayerTank : MonoBehaviour
 	
 		private float desiredX;
 
+
+
+		/// <summary>
+		///		Handles Aiming for the Tank's Primary Weapon 
+		/// </summary>
 		private void AimWeapon()
 		{
 

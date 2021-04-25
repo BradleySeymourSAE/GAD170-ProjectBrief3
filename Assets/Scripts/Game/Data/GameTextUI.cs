@@ -32,8 +32,13 @@ public static class GameTextUI
 	public static string CreditsMenu_DevelopmentTeamTitle = "Development Team";
 	public static string CreditsMenu_DevelopmentTeamRole = "Project Lead";
 
-	public static string CreditsMenu_SpecialThanksTitle = "Special Thanks";
-	public static string CreditsMenu_SpecialThanksMention_DICE = "Battlefield 4 Models - Dice / EA";
+	public static string CreditsMenu_InspirationHeader = "Design Inspiration";
+	public static string CreditsMenu_DiceMention = "Battlefield 3 Dice / EA - Game Models & Audio Assets";
+	public static string CreditsMenu_SebastianLagueMention = "Sebastian Lague - Procedural Generation & Erosion Projects";
+
+
+
+
 	public static string CreditsMenu_Developer = "Bradley Seymour";
 	public static string CreditsMenu_Exit = "Back to main menu";
 	#endregion

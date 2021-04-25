@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09d01743ffc58194598fcf6e6c0b8982, type: 3}
   m_Name: Health
   m_EditorClassIdentifier: 
-  RotationsPerSecond: 150
-  Amplitude: 0.3
-  Frequency: 2
+  RotationsPerSecond: 200
+  Amplitude: 0.65
+  Frequency: 1.5
   Enabled: 1
   ItemType: 0
-  startingPosition: {x: 133.94395, y: 0.35, z: 181.61406}
-  Offset: {x: 133.94395, y: 0.25729465, z: 181.61406}
+  startingPosition: {x: 95.50273, y: 0.35, z: 79.79328}
+  Offset: {x: 95.50273, y: -0.2042088, z: 79.79328}
   Rounds: 0
   HP: 35

@@ -74,7 +74,7 @@ public class NextWaveUI
 
 	public void SetNextWave(int NextWaveIndex) => nextWaveText.GetComponentInChildren<TMP_Text>().text = NextWaveIndex.ToString("0");
 
-	public void SetCurrentWave(int CurrentWaveIndex) => waveText.GetComponentInChildren<TMP_Text>().text = CurrentWaveIndex.ToString("0");
+	public void SetCurrentWave(int CurrentWaveIndex) => waveText.GetComponentInChildren<TMP_Text>().text = (CurrentWaveIndex - 1).ToString("0");
 	
 	#endregion
 

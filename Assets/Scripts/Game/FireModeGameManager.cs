@@ -227,7 +227,8 @@ public class FireModeGameManager : MonoBehaviour
 			totalAITanksRemaining = 0;
 
 			// Invoke the next wave event 
-			Debug.Log("[FireModeGameManager.DespawnEnemyAI]: " + "Starting Next Wave Event! - There are no enemies remaining" + totalAITanksRemaining);
+			Debug.Log("[FireModeGameManager.DespawnEnemyAI]: " + "Starting Next Wave Event! - There are no enemies remaining");
+
 			
 			// Then we want to run the next round 
 			FireModeEvents.HandleNextWaveStarted?.Invoke();
@@ -295,7 +296,7 @@ public class FireModeGameManager : MonoBehaviour
 	}
 
 	/// <summary>
-	///		Resets the current game's round 
+	///		Resets the game from the beginning! 
 	/// </summary>
 	private void ResetGame()
 	{
@@ -369,7 +370,7 @@ public class FireModeGameManager : MonoBehaviour
 		// Increase the amount of tanks to spawn into the next wave 
 		tankAISpawnAmount = startingTanks + currentWaveIndex;
 
-		// Spawn the items into the game 
+		// Spawn the items into the game
 		FireModeEvents.SpawnGameItemsEvent(healthPackSpawnAmount, ammunitionPackSpawnAmount);
 
 		// Wait X Amount of Seconds before the enemies are spawned

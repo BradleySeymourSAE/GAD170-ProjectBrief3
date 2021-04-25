@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 423761324}
   m_Layer: 6
-  m_Name: --- Environment ---
+  m_Name: --- STABLE_ENVIRONMENT ---
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -372,9 +372,9 @@ MonoBehaviour:
     type: 3}
   TankPrefab: {fileID: 3853994946362038195, guid: 1ce58fce8b55fd1469e8f5cb9ea5a86c,
     type: 3}
-  HealthPackPrefab: {fileID: 1436435221243773122, guid: 13307f9489db2b9449e2987b07df6583,
+  HealthPackPrefab: {fileID: 1077587173402846188, guid: b9287e22c3d29234c9beab0e3762c021,
     type: 3}
-  AmmunitionPackPrefab: {fileID: 8566082739271975305, guid: d43a2adf532504c4e831593e193b3db5,
+  AmmunitionPackPrefab: {fileID: 3743453949913276104, guid: 335e617773792174692d7359ad8bb1c1,
     type: 3}
   PlayerSpawnPoint: {fileID: 546290472}
   AISpawnPoint: {fileID: 1321749086}
@@ -410,7 +410,7 @@ GameObject:
   - component: {fileID: 1477984664}
   - component: {fileID: 1477984666}
   m_Layer: 12
-  m_Name: MinimapCamera
+  m_Name: --- MINIMAP RENDER CAMERA ---
   m_TagString: Minimap Camera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -552,7 +552,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1553962886
 GameObject:
@@ -677,7 +677,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.20666666
+  m_VoxelSize: 2.5
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 23800000, guid: cd524968673776b44ba1c68dd9b14668, type: 2}
 --- !u!1001 &1657938515
@@ -947,7 +947,7 @@ PrefabInstance:
     - target: {fileID: 9016878050404021942, guid: 61824b3c5f81e074e9aa0190728084b9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9016878050404021942, guid: 61824b3c5f81e074e9aa0190728084b9,
         type: 3}

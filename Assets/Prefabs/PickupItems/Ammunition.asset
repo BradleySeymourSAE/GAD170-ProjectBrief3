@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09d01743ffc58194598fcf6e6c0b8982, type: 3}
   m_Name: Ammunition
   m_EditorClassIdentifier: 
-  RotationsPerSecond: 190
-  Amplitude: 0.5
-  Frequency: 2
+  RotationsPerSecond: 150
+  Amplitude: 0.4
+  Frequency: 1
   Enabled: 1
   ItemType: 1
-  startingPosition: {x: 147.15521, y: 0.35, z: -134.98865}
-  Offset: {x: 147.15521, y: -0.13429168, z: -134.98865}
+  startingPosition: {x: -92.83179, y: 0.35, z: 108.362816}
+  Offset: {x: -92.83179, y: -0.045074977, z: 108.362816}
   Rounds: 5
   HP: 0

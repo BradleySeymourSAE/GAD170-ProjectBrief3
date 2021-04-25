@@ -86,6 +86,7 @@ public class FireModeUI : MonoBehaviour
 		FireModeEvents.IncreaseEnemiesRemainingEventUI += SetEnemiesRemainingUI;
 		FireModeEvents.IncreaseAmmunitionEventUI += SetPlayerAmmunitionUI; 
 		FireModeEvents.IncreaseWaveEventUI += SetNextWaveUI; 
+		FireModeEvents.IncreaseWaveEventUI += SetCurrentWaveUI;
 	}
 
 	/// <summary>
@@ -102,8 +103,10 @@ public class FireModeUI : MonoBehaviour
 		FireModeEvents.IncreasePlayerHealthEventUI -= SetPlayerHealthUI;
 		FireModeEvents.IncreasePlayerHealthEventUI -= SetPlayerHealthTextUI;
 		FireModeEvents.IncreaseEnemiesRemainingEventUI -= SetEnemiesRemainingUI;
-		FireModeEvents.IncreaseAmmunitionEventUI -= SetPlayerAmmunitionUI; // Working 
-		FireModeEvents.IncreaseWaveEventUI -= SetNextWaveUI; // On and off 
+		FireModeEvents.IncreaseAmmunitionEventUI -= SetPlayerAmmunitionUI; 
+		FireModeEvents.IncreaseWaveEventUI -= SetNextWaveUI;
+		FireModeEvents.IncreaseWaveEventUI -= SetCurrentWaveUI;
+
 	}
 
 	/// <summary>
@@ -196,10 +199,15 @@ public class FireModeUI : MonoBehaviour
 	}
 
 	/// <summary>
-	///		Sets the current wave text that the player has made it to 
+	///		Sets the current wave text for
 	/// </summary>
 	/// <param name="CurrentWaveIndex"></param>
-	private void SetCurrentWaveUI(int CurrentWaveIndex) => nextWaveUI.SetCurrentWave(CurrentWaveIndex);
+	private void SetCurrentWaveUI(int CurrentWaveIndex)
+	{ 
+		nextWaveUI.SetCurrentWave(CurrentWaveIndex);
+		inGameWaveUI.waveCounterUI.SetCurrentWaveInGame(CurrentWaveIndex);
+	}
+
 
 	/// <summary>
 	///		Sets the next wave index 

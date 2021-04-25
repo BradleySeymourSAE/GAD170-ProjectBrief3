@@ -190,12 +190,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2aba1f23cc7b8a4ea8c7f9147998baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionPrefab: {fileID: 4577931505699952433, guid: 6b568f7c223607842860e6570de486bf,
+  explosionPrefab: {fileID: 3876499796576913078, guid: a93adeeb4164edf4a8962c4209ab9cf2,
     type: 3}
   ObjectLayer:
     serializedVersion: 2
     m_Bits: 384
-  maxDamage: 15
+  maxDamage: 25
   explosionForce: 1200
   maxShellLifeTime: 5
   explosionRadius: 10

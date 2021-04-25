@@ -128,7 +128,10 @@ public static class FireModeEvents
 	/// </summary>
 	public static IntParameterDelegate IncreaseWaveEventUI;
 
-
+	/// <summary>
+	///		Increases the current wave IN GAME UI 
+	/// </summary>
+	public static IntParameterDelegate IncreaseCurrentWaveEventUI;
 
 	/// <summary>
 	///		Increases the players score! 
