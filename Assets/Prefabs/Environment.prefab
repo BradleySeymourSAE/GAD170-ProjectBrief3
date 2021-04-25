@@ -24,12 +24,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951675694153176461}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 7816573874862503587}
-  m_RootOrder: 1
+  m_Father: {fileID: 7816573874750716030}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1951675694153176451
 MonoBehaviour:
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 119
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
@@ -57,7 +57,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 2.5
+  m_VoxelSize: 1.6666666
   m_BuildHeightMesh: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &7816573873945042128
@@ -196,11 +196,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7816573874750716016}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -74, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7816573873945042140}
   - {fileID: 7816573874841776940}
+  - {fileID: 1951675694153176450}
   m_Father: {fileID: 7816573874862503587}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -239,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 820ccade70c8f86488df1464f6552f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelOfDetailColliderIndex: 1
+  levelOfDetailColliderIndex: 0
   DetailLevels:
   - lod: 0
     visibleDistanceThreshold: 200
@@ -251,9 +252,9 @@ MonoBehaviour:
   treeSettings: {fileID: 11400000, guid: 2d090f984583efb4eb9737a49e2d787a, type: 2}
   m_CurrentPlayer: {fileID: 0}
   mapMaterial: {fileID: 2100000, guid: f060b564be201414a8d0601b21f6e124, type: 2}
-  maximumTreeSpawnCount: 2500
-  maximumSpawnTreeXPosition: 1000
-  maximumSpawnTreeZPosition: 1000
+  maximumTreeSpawnCount: 1000
+  maximumSpawnTreeXPosition: 1210
+  maximumSpawnTreeZPosition: 1210
   timerBeforeTreesSpawned: 10
   timer: 0
   TreePrefab: {fileID: 196434, guid: 1833ba93709e80944b9f2627881f3f4c, type: 3}
@@ -392,7 +393,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7816573874750716030}
-  - {fileID: 1951675694153176450}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

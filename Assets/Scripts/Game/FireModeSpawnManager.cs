@@ -118,6 +118,8 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// </summary>
 	private Transform m_PlayerReference;
 
+	private Vector3 startingSpawnPosition;
+
 	#endregion
 
 	#region Unity References   
@@ -152,7 +154,14 @@ public class FireModeSpawnManager : MonoBehaviour
 	{
 		m_ItemSpawnPoint = GameItemSpawnPoint.position;
 		m_WaveSpawnPoint = AISpawnPoint.position;
-		m_PlayerSpawnPoint = PlayerSpawnPoint.position;
+		m_PlayerReference = FindObjectOfType<MainPlayerTank>().transform;
+
+		if (m_PlayerReference != null)
+		{
+			startingSpawnPosition = m_PlayerReference.transform.position;
+			m_PlayerReference.gameObject.SetActive(false);
+
+		}
 	}
 
 	#endregion
@@ -164,6 +173,7 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// </summary>
 	private void SpawnPlayer()
 	{
+
 		GameObject spawnedPlayer = Instantiate(PlayerPrefab, m_PlayerSpawnPoint, PlayerPrefab.transform.rotation);
 
 		if (spawnedPlayer.GetComponent<MainPlayerTank>())

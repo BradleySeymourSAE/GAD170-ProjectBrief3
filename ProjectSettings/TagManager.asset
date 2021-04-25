@@ -11,6 +11,7 @@ TagManager:
   - AI
   - Bullet
   - AI_EnemyCharacter
+  - ProceduralTreePlacement
   layers:
   - Default
   - TransparentFX

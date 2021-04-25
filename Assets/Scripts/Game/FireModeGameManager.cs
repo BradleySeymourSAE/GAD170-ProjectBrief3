@@ -17,6 +17,13 @@ public class FireModeGameManager : MonoBehaviour
 	#region Public Variables 
 
 	/// <summary>
+	///		The amount of time to wait before spawning the player in and to give the terrain enough time to
+	///		A) Be Created 
+	///		B) Generate the Trees on the map before the player is spawned in 
+	/// </summary>
+	public float generateTerrainSetupTimer = 2f;
+
+	/// <summary>
 	///		The amount of seconds to wait during the pre game setup  
 	/// </summary>
 	public float preWaveSetupTimer = 15f; // seconds before game starts
@@ -112,6 +119,12 @@ public class FireModeGameManager : MonoBehaviour
 	/// </summary>
 	[SerializeField] private int tankAISpawnAmount;
 
+	/// <summary>
+	///		Tree Spawner Camera Reference - I am thinking towards using this to spawn the enemies on the nav mesh as they are
+	///		slightly above the ground atm and its quite frustrating... xD 
+	/// </summary>
+	[SerializeField] private Transform m_SpawnCameraReference;
+
 	#endregion
 
 	#region Unity Events  
@@ -162,9 +175,6 @@ public class FireModeGameManager : MonoBehaviour
 	}
 
 	#endregion
-
-
-
 
 	#region Private Methods 
 
@@ -326,6 +336,10 @@ public class FireModeGameManager : MonoBehaviour
 		FireModeEvents.ResetGameEvent?.Invoke(); 
 
 		FireModeEvents.SpawnPlayerEvent?.Invoke(); // spawn the player in
+
+		yield return new WaitForSeconds(generateTerrainSetupTimer);
+
+
 
 		FireModeEvents.PreGameStartedEvent?.Invoke();
 

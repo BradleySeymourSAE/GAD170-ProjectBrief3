@@ -25,7 +25,7 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 	public TextureData2DSettings textureSettings;
 	public TreeSettings treeSettings;
 
-	public Transform m_CurrentPlayer;
+	[SerializeField] private Transform m_CurrentPlayer;
 	public Material mapMaterial;
 
 	[Header("Tree Spawning")]
@@ -61,9 +61,9 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 
 	private void Awake()
 	{
-		if (GameObject.Find("Main Camera").GetComponent<Camera>())
+		if (GameObject.Find("SpawnCamera").GetComponent<Camera>())
 		{
-			m_CameraReference = GameObject.Find("Main Camera").transform;
+			m_CameraReference = GameObject.Find("SpawnCamera").transform;
 		}
 	}
 
@@ -101,6 +101,13 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 
 	private void Update()
 	{
+
+		if (!m_CurrentPlayer && FindObjectOfType<MainPlayerTank>())
+		{
+			m_CurrentPlayer = FindObjectOfType<MainPlayerTank>().transform;
+		}
+		
+
 		viewerPosition = new Vector2 (m_CurrentPlayer.position.x, m_CurrentPlayer.position.z);
 
 
@@ -254,9 +261,9 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 
 
 		// This could be used to generate the trees asyncronously while the game is loading in the main scene 
-		EnvironmentEvents.HandleTreesSpawnedEvent?.Invoke(spawnedTrees);
+		// EnvironmentEvents.HandleTreesSpawnedEvent?.Invoke(spawnedTrees);
 		
 		// This is more for debugging at this point and I am just experimenting with ways to go about this!  
-		EnvironmentEvents.HandleTreeSpawnPositionsEvent?.Invoke(spawnedTreePositions);
+		// EnvironmentEvents.HandleTreeSpawnPositionsEvent?.Invoke(spawnedTreePositions);
 	}
 }

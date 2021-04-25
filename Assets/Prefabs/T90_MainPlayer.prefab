@@ -15670,7 +15670,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7698638841374273006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7356180210314323164}
@@ -15839,6 +15839,7 @@ MonoBehaviour:
     TurningSpeed: 80
     sensitivity: 35
     sensitivityMultiplier: 1
+    BoostedMovementSpeed: 21
     minimumTurretRotationY: -1.5
     maximumTurretRotationY: 7
     clampedCameraXRotation: 0
@@ -15880,6 +15881,7 @@ MonoBehaviour:
     Backwards: 115
     Left: 97
     Right: 100
+    Boost: 304
     MouseFire: 323
     MouseAim: 324
   enablePlayerControl: 1
