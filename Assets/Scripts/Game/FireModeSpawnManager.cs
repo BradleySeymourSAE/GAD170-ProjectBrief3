@@ -40,22 +40,22 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// <summary>
 	///		The player's Spawn Point 
 	/// </summary>
-	public Transform PlayerSpawnPoint;
+	public Transform playerSpawnPoint;
 
 	/// <summary>
 	///		 The Enemy AI's Spawn Point 
 	/// </summary>
-	public Transform AISpawnPoint;
+	public Transform aiWaveSpawnPoint;
 
 	/// <summary>
 	///		The Collectable Item Spawn 
 	/// </summary>
-	public Transform GameItemSpawnPoint;
+	public Transform gameItemsSpawnPoint;
 
 	/// <summary>
 	///		The wave spawn maximum range 
 	/// </summary>
-	public float waveSpawnRange = 250f;
+	public float maximumWaveSpawnRange = 250f;
 	
 	/// <summary>
 	///		Offset Y Spawn Position 
@@ -72,6 +72,13 @@ public class FireModeSpawnManager : MonoBehaviour
 	///		Maximum Item Spawn Range 
 	/// </summary>
 	public float itemSpawnRange = 100f;
+
+	public float maximumHealthSpawnX = 300;
+	public float maximumHealthSpawnZ = 250;
+
+	public float maximumAmmunitionSpawnX = 150;
+	public float maximumAmmunitionSpawnZ = 300;
+
 	
 	/// <summary>
 	///		Maximum Item's Y Positional Offset 
@@ -82,26 +89,6 @@ public class FireModeSpawnManager : MonoBehaviour
 	#endregion
 
 	#region Private Variables 
-
-	/// <summary>
-	///		The minimum range for spawning enemies 
-	/// </summary>
-	private float minimumWaveSpawnRange = 50f;
-
-	/// <summary>
-	///		The position of the wave spawn point 
-	/// </summary>
-	private Vector3 m_WaveSpawnPoint;
-
-	/// <summary>
-	///		The position of the item's spawn point 
-	/// </summary>
-	private Vector3 m_ItemSpawnPoint;
-
-	/// <summary>
-	///		The position to spawn the player 
-	/// </summary>
-	private Vector3 m_PlayerSpawnPoint;
 	
 	/// <summary>
 	///		List of spawned enemies 
@@ -118,9 +105,20 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// </summary>
 	private Transform m_PlayerReference;
 
-	private Vector3 startingSpawnPosition;
+	/// <summary>
+	///		Reference to the spawn items camera 
+	/// </summary>
+	private Transform m_SpawnCameraReference;
 
 	#endregion
+
+
+	float spawnHealthXPosition;
+	float spawnHealthZPosition;
+
+	float spawnRoundsXPosition;
+	float spawnRoundsZPosition;
+
 
 	#region Unity References   
 	
@@ -150,19 +148,19 @@ public class FireModeSpawnManager : MonoBehaviour
 		FireModeEvents.ResetGameEvent -= HandleOnReset; // Restarts the current wave 
 	}
 
-	private void Start()
+
+	private void Awake()
 	{
-		m_ItemSpawnPoint = GameItemSpawnPoint.position;
-		m_WaveSpawnPoint = AISpawnPoint.position;
-		m_PlayerReference = FindObjectOfType<MainPlayerTank>().transform;
-
-		if (m_PlayerReference != null)
+		if (GameObject.Find("SpawnCamera").GetComponent<Camera>())
 		{
-			startingSpawnPosition = m_PlayerReference.transform.position;
-			m_PlayerReference.gameObject.SetActive(false);
-
+			m_SpawnCameraReference = GameObject.Find("SpawnCamera").transform;
+		}
+		else
+		{
+			Debug.LogWarning("[FireModeSpawnManager.Awake]: " + "Could not find a reference to the spawn object's camera!");
 		}
 	}
+
 
 	#endregion
 
@@ -173,8 +171,9 @@ public class FireModeSpawnManager : MonoBehaviour
 	/// </summary>
 	private void SpawnPlayer()
 	{
+		
 
-		GameObject spawnedPlayer = Instantiate(PlayerPrefab, m_PlayerSpawnPoint, PlayerPrefab.transform.rotation);
+		GameObject spawnedPlayer = Instantiate(PlayerPrefab, playerSpawnPoint.transform.position, PlayerPrefab.transform.rotation);
 
 		if (spawnedPlayer.GetComponent<MainPlayerTank>())
 		{
@@ -239,10 +238,14 @@ public class FireModeSpawnManager : MonoBehaviour
 		// Repeat the process for the amount of tanks we want in the round 
 		for (int i = 0; i < AISpawnAmount; i++)
 		{
-			float xPosition = Mathf.Round(Random.Range(-waveSpawnRange, waveSpawnRange) * magnitude);
-			float zPosition = Mathf.Round(Random.Range(-waveSpawnRange, waveSpawnRange) * magnitude);
+			float xPosition = Random.Range(-maximumWaveSpawnRange, maximumWaveSpawnRange);
+			float zPosition = Random.Range(-maximumWaveSpawnRange, maximumWaveSpawnRange);
 
-			Vector3 tempSpawnPosition = new Vector3(m_WaveSpawnPoint.x + xPosition, 0f, m_WaveSpawnPoint.z + zPosition);
+			Vector3 tempSpawnPosition = new Vector3(aiWaveSpawnPoint.transform.position.x + xPosition, 0f, aiWaveSpawnPoint.transform.position.z + zPosition);
+
+
+			// Raycast to get the right Y Axis for the spawned in AI  
+
 
 			GameObject tankClone = Instantiate(TankPrefab, tempSpawnPosition, TankPrefab.transform.rotation);
 
@@ -268,10 +271,14 @@ public class FireModeSpawnManager : MonoBehaviour
 		// Create health packs and set their spawn points randomly 
 		for (int i = 0; i < HealthPacks; i++)
 		{
-			float xPosition = Random.Range(-itemSpawnRange, itemSpawnRange);
-			float zPosition = Random.Range(-itemSpawnRange, itemSpawnRange);
-			
-			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + xPosition, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + zPosition);
+
+
+			spawnHealthXPosition = Random.Range(-maximumHealthSpawnX, maximumHealthSpawnX);
+			spawnHealthZPosition = Random.Range(-maximumHealthSpawnZ, maximumHealthSpawnZ);
+		
+
+
+			Vector3 newSpawnPoint = new Vector3(gameItemsSpawnPoint.transform.position.x + spawnHealthXPosition, 0 + itemSpawnYPositionOffset, gameItemsSpawnPoint.transform.position.z + spawnHealthZPosition);
 
 			GameObject s_Health = Instantiate(HealthPackPrefab, newSpawnPoint, HealthPackPrefab.transform.rotation);
 			
@@ -281,10 +288,10 @@ public class FireModeSpawnManager : MonoBehaviour
 		// Create ammunition packs and set their spawn points randomly.
 		for (int i = 0; i < AmmunitionPacks; i++)
 		{
-			float x = Random.Range(-itemSpawnRange, itemSpawnRange);
-			float z = Random.Range(-itemSpawnRange, itemSpawnRange);
+			spawnRoundsXPosition = Random.Range(-maximumAmmunitionSpawnX, maximumAmmunitionSpawnX);
+			spawnRoundsZPosition = Random.Range(-maximumAmmunitionSpawnZ, maximumAmmunitionSpawnZ);
 
-			Vector3 newSpawnPoint = new Vector3(m_ItemSpawnPoint.x + x, m_ItemSpawnPoint.y + itemSpawnYPositionOffset, m_ItemSpawnPoint.z + z);
+			Vector3 newSpawnPoint = new Vector3(gameItemsSpawnPoint.transform.position.x + spawnRoundsXPosition, 0 + itemSpawnYPositionOffset, gameItemsSpawnPoint.transform.position.z + spawnRoundsZPosition);
 
 			GameObject s_Ammunition = Instantiate(AmmunitionPackPrefab, newSpawnPoint, AmmunitionPackPrefab.transform.rotation);
 

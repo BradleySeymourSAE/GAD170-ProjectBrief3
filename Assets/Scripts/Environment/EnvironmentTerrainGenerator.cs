@@ -160,7 +160,7 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 			int currentChunkCoordX = Mathf.RoundToInt(viewerPosition.x / m_meshWorldSize);
 			int currentChunkCoordY = Mathf.RoundToInt(viewerPosition.y / m_meshWorldSize);
 
-			Debug.Log("Current Chunk Coordinate X: " + currentChunkCoordX + "Current Chunk Coordinate Y: " + currentChunkCoordY);
+			// Debug.Log("Current Chunk Coordinate X: " + currentChunkCoordX + "Current Chunk Coordinate Y: " + currentChunkCoordY);
 
 
 			for (int yOffset = -VisibleTerrainInViewDistance; yOffset <= VisibleTerrainInViewDistance; yOffset++)
@@ -215,8 +215,7 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 			spawnTreeXPosition = Random.Range(-maximumSpawnTreeXPosition, maximumSpawnTreeXPosition);
 			spawnTreeZPosition = Random.Range(-maximumSpawnTreeZPosition, maximumSpawnTreeZPosition);
 
-			// GameObject spawnedTree = Instantiate(treeSettings.treeDataSettings., treeSpawnPosition, treeSettings.treeDataSettings.tree.transform.rotation);
-
+		
 			Vector3 newSpawnPosition = new Vector3(spawnTreeXPosition, baseY, spawnTreeZPosition);
 
 			m_CameraReference.transform.position = new Vector3(newSpawnPosition.x, m_CameraReference.transform.position.y, newSpawnPosition.z);
@@ -227,7 +226,7 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 			{
 				// Debug.Log("[EnvironmentTerrainGenerator.SpawnTreesOnMesh]: " + "Spawn Offset Y Raycast Hit: " + hit.point.y);
 
-				Debug.DrawLine(m_CameraReference.position, hit.point, Color.red);
+				// Debug.DrawLine(m_CameraReference.position, hit.point, Color.red);
 
 				// Set the new spawn position y to where the raycast hit an object. 
 				newSpawnPosition.y += hit.point.y;
@@ -237,18 +236,14 @@ public class EnvironmentTerrainGenerator : MonoBehaviour
 
 			if (!spawned.GetComponent<NavMeshObstacle>())
 			{	
-				NavMeshObstacle obstacle;
 				// Add navigation mesh obstacle script to the game object 
-				spawned.AddComponent<NavMeshObstacle>();
+				NavMeshObstacle obstacle = spawned.AddComponent<NavMeshObstacle>();
 
-				// After the component has been added to the spawned in tree game object, we need to get a reference to it 
-				obstacle = spawned.transform.GetComponent<NavMeshObstacle>();
 
 				// Set the obstacle to be carving out an area within the terrain 
 				obstacle.carving = true;
 
-				// Change the obstacles shape to the navigation mesh obstacle shape capsule property
-				// I don't know this sort of just makes sense for trees right ?? haha
+				// Navigation Mesh Obstacle Shape can either be a Box or a Capsule
 				obstacle.shape = NavMeshObstacleShape.Capsule;
 			}
 

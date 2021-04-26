@@ -12,6 +12,7 @@ TagManager:
   - Bullet
   - AI_EnemyCharacter
   - ProceduralTreePlacement
+  - SpawnCamera
   layers:
   - Default
   - TransparentFX

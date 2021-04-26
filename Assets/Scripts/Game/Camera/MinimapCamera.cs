@@ -17,17 +17,17 @@ public class MinimapCamera : MonoBehaviour
 	/// <summary>
 	///		Reference to the Main Player's Tank
 	/// </summary>
-	private Transform m_CurrentPlayerRef;
+	[SerializeField] private Transform m_CurrentPlayerRef;
 
 	/// <summary>
 	///		The cameras new position 
 	/// </summary>
-	private Vector3 m_CameraPosition;
+	[SerializeField] private Vector3 m_CameraPosition;
 
 	/// <summary>
 	///		Does the camera currently have a target? 
 	/// </summary>
-	private bool cameraHasTarget = false;
+	[SerializeField] private bool cameraHasTarget = false;
 
 	public LayerMask m_MinimapMask;
 
@@ -36,17 +36,28 @@ public class MinimapCamera : MonoBehaviour
 
 	#region Unity References 
 
+	private void OnEnable()
+	{
+		FireModeEvents.HandleOnPlayerSpawnedEvent += InitializeCamera;
+	}
+
+	private void OnDisable()
+	{
+		FireModeEvents.HandleOnPlayerSpawnedEvent -= InitializeCamera;
+	}
+
+
 	/// <summary>
 	///		Late Update Method
 	/// </summary>
 	private void LateUpdate()
 	{
 
-		if (!cameraHasTarget)
+		if (!cameraHasTarget || !m_CurrentPlayerRef)
 		{
 			return;
 		}
-
+	
 
 		m_CameraPosition = m_CurrentPlayerRef.position;
 
@@ -57,25 +68,6 @@ public class MinimapCamera : MonoBehaviour
 		transform.rotation = Quaternion.Euler(90f, m_CurrentPlayerRef.eulerAngles.y, 0f);
 	}
 
-	#region Unity Events  
-
-	/// <summary>
-///		On Enable Event Listeners 
-/// </summary>
-	private void OnEnable()
-	{
-		FireModeEvents.HandleOnPlayerSpawnedEvent += InitializeCamera;
-	}
-
-	/// <summary>
-	///		On Disable Event Listeners 
-	/// </summary>
-	private void OnDisable()
-	{
-		FireModeEvents.HandleOnPlayerSpawnedEvent -= InitializeCamera;
-	}
-
-	#endregion
 
 	#endregion
 
@@ -89,9 +81,12 @@ public class MinimapCamera : MonoBehaviour
 	{
 		if (PlayerReference.GetComponent<MainPlayerTank>())
 		{
-			m_CurrentPlayerRef = PlayerReference.transform;
-		
-			cameraHasTarget = true;
+			m_CurrentPlayerRef = PlayerReference;
+
+			if (m_CurrentPlayerRef != null)
+			{
+				cameraHasTarget = true;
+			}
 		}
 		else
 		{

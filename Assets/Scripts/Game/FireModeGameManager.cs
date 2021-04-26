@@ -125,6 +125,10 @@ public class FireModeGameManager : MonoBehaviour
 	/// </summary>
 	[SerializeField] private Transform m_SpawnCameraReference;
 
+	/// <summary>
+	///		Reference to the minimap render camera transform 
+	/// </summary>
+	[SerializeField] private Transform m_MinimapRenderCameraReference;
 	#endregion
 
 	#region Unity Events  
@@ -187,6 +191,7 @@ public class FireModeGameManager : MonoBehaviour
 		if (PlayerEntity.GetComponent<MainPlayerTank>())
 		{
 			m_currentPlayerReference = PlayerEntity.GetComponent<MainPlayerTank>();
+
 			Debug.Log("[FireModeGameManager.SpawnedPlayerEntity]: " + "Spawned player entity!");
 		}
 	}
@@ -318,6 +323,7 @@ public class FireModeGameManager : MonoBehaviour
 		ammunitionPackSpawnAmount = startingAmmunitionPacks;
 		tankAISpawnAmount = startingTanks;
 
+
 		Debug.Log("[FireModeGameManager.ResetGame]: " + "Resetting current wave index, current lives and total players score!");
 	}
 
@@ -335,11 +341,9 @@ public class FireModeGameManager : MonoBehaviour
 		Debug.Log("[FireModeGameManager.RunGameModeLogic]: " + "Running game mode logic!");
 		FireModeEvents.ResetGameEvent?.Invoke(); 
 
-		FireModeEvents.SpawnPlayerEvent?.Invoke(); // spawn the player in
-
 		yield return new WaitForSeconds(generateTerrainSetupTimer);
 
-
+		FireModeEvents.SpawnPlayerEvent?.Invoke(); // spawn the player in
 
 		FireModeEvents.PreGameStartedEvent?.Invoke();
 

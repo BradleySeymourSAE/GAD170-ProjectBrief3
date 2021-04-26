@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 424181528229721102}
   m_Layer: 7
   m_Name: Lights_M005
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,7 +110,7 @@ GameObject:
   - component: {fileID: 844412434784277499}
   m_Layer: 7
   m_Name: ype99_M023
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 1076270798106252345}
   m_Layer: 7
   m_Name: ype99_M031
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 1256160243273648936}
   m_Layer: 7
   m_Name: ype99_M013
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -398,7 +398,7 @@ GameObject:
   - component: {fileID: 1282515322549191293}
   m_Layer: 7
   m_Name: ype99_DECALS_M002
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -494,7 +494,7 @@ GameObject:
   - component: {fileID: 1611136749016217069}
   m_Layer: 7
   m_Name: ype99_M032
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -590,7 +590,7 @@ GameObject:
   - component: {fileID: 1706069451588838841}
   m_Layer: 7
   m_Name: ype99_M014
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -686,7 +686,7 @@ GameObject:
   - component: {fileID: 1755824153542427203}
   m_Layer: 7
   m_Name: T90_Barrel
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -783,7 +783,7 @@ GameObject:
   - component: {fileID: 1813289020634971176}
   m_Layer: 7
   m_Name: ype99_M040
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -879,7 +879,7 @@ GameObject:
   - component: {fileID: 1823021567076363073}
   m_Layer: 7
   m_Name: ype99_M025
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -975,7 +975,7 @@ GameObject:
   - component: {fileID: 1886061221584414895}
   m_Layer: 7
   m_Name: ype99_M039
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1071,7 +1071,7 @@ GameObject:
   - component: {fileID: 2308030626231439468}
   m_Layer: 7
   m_Name: NORENCO_M001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1167,7 +1167,7 @@ GameObject:
   - component: {fileID: 2440926417176382401}
   m_Layer: 7
   m_Name: ype99_M011
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1263,7 +1263,7 @@ GameObject:
   - component: {fileID: 2755848851342385707}
   m_Layer: 7
   m_Name: ype99_LOGO_M003
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1359,7 +1359,7 @@ GameObject:
   - component: {fileID: 2761600629352194605}
   m_Layer: 7
   m_Name: ype99_M003
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1455,7 +1455,7 @@ GameObject:
   - component: {fileID: 2876890628879728875}
   m_Layer: 7
   m_Name: ype99_M020
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1551,7 +1551,7 @@ GameObject:
   - component: {fileID: 3107569727891105862}
   m_Layer: 7
   m_Name: ype99_M006
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1647,7 +1647,7 @@ GameObject:
   - component: {fileID: 3256629001247149409}
   m_Layer: 7
   m_Name: ype99_M030
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1743,7 +1743,7 @@ GameObject:
   - component: {fileID: 3313036751626590210}
   m_Layer: 7
   m_Name: ype99_M026
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1839,7 +1839,7 @@ GameObject:
   - component: {fileID: 3326483578071598591}
   m_Layer: 7
   m_Name: Tracks
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2009,7 +2009,7 @@ GameObject:
   - component: {fileID: 3395119634299715024}
   m_Layer: 7
   m_Name: NORENCO_M006
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2105,7 +2105,7 @@ GameObject:
   - component: {fileID: 3785928972795095695}
   m_Layer: 7
   m_Name: NORENCO_M002
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2201,7 +2201,7 @@ GameObject:
   - component: {fileID: 3828373507338054528}
   m_Layer: 7
   m_Name: ype99_M015
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2297,7 +2297,7 @@ GameObject:
   - component: {fileID: 3999786619669528971}
   m_Layer: 7
   m_Name: ype99_DECALS_M004
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2393,7 +2393,7 @@ GameObject:
   - component: {fileID: 4060713363311058509}
   m_Layer: 7
   m_Name: ype99_LOGO_M004
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2487,7 +2487,7 @@ GameObject:
   - component: {fileID: 5288057165795468599}
   - component: {fileID: 6255783887751421180}
   m_Layer: 12
-  m_Name: Sphere
+  m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2500,12 +2500,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4428720780528273715}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalScale: {x: 20, y: 25, z: 1}
   m_Children: []
-  m_Father: {fileID: 2280965428098847925}
-  m_RootOrder: 0
+  m_Father: {fileID: 7033742528294893396}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5288057165795468599
 MeshFilter:
@@ -2514,7 +2514,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4428720780528273715}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &6255783887751421180
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2525,7 +2525,7 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -2534,7 +2534,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 90290793d1147c14982120d255f0d755, type: 2}
+  - {fileID: 2100000, guid: 17f426c62fec82b4cb94f627d35865f3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2570,7 +2570,7 @@ GameObject:
   - component: {fileID: 4472371431443291393}
   m_Layer: 7
   m_Name: NORENCO_M005
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2666,7 +2666,7 @@ GameObject:
   - component: {fileID: 4583265415059986612}
   m_Layer: 7
   m_Name: ype99_M017
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2762,7 +2762,7 @@ GameObject:
   - component: {fileID: 4591292947585666203}
   m_Layer: 7
   m_Name: Lights_M003
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2858,7 +2858,7 @@ GameObject:
   - component: {fileID: 4940820331353586266}
   m_Layer: 7
   m_Name: Lights_M002
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2954,7 +2954,7 @@ GameObject:
   - component: {fileID: 4988187576387112131}
   m_Layer: 7
   m_Name: ype99_M019
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3050,7 +3050,7 @@ GameObject:
   - component: {fileID: 5014574289279828179}
   m_Layer: 7
   m_Name: Lights_M001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3146,7 +3146,7 @@ GameObject:
   - component: {fileID: 5074213442795698469}
   m_Layer: 7
   m_Name: ype99_M022
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3242,7 +3242,7 @@ GameObject:
   - component: {fileID: 5087829998903645895}
   m_Layer: 7
   m_Name: ype99_M008
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3338,7 +3338,7 @@ GameObject:
   - component: {fileID: 5209016293339733595}
   m_Layer: 7
   m_Name: ype99_M035
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3434,7 +3434,7 @@ GameObject:
   - component: {fileID: 5351691662492529489}
   m_Layer: 7
   m_Name: ype99_M004
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3530,7 +3530,7 @@ GameObject:
   - component: {fileID: 5482762058133711413}
   m_Layer: 7
   m_Name: M_KitAtlas002
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3626,7 +3626,7 @@ GameObject:
   - component: {fileID: 5495624397904395054}
   m_Layer: 7
   m_Name: ype99_LOGO_M002
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3722,7 +3722,7 @@ GameObject:
   - component: {fileID: 5495841024283954385}
   m_Layer: 7
   m_Name: ype99_M012
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3818,7 +3818,7 @@ GameObject:
   - component: {fileID: 5514504607932120911}
   m_Layer: 7
   m_Name: ype99_M029
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3914,7 +3914,7 @@ GameObject:
   - component: {fileID: 5707088064396983140}
   m_Layer: 7
   m_Name: ype99_M002
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4010,7 +4010,7 @@ GameObject:
   - component: {fileID: 5725419523376589681}
   m_Layer: 7
   m_Name: ype99_M033
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4106,7 +4106,7 @@ GameObject:
   - component: {fileID: 5887583337522245232}
   m_Layer: 7
   m_Name: ype99_M009
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4202,7 +4202,7 @@ GameObject:
   - component: {fileID: 5959771870797546099}
   m_Layer: 7
   m_Name: ype99_M037
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4298,7 +4298,7 @@ GameObject:
   - component: {fileID: 6014615550936880382}
   m_Layer: 7
   m_Name: ype99_M027
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4394,7 +4394,7 @@ GameObject:
   - component: {fileID: 6035570875524876818}
   m_Layer: 7
   m_Name: NORENCO_M007
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4490,7 +4490,7 @@ GameObject:
   - component: {fileID: 6047731061115833614}
   m_Layer: 7
   m_Name: ype99_M010
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4586,7 +4586,7 @@ GameObject:
   - component: {fileID: 6059130696281550530}
   m_Layer: 7
   m_Name: NORENCO_M003
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4682,7 +4682,7 @@ GameObject:
   - component: {fileID: 6095260566014811956}
   m_Layer: 7
   m_Name: Lights_M004
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4778,7 +4778,7 @@ GameObject:
   - component: {fileID: 6189505014569360218}
   m_Layer: 7
   m_Name: ype99_M036
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4874,7 +4874,7 @@ GameObject:
   - component: {fileID: 6350346075706498774}
   m_Layer: 7
   m_Name: ype99_M028
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4970,7 +4970,7 @@ GameObject:
   - component: {fileID: 6387179008292271260}
   m_Layer: 7
   m_Name: ype99_M018
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5066,7 +5066,7 @@ GameObject:
   - component: {fileID: 6499038143229239244}
   m_Layer: 7
   m_Name: ype99_M001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5162,7 +5162,7 @@ GameObject:
   - component: {fileID: 6821885607412690820}
   m_Layer: 7
   m_Name: ype99_M024
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5258,7 +5258,7 @@ GameObject:
   - component: {fileID: 6967407673682028726}
   m_Layer: 7
   m_Name: M_KitAtlas003
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5354,7 +5354,7 @@ GameObject:
   - component: {fileID: 7105326501628112697}
   m_Layer: 7
   m_Name: ype99_M005
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5449,7 +5449,7 @@ GameObject:
   - component: {fileID: 7356180210314323165}
   m_Layer: 7
   m_Name: DustTrail_Left
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10218,7 +10218,7 @@ GameObject:
   - component: {fileID: 7356180210371692669}
   m_Layer: 7
   m_Name: TurretFirePoint
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10250,7 +10250,7 @@ GameObject:
   - component: {fileID: 7356180210384461472}
   m_Layer: 7
   m_Name: DustTrail_Right
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15019,7 +15019,7 @@ GameObject:
   - component: {fileID: 7356180210530997319}
   m_Layer: 7
   m_Name: Type99_Chassis
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15083,7 +15083,7 @@ GameObject:
   - component: {fileID: 7356180210749329288}
   m_Layer: 7
   m_Name: TankFirePoint
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15209,7 +15209,7 @@ GameObject:
   - component: {fileID: 7356180211111667767}
   m_Layer: 7
   m_Name: TurretAccessories
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15241,7 +15241,7 @@ GameObject:
   - component: {fileID: 7356180211353760267}
   m_Layer: 7
   m_Name: T90_SecondaryWeapon
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15277,7 +15277,7 @@ GameObject:
   - component: {fileID: 7356180211399278880}
   m_Layer: 7
   m_Name: Type99_Lights
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15312,7 +15312,7 @@ GameObject:
   - component: {fileID: 7356180211436946919}
   m_Layer: 7
   m_Name: T90_PrimaryWeapon
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15367,7 +15367,7 @@ GameObject:
   - component: {fileID: 7509409352034926642}
   m_Layer: 7
   m_Name: ype99_M016
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15463,7 +15463,7 @@ GameObject:
   - component: {fileID: 7582850300879956362}
   m_Layer: 7
   m_Name: NORENCO_M004
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15559,7 +15559,7 @@ GameObject:
   - component: {fileID: 7601158640791333389}
   m_Layer: 7
   m_Name: ype99_M034
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15651,8 +15651,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7033742528294893396}
   - component: {fileID: 7698638841374273002}
-  - component: {fileID: 7698638841374273005}
   - component: {fileID: -3943916307538345398}
+  - component: {fileID: 4482589836761799300}
   - component: {fileID: 7698638841374273007}
   - component: {fileID: 4572924345148622397}
   m_Layer: 7
@@ -15670,7 +15670,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7698638841374273006}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7356180210314323164}
@@ -15679,7 +15679,7 @@ Transform:
   - {fileID: 4913043784387017114}
   - {fileID: 7356180211399278880}
   - {fileID: 7356180210530997319}
-  - {fileID: 2280965428098847925}
+  - {fileID: 1682885060607680468}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -15699,19 +15699,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!65 &7698638841374273005
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7698638841374273006}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3.1, y: 1.75, z: 6.8}
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!65 &-3943916307538345398
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -15723,8 +15710,21 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.1, y: 1.75, z: 6.8}
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Size: {x: 3, y: 1.6, z: 6.3}
+  m_Center: {x: 0, y: 1, z: -0.15}
+--- !u!65 &4482589836761799300
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698638841374273006}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 1.6, z: 6.3}
+  m_Center: {x: 0, y: 1, z: -0.15}
 --- !u!82 &7698638841374273007
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15860,7 +15860,7 @@ MonoBehaviour:
     MinimumAmmunition: 0
     MaximumAmmunition: 50
     maximumReloadingTime: 1.2
-    bulletSpeed: 1150
+    bulletSpeed: 1000
     fov: 70
     aimDownSightFieldOfView: 50
     currentAmmunition: 0
@@ -15901,7 +15901,7 @@ GameObject:
   - component: {fileID: 8114460831339410277}
   m_Layer: 7
   m_Name: M_KitAtlas004
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15997,7 +15997,7 @@ GameObject:
   - component: {fileID: 8208964097657433302}
   m_Layer: 7
   m_Name: M_KitAtlas001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16093,7 +16093,7 @@ GameObject:
   - component: {fileID: 8405519168855836924}
   m_Layer: 7
   m_Name: ype99_LOGO_M001
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16189,7 +16189,7 @@ GameObject:
   - component: {fileID: 8447527221296273421}
   m_Layer: 7
   m_Name: ype99_M021
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16285,7 +16285,7 @@ GameObject:
   - component: {fileID: 8701502104499864443}
   m_Layer: 7
   m_Name: ype99_DECALS_M003
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16367,37 +16367,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8833794337375085761, guid: d7d1f80cf7378ab428d57f5f9570a834, type: 3}
---- !u!1 &8965788829699780036
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2280965428098847925}
-  m_Layer: 12
-  m_Name: MinimapSphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2280965428098847925
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8965788829699780036}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1682885060607680468}
-  m_Father: {fileID: 7033742528294893396}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8975751897858437816
 GameObject:
   m_ObjectHideFlags: 0
@@ -16412,7 +16381,7 @@ GameObject:
   - component: {fileID: 8975751897858437817}
   m_Layer: 7
   m_Name: ype99_M038
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16508,7 +16477,7 @@ GameObject:
   - component: {fileID: 9077544827341663287}
   m_Layer: 7
   m_Name: M_KitAtlas005
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

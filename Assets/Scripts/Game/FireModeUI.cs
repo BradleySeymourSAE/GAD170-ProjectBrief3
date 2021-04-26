@@ -182,6 +182,14 @@ public class FireModeUI : MonoBehaviour
 
 	#region Public Methods
 
+	/// <summary>
+	///		Audio Fade Function - This was added as a temporary function while I was debugging the audio fade 
+	///		from within this class. 
+	/// </summary>
+	/// <param name="source"></param>
+	/// <param name="duration"></param>
+	/// <param name="targetVolume"></param>
+	/// <returns></returns>
 	public IEnumerator StartFade(AudioSource source, float duration, float targetVolume)
 	{
 		float s_CurrentTime = 0;
@@ -208,7 +216,6 @@ public class FireModeUI : MonoBehaviour
 		inGameWaveUI.waveCounterUI.SetCurrentWaveInGame(CurrentWaveIndex);
 	}
 
-
 	/// <summary>
 	///		Sets the next wave index 
 	/// </summary>
@@ -227,8 +234,16 @@ public class FireModeUI : MonoBehaviour
 	/// <param name="EnemiesRemaining"></param>
 	private void SetEnemiesRemainingUI(int EnemiesRemaining) => inGameWaveUI.waveCounterUI.SetEnemiesRemaining(EnemiesRemaining);
 
+	/// <summary>
+	///		Sets the current players Health Slider 
+	/// </summary>
+	/// <param name="Health"></param>
 	private void SetPlayerHealthUI(float Health) => onScreenUI.Health.SetHealthBarSlider(Health, 100);
 
+	/// <summary>
+	///		Sets the current players health - TEXT UI 
+	/// </summary>
+	/// <param name="Health"></param>
 	private void SetPlayerHealthTextUI(float Health) => onScreenUI.Health.SetHeathBarText(Health);
 	
 	#endregion
@@ -287,6 +302,10 @@ public class FireModeUI : MonoBehaviour
 		StartCoroutine(ShowNextWaveCountdownTimer());
 	}
 
+	/// <summary>
+	///		Starts IEnumerator for displaying the next wave countdown timer 
+	/// </summary>
+	/// <returns></returns>
 	private IEnumerator ShowNextWaveCountdownTimer()
 	{
 		// Set the Next Wave Countdown timer seconds 

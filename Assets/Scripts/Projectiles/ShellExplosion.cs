@@ -23,6 +23,7 @@ public class ShellExplosion : MonoBehaviour
     {
         if (other.transform == transform)
         {
+            Debug.Log(other.transform);
             // if we some how hit ourselves or another bullet
             // ignore it
             return;
@@ -40,6 +41,8 @@ public class ShellExplosion : MonoBehaviour
     {
        
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius, ObjectLayer);
+
+      
 
 
 

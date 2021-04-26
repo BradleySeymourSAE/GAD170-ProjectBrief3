@@ -21,8 +21,8 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - _GrassBlendAmount: 1
-    - _GrassSlopeThreshold: 0.025
+    - _GrassSlopeThreshold: 0.06
     m_Colors:
-    - _GrassColour: {r: 0.4156863, g: 0.4431373, b: 0.16470589, a: 1}
-    - _RockColour: {r: 0.42352945, g: 0.28627452, b: 0.21568629, a: 1}
+    - _GrassColour: {r: 0.5566038, g: 0.51234025, b: 0.39119795, a: 1}
+    - _RockColour: {r: 0.3962264, g: 0.32533818, b: 0.28595585, a: 1}
   m_BuildTextureStacks: []

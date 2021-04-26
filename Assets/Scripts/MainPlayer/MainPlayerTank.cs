@@ -738,6 +738,7 @@ public class MainPlayerTank : MonoBehaviour
 			weaponHasBeenFired = true;
 			GameObject clone = Instantiate(projectile, weaponFirePoint.position, Quaternion.identity);
 
+
 			if (clone.GetComponent<Rigidbody>())
 			{
 				Rigidbody rb = clone.GetComponent<Rigidbody>();
@@ -853,6 +854,10 @@ public class MainPlayerTank : MonoBehaviour
 				{
 					// Player is dead 
 					playerIsDead = true;
+
+					// The players is deadd 
+					// Invoke the remove lives event if you still plan to use it 
+
 				}
 				else
 				{
