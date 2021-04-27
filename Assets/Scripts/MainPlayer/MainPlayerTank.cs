@@ -586,26 +586,59 @@ public class MainPlayerTank : MonoBehaviour
 
 		#region Private Variables 
 
+		/// <summary>
+		///		The players current ammunition 
+		/// </summary>
 		[SerializeField] private int currentAmmunition;
 		
+		/// <summary>
+		///		The current bullet (projectile) velocity (speed) 
+		/// </summary>
 		[SerializeField] private float currentBulletVelocity;
 
+		/// <summary>
+		///		The current amount of time it takes to reload 
+		/// </summary>
 		[SerializeField] private float currentReloadSpeed;
 
-		[SerializeField] private bool isWeaponReloading, weaponHasBeenFired, weaponOutOfAmmo;
+		/// <summary>
+		///		Is the weapon reloading?
+		/// </summary>
+		[SerializeField] private bool isWeaponReloading;
 		
+		/// <summary>
+		///		Has the weapon been fired? 
+		/// </summary>
+		[SerializeField] private bool weaponHasBeenFired;
+		
+		/// <summary>
+		///		Is the player ADS zooming? 
+		/// </summary>
 		[SerializeField] private bool aimingDownWeaponSight;
 
+		/// <summary>
+		///		Is the player allowed to fire the primary weapon? 
+		/// </summary>
 		[SerializeField] private bool m_WeaponAllowedToFire;
 
+		/// <summary>
+		///		Reference to the current player 
+		/// </summary>
 		private Transform m_PlayerRef;
 
+		/// <summary>
+		///		Reference to the players camera 
+		/// </summary>
 		private Camera m_CameraReference;
 
 		#endregion
 
 		#region Public Methods 
 
+		/// <summary>
+		///		Sets up the players field of view and camera references and default values  
+		/// </summary>
+		/// <param name="Player"></param>
 		public void Setup(Transform Player)
 		{
 			m_PlayerRef = Player;
@@ -617,12 +650,10 @@ public class MainPlayerTank : MonoBehaviour
 				m_CameraReference.fieldOfView = m_CurrentFOV;
 			}
 
-			currentBulletVelocity = bulletSpeed;
+			currentBulletVelocity = bulletSpeed; 
 			currentReloadSpeed = maximumReloadingTime;
 			currentAmmunition = MaximumAmmunition;
 			
-
-			weaponOutOfAmmo = false;
 			isWeaponReloading = false;
 			EnableWeapons(false); // by default disable weapon firing 
 		}
@@ -633,6 +664,11 @@ public class MainPlayerTank : MonoBehaviour
 		/// <param name="ShouldEnableWeapons"></param>
 		public void EnableWeapons(bool ShouldEnableWeapons) => m_WeaponAllowedToFire = ShouldEnableWeapons;
 
+
+		/// <summary>
+		///		Called when the player fires the primary weapon 
+		/// </summary>
+		/// <param name="FiringInput"></param>
 		public void SetWeaponFiringInput(float FiringInput)
 		{
 			if (!m_WeaponAllowedToFire == true || isWeaponReloading == true)
@@ -649,8 +685,10 @@ public class MainPlayerTank : MonoBehaviour
 					return;
 				}
 
+				// Fire the primary weapon 
 				FirePrimaryWeapon();
 
+				// If the weapon has been fired, begin reloading 
 				if (weaponHasBeenFired)
 				{
 					Debug.Log("[MainPlayerTank.Weapons.SetWeaponFiringInput]: " + "Weapon has fired! Reloading primary weapon...");
@@ -678,16 +716,6 @@ public class MainPlayerTank : MonoBehaviour
 				currentAmmunition = value;
 
 				currentAmmunition = Mathf.Clamp(currentAmmunition, MinimumAmmunition, MaximumAmmunition);
-
-
-				if (currentAmmunition <= 0)
-				{
-					weaponOutOfAmmo = true;
-				}
-				else
-				{
-					weaponOutOfAmmo = false;
-				}
 
 
 				FireModeEvents.IncreaseAmmunitionEventUI?.Invoke(currentAmmunition);
@@ -747,7 +775,7 @@ public class MainPlayerTank : MonoBehaviour
 			}
 			else
 			{
-				Debug.Log("Projectile is missing a rigidbody component!");
+				Debug.LogWarning("Projectile is missing a rigidbody component!");
 			}
 
 			Destroy(clone, 5f);

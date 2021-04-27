@@ -56,14 +56,21 @@ public class FieldOfFire_UIManager : MonoBehaviour
 	/// </summary>
 	public void DisplayMainMenu(bool show) => MainMenuUI.ShowDisplay(show);
 	
-	// I will include an options menu once I have cleaned up other areas during the week 
-	// TODO: 
-	// public void DisplaySettingsMenu(bool show) => SettingsMenu.ShowDisplay(show);
 
 	/// <summary>
 	///		Displays the credits menu
 	/// </summary>
 	public void DisplayCreditsMenu(bool show) => CreditsMenuUI.ShowDisplay(show);
+
+	/// <summary>
+	///		Plays the menu select sound effect
+	/// </summary>
+	public void PlayMenuSelect() => AudioManager.Instance.PlaySound(GameAudio.GUI_Select);
+
+	/// <summary>
+	///		Plays the menu switch sound effect 
+	/// </summary>
+	public void PlayMenuSwitch() => AudioManager.Instance.PlaySound(GameAudio.GUI_MenuSwitch);
 
 	#endregion
 

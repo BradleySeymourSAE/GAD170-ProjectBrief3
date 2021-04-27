@@ -15,6 +15,11 @@ public class SoundFX
 	public bool loop = false; // default to false  
 
 	/// <summary>
+	///		Whether the sound should play on awake or not 
+	/// </summary>
+	public bool playOnAwake = true; // default's to playing on awake 
+
+	/// <summary>
 	///		The volume for the sound effect 
 	/// </summary>
 	[Range(0f, 1f)]

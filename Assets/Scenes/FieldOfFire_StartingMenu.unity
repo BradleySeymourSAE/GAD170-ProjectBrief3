@@ -7447,6 +7447,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
         type: 3}
+      propertyPath: GameSoundEffects.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
       propertyPath: AmmoSoundEffects.Array.data[0].clip
       value: 
       objectReference: {fileID: 8300000, guid: 8fbf89cf05f5126428afdee9b39befe9, type: 3}
@@ -7489,16 +7494,81 @@ PrefabInstance:
         type: 3}
       propertyPath: GameSoundEffects.Array.data[0].clip
       value: 
-      objectReference: {fileID: 8300000, guid: bd635684d6edc9d4db33185fd3dcc4e4, type: 3}
+      objectReference: {fileID: 8300000, guid: 9ae6e35c86743d845895ef49e2c57226, type: 3}
     - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
         type: 3}
       propertyPath: GameSoundEffects.Array.data[1].clip
       value: 
-      objectReference: {fileID: 8300000, guid: 12d0ab36cc31e954baaef244477a70ce, type: 3}
+      objectReference: {fileID: 8300000, guid: 8d2fa28c227716248ad48a6c136323ce, type: 3}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[3].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 84078fd1cb214b9469f1c3f445071da5, type: 3}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[9].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 07eeda7e7962fa04da01e5ba12b62edb, type: 3}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[9].loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[9].name
+      value: GUI_Select
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[10].clip
+      value: 
+      objectReference: {fileID: 8300000, guid: ea90884fa30672e4b8bc5d8167f7f19e, type: 3}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[10].name
+      value: GUI_MenuSwitch
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[3].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[9].pitch
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
         type: 3}
       propertyPath: GameSoundEffects.Array.data[0].volume
-      value: 0.55
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[10].pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[9].volume
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[10].volume
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[9].playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7657194901933773963, guid: 2d86e0d1014797b45bca1e339abd6404,
+        type: 3}
+      propertyPath: GameSoundEffects.Array.data[10].playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7657194901933773972, guid: 2d86e0d1014797b45bca1e339abd6404,
         type: 3}

@@ -16,40 +16,15 @@ public static class EnvironmentEvents
 {
 	
 	/// <summary>
-	///		 Handles empty parameter delegate events 
-	/// </summary>
-	public delegate void VoidDelegate();
-
-	/// <summary>
 	///		Handles int parameter events  
 	/// </summary>
 	/// <param name="Amount"></param>
 	public delegate void IntParameterDelegate(int Amount);
 
-	/// <summary>
-	///		Handles Game Object List Events 
-	/// </summary>
-	/// <param name="GameObjectList"></param>
-	public delegate void GameObjectListDelegate(List<GameObject> GameObjectList);
 
 	/// <summary>
-	///		Handles Transform List Events 
+	///		Handles spawning trees on the terrain 
 	/// </summary>
-	/// <param name="TransformListDelegate"></param>
-	public delegate void TransformListDelegate(List<Transform> TransformListDelegate);
-
-	/// <summary>
-	///		Handles Vector3 List Events 
-	/// </summary>
-	/// <param name="Vector3ListDelegate"></param>
-	public delegate void Vector3ListDelegate(List<Vector3> Vector3ListDelegate);
-
-
 	public static IntParameterDelegate SpawnTreesEvent;
-
-	public static GameObjectListDelegate HandleTreesSpawnedEvent;
-
-	public static Vector3ListDelegate HandleTreeSpawnPositionsEvent;
-
 
 }

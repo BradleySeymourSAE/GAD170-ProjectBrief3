@@ -50,6 +50,9 @@ public class AudioManager : MonoBehaviour
 				// set the source's clip, volume and pitch 
 				s_SoundFX.source.clip = s_SoundFX.clip;
 				s_SoundFX.source.loop = s_SoundFX.loop;
+				s_SoundFX.source.playOnAwake = s_SoundFX.playOnAwake;
+				s_SoundFX.source.pitch = s_SoundFX.pitch;
+				
 
 				s_SoundFX.source.outputAudioMixerGroup = AudioMixer;
 		
@@ -60,6 +63,8 @@ public class AudioManager : MonoBehaviour
 			s_SoundFX.source = gameObject.AddComponent<AudioSource>();
 			s_SoundFX.source.clip = s_SoundFX.clip;
 			s_SoundFX.source.loop = s_SoundFX.loop;
+			s_SoundFX.source.playOnAwake = s_SoundFX.playOnAwake;
+			s_SoundFX.source.pitch = s_SoundFX.pitch;
 
 
 			s_SoundFX.source.outputAudioMixerGroup = AudioMixer;
@@ -70,6 +75,8 @@ public class AudioManager : MonoBehaviour
 			s_SoundFX.source = gameObject.AddComponent<AudioSource>();
 			s_SoundFX.source.clip = s_SoundFX.clip;
 			s_SoundFX.source.loop = s_SoundFX.loop;
+			s_SoundFX.source.playOnAwake = s_SoundFX.playOnAwake;
+			s_SoundFX.source.pitch = s_SoundFX.pitch;
 
 
 			s_SoundFX.source.outputAudioMixerGroup = AudioMixer;
@@ -176,6 +183,7 @@ public class AudioManager : MonoBehaviour
 
 		s_SoundFX.source.volume = s_SoundFX.volume;
 		s_SoundFX.source.pitch = s_SoundFX.pitch;
+		s_SoundFX.source.playOnAwake = s_SoundFX.playOnAwake;
 
 		s_SoundFX.source.Play();
 	}

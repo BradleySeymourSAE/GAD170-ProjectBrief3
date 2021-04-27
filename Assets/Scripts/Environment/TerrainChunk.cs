@@ -60,6 +60,7 @@ public class TerrainChunk
 		Debug.Log("Bounds Extents: " + bounds.extents);
 
 		meshObject = new GameObject("Terrain");
+		meshObject.layer = 6;
 		meshRenderer = meshObject.AddComponent<MeshRenderer>();
 		meshFilter = meshObject.AddComponent<MeshFilter>();
 		meshCollider = meshObject.AddComponent<MeshCollider>();

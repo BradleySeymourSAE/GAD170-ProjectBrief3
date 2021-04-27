@@ -73,6 +73,9 @@ public class CreditsMenu
 	public void OpenMainMenu()
 	{
 		ShowDisplay(false);
+
+		m_UIManager.PlayMenuSelect();
+
 		m_UIManager.DisplayMainMenu(true);
 	}
 

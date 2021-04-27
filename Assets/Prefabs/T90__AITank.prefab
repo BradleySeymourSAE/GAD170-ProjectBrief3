@@ -15449,7 +15449,7 @@ GameObject:
   - component: {fileID: 2010955410412130116}
   - component: {fileID: 1256648030974574575}
   - component: {fileID: 4365615389995075880}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: MinimapIconEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15465,7 +15465,7 @@ Transform:
   m_GameObject: {fileID: 8096959246484209005}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: 0, y: 10, z: 0}
-  m_LocalScale: {x: 15, y: 15, z: 1}
+  m_LocalScale: {x: 20, y: 20, z: 1}
   m_Children: []
   m_Father: {fileID: 4483319481589763337}
   m_RootOrder: 6

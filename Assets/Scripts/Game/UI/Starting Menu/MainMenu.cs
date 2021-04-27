@@ -52,6 +52,20 @@ public class MainMenu
 	public void ShowDisplay(bool Display)
 	{
 		MainMenuScreen.SetActive(Display);
+
+
+		if (Display == true)
+		{
+			m_UIManager.PlayMenuSwitch();
+		}
+		else
+		{
+			m_UIManager.PlayMenuSelect();
+			m_UIManager.PlayMenuSwitch();
+		}
+
+
+		
 	}
 
 
@@ -62,6 +76,8 @@ public class MainMenu
 	private void StartGame()
 	{
 		Debug.Log("[MainMenu.StartGame]: " + "Loading Game Scene: " + GameScenes.GameLevel_01);
+		m_UIManager.PlayMenuSelect();
+
 		SceneManager.LoadScene(GameScenes.GameLevel_01);
 	}
 
@@ -72,6 +88,9 @@ public class MainMenu
 	private void OpenCreditsMenu()
 	{
 		ShowDisplay(false);
+
+		m_UIManager.PlayMenuSwitch();
+
 		m_UIManager.DisplayCreditsMenu(true);
 	}
 
@@ -80,6 +99,9 @@ public class MainMenu
 	/// </summary>
 	private void QuitApplication()
 	{
+
+		m_UIManager.PlayMenuSelect();
+
 		#if UNITY_STANDALONE
 			Debug.Log("[MainMenu.QuitApplication]: " + "Quitting Application!");
 			Application.Quit();

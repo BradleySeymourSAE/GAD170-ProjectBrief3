@@ -12,6 +12,9 @@ using UnityEngine;
 public class FireModeGameManager : MonoBehaviour
 {
 
+	/// <summary>
+	///		The Fire Mode Game Manager Instance 
+	/// </summary>
 	public static FireModeGameManager Instance;
 
 	#region Public Variables 
@@ -351,7 +354,12 @@ public class FireModeGameManager : MonoBehaviour
 		yield return new WaitForSeconds(generateTerrainSetupTimer);
 
 		m_StationaryCameraReference.GetComponent<Camera>().enabled = false;
+	
 
+		if (m_StationaryCameraReference.GetComponent<AudioListener>())
+		{
+			Destroy(m_StationaryCameraReference.GetComponent<AudioListener>());
+		}
 
 		FireModeEvents.SpawnPlayerEvent?.Invoke(); // spawn the player in
 
@@ -369,9 +377,6 @@ public class FireModeGameManager : MonoBehaviour
 		// Starts the first round! 
 		Debug.Log("[FireModeGameManager.RunGameModeLogic]: " + "On Game Started Event has been called!");
 		
-		
-
-		// Starts the game after 3 seconds! 
 		Invoke(nameof(GameStarted), 3f);
 		yield return null; // Tells coroutine when the next update is 
 	}
