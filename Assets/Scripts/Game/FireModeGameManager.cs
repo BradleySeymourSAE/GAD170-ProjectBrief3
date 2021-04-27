@@ -129,6 +129,11 @@ public class FireModeGameManager : MonoBehaviour
 	///		Reference to the minimap render camera transform 
 	/// </summary>
 	[SerializeField] private Transform m_MinimapRenderCameraReference;
+
+	/// <summary>
+	///		Reference to the camera to display while the level is loading 
+	/// </summary>
+	[SerializeField] private Transform m_StationaryCameraReference;
 	#endregion
 
 	#region Unity Events  
@@ -341,7 +346,12 @@ public class FireModeGameManager : MonoBehaviour
 		Debug.Log("[FireModeGameManager.RunGameModeLogic]: " + "Running game mode logic!");
 		FireModeEvents.ResetGameEvent?.Invoke(); 
 
+		m_StationaryCameraReference.GetComponent<Camera>().enabled = true;
+
 		yield return new WaitForSeconds(generateTerrainSetupTimer);
+
+		m_StationaryCameraReference.GetComponent<Camera>().enabled = false;
+
 
 		FireModeEvents.SpawnPlayerEvent?.Invoke(); // spawn the player in
 
