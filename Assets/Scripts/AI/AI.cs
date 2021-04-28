@@ -172,6 +172,8 @@ public class AI : MonoBehaviour
 			return;
 		}
 
+		AudioManager.Instance.PlaySound(GameAudio.PlayerDeathOOFT);
+
 		GameObject deathClone = Instantiate(explosionPrefab, transform.position, explosionPrefab.transform.rotation);
 		
 		Destroy(deathClone, 2); 
@@ -389,12 +391,6 @@ public class AI : MonoBehaviour
 				if (m_CurrentHealth <= 0)
 				{
 					isCurrentlyDead = true;
-
-
-					if (AudioManager.Instance)
-					{
-						AudioManager.Instance.PlaySound(GameAudio.PlayerDeathOOFT);
-					}
 
 					Debug.LogWarning("[AI.CurrentAIHealth]: "+ "Invoking Increase Enemies Remaining Event - AI Killed!");
 					FireModeEvents.IncreaseEnemiesRemainingEvent?.Invoke(-1);
